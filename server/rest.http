@@ -1,0 +1,43 @@
+@host = http://localhost:9000/api
+
+
+POST {{host}}/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "email":"luongminhthanh914@gmail.com",
+    "password":"123456"
+}
+###
+
+POST {{host}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email":"luongminhthanh914@gmail.com",
+    "password":"123456"
+}
+
+###
+
+GET  {{host}}/auth/getlist HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTY2NDgwNjY0MiwiZXhwIjoxNjY0ODEwMjQyfQ.eH5WD582xU7pwsuX2c5pyzPTMGbrLQHZIXeT1AphBLA
+###
+POST {{host}}/auth/refresh-token HTTP/1.1
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTY2NDgwNjYwNiwiZXhwIjoxNjY0ODEzODA2fQ.ykXjvLMp93Sj-Y3yvqzkugMSMKUCOlBmok-aLOAauKQ"
+}
+
+###
+
+DELETE {{host}}/auth/logout HTTP/1.1
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTY2NDgwODM1MSwiZXhwIjoxNjY0ODE1NTUxfQ.R9IRG_UroKqDZADXOlfAtoHLo28XnTUFLmCZpibI2KQ"
+
+}
+
