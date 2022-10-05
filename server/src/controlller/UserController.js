@@ -1,5 +1,4 @@
 import createError from "http-errors";
-// import User2 from "../models/User2";
 import db from "../models/index";
 import client from "../config/connect_redis";
 import {
