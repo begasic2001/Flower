@@ -13,16 +13,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 connect_mysql();
 route(app);
+
+//using ejs template
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+//using public file 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use((req, res, next) => {
-	next(createError.NotFound("This route does not exist"));
+    next(createError.NotFound("This route does not exist"));
 });
 app.use((err, req, res, next) => {
-	res.json({
-		status: err.status || 500,
-		message: err.message,
-	});
+    res.json({
+        status: err.status || 500,
+        message: err.message,
+    });
 });
 app.use(cors());
 app.listen(port, () => {
-	console.log(`http://${hostname}:${port}/api`);
+    console.log(`http://${hostname}:${port}/api`);
 });
