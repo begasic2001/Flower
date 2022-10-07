@@ -12,17 +12,17 @@ module.exports = (sequelize, DataTypes) => {
 			// define association here
 		}
 	}
-	Brand.init(
+	Wishlist.init(
 		{
 			user_id: DataTypes.INTEGER,
 			product_id: DataTypes.INTEGER,
 		},
 		{
 			sequelize,
-			modelName: "Brand",
+			modelName: "Wishlist",
 		},
 	);
 
 	
-	return Brand;
+	return Wishlist;
 };
