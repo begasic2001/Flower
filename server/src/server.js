@@ -3,6 +3,7 @@ import createError from "http-errors";
 import cors from "cors";
 import route from "./route/route";
 import connect_mysql from "./config/connect_mysql";
+import path from "path";
 require("./config/connect_redis");
 require("dotenv").config();
 
