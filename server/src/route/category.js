@@ -1,5 +1,5 @@
 import express from "express";
-import CategoryController from "../controlller/CategoryController";
+import CategoryController from "../controller/CategoryController";
 const route = express.Router();
 route.get("/category", CategoryController.category);
 route.post("/storeCategory", CategoryController.storeCategory);

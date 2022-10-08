@@ -1,5 +1,5 @@
 import express from "express";
-import UserController from "../controlller/UserController";
+import UserController from "../controller/UserController";
 import { signAccessToken, verifyAccessToken } from "../services/jwt_service";
 
 const route = express.Router();
