@@ -24,7 +24,15 @@ const categoriesValidate = (data) => {
     return categorySchema.validate(data);
 }
 
+const subcategoriesValidate = (data) => {
+    const subCategorySchema = Joi.object({
+        categories_id: Joi.number().integer().required(),
+        subcategory_name: Joi.string.required(),
+    })
+    return subCategorySchema.validate(data);
+}
 module.exports = {
     userValidate,
     categoriesValidate,
+    subcategoriesValidate,
 };
