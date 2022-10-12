@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 
 const serviceAccount = require("../config/connect_firebase.json");
-const BUCKET = "gs://tmdt-69b9a.appspot.com";
+const BUCKET = "tmdt-69b9a.appspot.com";
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: BUCKET,
