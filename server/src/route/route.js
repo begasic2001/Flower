@@ -8,7 +8,7 @@ const app = (app) => {
     app.use("/api/cate", routerCategory);
     app.use("/api/brand", routerBrand);
     app.use("/api/subcate", routerSubCate);
-    app.use("/admin", routerAdmin);
+    app.use("/api/admin", routerAdmin);
 };
 
 module.exports = app;

@@ -1,4 +1,82 @@
-<%- include ('../layouts/header'); -%>
-<%- include ('../layouts/sidebar'); -%>
+<%- include ('../../layouts/header'); -%>
+<%- include ('../../layouts/sidebar'); -%>
+    <!-- ########## START: MAIN PANEL ########## -->
+    <div class="sl-mainpanel">
+        <nav class="breadcrumb sl-breadcrumb">
+            <a class="breadcrumb-item" href="index.html">Starlight</a>
+            <a class="breadcrumb-item" href="index.html">Tables</a>
+            <span class="breadcrumb-item active">Data Table</span>
+        </nav>
+    
+        <div class="sl-pagebody">
+            <div class="sl-page-title">
+                <h5>Category Table</h5>
+            </div><!-- sl-page-title -->
+    
+            <div class="card pd-20 pd-sm-40">
+                <h6 class="card-body-title">CATEGORY LIST
+                    <a href="" class="btn btn-sm btn-warning" style="float: right;" 
+                    data-toggle="modal" data-target="#modaldemo3">Add New</a>
+                </h6>
+    
+                <div class="table-wrapper">
+                    <table id="datatable1" class="table display responsive nowrap">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p">ID</th>
+                                <th class="wd-15p">Category name</th>
+                                <th class="wd-20p">Action</th>
+                              
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% category.map(function(c,index){ %>
+                            <tr>
+                                <td><%= index +1 %></td>
+                                <td><%= c.cat_name %></td>
+                                <td>
+                                    <a href="" class="btn btn-sm btn-info">Edit</a>
+                                <!--/api/admin/deleteCategory/<%= c.id %>-->
+                                    <a href="" class="btn btn-sm btn-danger" id="delete" title="<%= c.cat_name %>">Delete</a>
+                                </td>
+                              
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div><!-- table-wrapper -->
+            </div><!-- card -->
+    
+          
+    
+        </div><!-- sl-pagebody -->
+    </div><!-- sl-mainpanel -->
+    <!-- ########## END: MAIN PANEL ########## -->
 
-<%- include ('../layouts/footer'); -%>
+    <!-- LARGE MODAL -->
+    <div id="modaldemo3" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content tx-size-sm">
+                <div class="modal-header pd-x-20">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Category Add</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-20">
+                <form action="/api/admin/storeCategory" method="POST">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Category name</label>
+                        <input type="text" class="form-control" 
+                          name="cat_name" placeholder="Category">
+                    </div>
+                </div><!-- modal-body -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info pd-x-20">Submit</button>
+                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+                </div>
+                </form>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
+<%- include ('../../layouts/footer'); -%>
