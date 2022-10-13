@@ -64,8 +64,8 @@
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    let aElement = document.getElementById('delete')
-    let id = aElement.title
+    // let aElement = document.getElementById('delete')
+    // let id = aElement.title
     //let id = document.getElementById('delete').split('/').pop();
     // id = id.split('/').pop()
     $(document).on("click", "#delete", function (e) {
@@ -82,7 +82,7 @@
                 if (willDelete) {
                    $.ajax({
                         url: "./deleteCategory/" + id,
-                        type: "GET",
+                        type: "DELETE",
                     }).then(()=>{
                         swal("DELETE SUCCESSFULLY");
                     })

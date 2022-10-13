@@ -1,0 +1,48 @@
+<%- include ('../../layouts/header'); -%>
+    <%- include ('../../layouts/sidebar'); -%>
+        <!-- ########## START: MAIN PANEL ########## -->
+        <div class="sl-mainpanel">
+            <nav class="breadcrumb sl-breadcrumb">
+                <a class="breadcrumb-item" href="index.html">Starlight</a>
+                <a class="breadcrumb-item" href="index.html">Tables</a>
+                <span class="breadcrumb-item active">Data Table</span>
+            </nav>
+
+            <div class="sl-pagebody">
+                <div class="sl-page-title">
+                    <h5>Category Table</h5>
+                </div><!-- sl-page-title -->
+
+                <div class="card pd-20 pd-sm-40">
+                    <h6 class="card-body-title">CATEGORY LIST
+                    </h6>
+
+                    <div class="table-wrapper">
+                       
+                  
+                                    <div class="modal-body pd-20">
+                                        <form action="/api/cate/updateCategory/<%= category.id %>" method="POST">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Category name</label>
+                                                <input type="text" class="form-control" name="cat_name" placeholder="Category"
+                                                    value="<%= category.cat_name %>">
+                                            </div>
+                                    </div><!-- modal-body -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-info pd-x-20">Submit</button>
+
+                                    </div>
+                                    </form>
+                                </div>
+                            </div><!-- modal-dialog -->
+                        
+
+
+
+            </div><!-- sl-pagebody -->
+        </div><!-- sl-mainpanel -->
+        <!-- ########## END: MAIN PANEL ########## -->
+
+        <!-- LARGE MODAL -->
+       <!-- modal -->
+        <%- include ('../../layouts/footer'); -%>
