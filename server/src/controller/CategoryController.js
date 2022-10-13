@@ -94,6 +94,7 @@ const updateCategory = async (req, res, next) => {
     next(error);
   }
 };
+
 const deleteCategory = async (req, res, next) => {
   try {
     const cat_nameID = req.params.id;
