@@ -77,17 +77,11 @@ const updateCategory = async (req, res, next) => {
     const cat_nameID = req.params.id;
     const cat_name = req.body.cat_name;
     const { error } = categoriesValidate(req.body);
-    const isExistUpdate = await db.Categories.findOne({
-      where: {
-        id: cat_nameID,
-      },
-    });
+
     if (error) {
       throw createError(error.details[0].message);
     }
-    if (isExistUpdate) {
-      throw createError.Conflict(`${cat_name} is has already `);
-    }
+
     await db.Categories.update({ cat_name }, { where: { id: cat_nameID } });
     res.redirect("/api/cate/category");
   } catch (error) {

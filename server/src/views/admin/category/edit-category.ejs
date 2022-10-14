@@ -21,7 +21,7 @@
                        
                   
                                     <div class="modal-body pd-20">
-                                        <form action="/api/cate/updateCategory/<%= category.id %>" method="POST">
+                                        <form action="/api/cate/updateCategory/<%= category.id %>?_method=PUT" method="POST">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Category name</label>
                                                 <input type="text" class="form-control" name="cat_name" placeholder="Category"

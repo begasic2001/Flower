@@ -64,15 +64,15 @@
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    // let aElement = document.getElementById('delete')
-    // let id = aElement.title
-    //let id = document.getElementById('delete').split('/').pop();
-    // id = id.split('/').pop()
+    // let aElement = document.querySelector('#delete');
+    // let id = aElement?.dataset?.title;
+    // console.log(id)
     $(document).on("click", "#delete", function (e) {
         e.preventDefault();
+        let id = $(this).attr("data-id")
         var link = $(this).attr("href");
         swal({
-            title: `Are you Want to delete ${id}`,
+            title: `Are you Want to delete ${id} `,
             text: "Once Delete, This will be Permanently Delete!",
             icon: "warning",
             buttons: true,
@@ -85,6 +85,7 @@
                         type: "DELETE",
                     }).then(()=>{
                         swal("DELETE SUCCESSFULLY");
+                        window.location.reload()
                     })
                 } else {
                     swal("Safe Data!");

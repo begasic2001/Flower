@@ -10,6 +10,6 @@ route.get("/categoryAPI", CategoryController.category);
 route.post("/storeCategory", CategoryController.storeCategory);
 route.get("/getCategoryEdit/:id", CategoryController.getCategoryEdit);
 route.put("/updateCategory/:id", CategoryController.updateCategory);
-route.get("/deleteCategory/:id", CategoryController.deleteCategory);
+route.delete("/deleteCategory/:id", CategoryController.deleteCategory);
 route.get("/category/:id", CategoryController.categoryById);
 module.exports = route;
