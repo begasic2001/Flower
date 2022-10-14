@@ -1,5 +1,6 @@
 import * as services from "../services/brand_serviece";
-import db from "../models/index";
+import { brandValidate } from "../config/validatation";
+import createError from "http-errors";
 const brandView = async (req, res, next) => {
   try {
     const brand = await services.brand();
@@ -19,7 +20,19 @@ const brand = async (req, res, next) => {
   });
 };
 // const brandById = async (req, res, next) => {};
-const storeBrand = async (req, res, next) => {};
+const storeBrand = async (req, res, next) => {
+  try {
+    const newBrand = await services.createBrand(req.body);
+    res.json(newBrand);
+    
+  } catch (error) {
+    next(error)
+  }
+  // const { error } = await brandValidate(req.body);
+  // if(error){
+  //   throw createError(error.details[0].message);
+  // }
+};
 // const updateBrand = async (req, res, next) => {};
 
 // const deleteBrand = async (req, res, next) => {};

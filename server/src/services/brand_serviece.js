@@ -1,7 +1,7 @@
 import { categoriesValidate } from "../config/validatation";
 import createError from "http-errors";
 import db from "../models/index";
-import {v4 as genarateId } from "uuid"
+import { v4 as genarateId } from "uuid";
 const brand = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -14,21 +14,23 @@ const brand = () => {
 };
 
 const createBrand = (data) => {
+    console.log(data)
   return new Promise(async (resolve, reject) => {
     try {
-        const response = await db.Brand.findOrCreate({
-            where:{
-                brand_name : data.brand_name
-            },
-            defaults:{
-                ...data,
-                id:genarateId()
-            }
-        })
-        resolve({
-            err: response[1] ? 0 : 1,
-            msg: response[1] ? 'Created' : 'Book has been created'
-        })
+      const response = await db.Brand.findOrCreate({
+        where: {
+          brand_name: data.brand_name,
+        },
+        defaults: {
+          ...data,
+          id: genarateId(),
+        },
+      });
+      console.log(response)
+      resolve({
+        err: response[1] ? 0 : 1,
+        msg: response[1] ? "Created" : "Book has been created",
+      });
     } catch (error) {
       reject(error);
     }
