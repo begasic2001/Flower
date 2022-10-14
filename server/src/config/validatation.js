@@ -34,12 +34,13 @@ const subcategoriesValidate = (data) => {
 const brandValidate = (data) => {
   const brandSchema = Joi.object({
     brand_name: Joi.string().required(),
+    brand_logo: Joi.string().required(),
   });
-  return brandSchema;
+  return brandSchema.validate(data);
 };
 module.exports = {
   userValidate,
   categoriesValidate,
   subcategoriesValidate,
-  brandValidate
+  brandValidate,
 };

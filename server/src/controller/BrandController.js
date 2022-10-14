@@ -1,6 +1,7 @@
-import * as services from "../services/brand_serviece";
+import * as services from "../services/brand_service";
 import { brandValidate } from "../config/validatation";
 import createError from "http-errors";
+const cloudinary = require("cloudinary").v2;
 const brandView = async (req, res, next) => {
   try {
     const brand = await services.brand();
@@ -14,24 +15,33 @@ const brandView = async (req, res, next) => {
 // const getBrandEdit = async (req, res) => {};
 
 const brand = async (req, res, next) => {
-  const brand = await services.brand();
-  res.json({
-    brand,
-  });
+  try {
+    const brand = await services.brand();
+    res.json({
+      brand,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 // const brandById = async (req, res, next) => {};
 const storeBrand = async (req, res, next) => {
   try {
-    const newBrand = await services.createBrand(req.body);
+    const fileData = req.file;
+
+    const { error } = await brandValidate({
+      ...req.body,
+      brand_logo: fileData?.path,
+    });
+    if (error) {
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+      throw createError(error.details[0].message);
+    }
+    const newBrand = await services.createBrand(req.body, fileData);
     res.json(newBrand);
-    
   } catch (error) {
-    next(error)
+    next(error);
   }
-  // const { error } = await brandValidate(req.body);
-  // if(error){
-  //   throw createError(error.details[0].message);
-  // }
 };
 // const updateBrand = async (req, res, next) => {};
 

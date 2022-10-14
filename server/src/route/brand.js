@@ -1,5 +1,6 @@
 import express from "express";
 import BrandController from "../controller/BrandController";
+import uploadCloud from "../config/cloudinary";
 import uploadImage from "../services/firebase_service";
 import Multer from "../config/upload";
 const route = express.Router();
@@ -8,7 +9,7 @@ const route = express.Router();
 route.get("/brand", BrandController.brandView);
 // API
 route.get("/brandAPI", BrandController.brand);
-route.post("/storeBrand", BrandController.storeBrand);
+route.post("/storeBrand",uploadCloud.single('image'), BrandController.storeBrand);
 // route.get("/getBrandEdit/:id", BrandController.getBrandEdit);
 // route.put("/updateBrand/:id", BrandController.updateBrand);
 // route.delete("/deleteBrand/:id", BrandController.deleteBrand);
