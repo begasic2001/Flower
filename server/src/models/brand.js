@@ -1,5 +1,4 @@
 "use strict";
-import bcrypt from "bcrypt";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
 	class Brand extends Model {

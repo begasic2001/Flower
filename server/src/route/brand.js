@@ -4,21 +4,20 @@ import uploadImage from "../services/firebase_service";
 import Multer from "../config/upload";
 const route = express.Router();
 
-// Admin Category
-// route.get("/category", CategoryController.categoryView);
-// route.get("/dashboard", CategoryController.dashboard);
-// // API
-// route.get("/categoryAPI", CategoryController.category);
-// route.post("/storeCategory", CategoryController.storeCategory);
-// route.get("/getCategoryEdit/:id", CategoryController.getCategoryEdit);
-// route.put("/updateCategory/:id", CategoryController.updateCategory);
-// route.get("/deleteCategory/:id", CategoryController.deleteCategory);
-// route.get("/category/:id", CategoryController.categoryById);
-route.post(
-  "/storeBrand",
-  Multer.single("image"),
-  uploadImage,
-  BrandController.storeBrand
-);
+//Admin Brand
+route.get("/brand", BrandController.brandView);
+// API
+route.get("/brandAPI", BrandController.brand);
+route.post("/storeBrand", BrandController.storeBrand);
+// route.get("/getBrandEdit/:id", BrandController.getBrandEdit);
+// route.put("/updateBrand/:id", BrandController.updateBrand);
+// route.delete("/deleteBrand/:id", BrandController.deleteBrand);
+// route.get("/brand/:id", BrandController.brandById);
+// route.post(
+//   "/storeBrand",
+//   Multer.single("image"),
+//   uploadImage,
+//   BrandController.storeBrand
+// );
 
 module.exports = route;

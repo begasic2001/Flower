@@ -34,6 +34,7 @@
     "redis": "3.1.2",
     "sequelize": "^6.23.1",
     "tedious": "^15.1.0",
+    "uuid": "^9.0.0",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
