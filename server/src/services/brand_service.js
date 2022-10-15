@@ -7,10 +7,7 @@ const brand = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const brand = await db.Brand.findAll({});
-      resolve({
-        status: 1,
-        result: brand,
-      });
+      resolve(brand);
     } catch (error) {
       reject(error);
     }

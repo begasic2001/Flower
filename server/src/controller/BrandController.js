@@ -12,7 +12,7 @@ const brandView = async (req, res, next) => {
     next(error);
   }
 };
-// const getBrandEdit = async (req, res) => {};
+const getBrandEdit = async (req, res) => {};
 
 const brand = async (req, res, next) => {
   try {
@@ -43,15 +43,20 @@ const storeBrand = async (req, res, next) => {
     next(error);
   }
 };
-// const updateBrand = async (req, res, next) => {};
+const updateBrand = async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
 
 // const deleteBrand = async (req, res, next) => {};
 module.exports = {
   brandView,
   storeBrand,
   brand,
-  // getBrandEdit,
-  // updateBrand,
+  getBrandEdit,
+  updateBrand,
   // deleteBrand,
   // brandById,
 };

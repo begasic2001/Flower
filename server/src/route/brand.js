@@ -9,16 +9,14 @@ const route = express.Router();
 route.get("/brand", BrandController.brandView);
 // API
 route.get("/brandAPI", BrandController.brand);
-route.post("/storeBrand",uploadCloud.single('image'), BrandController.storeBrand);
-// route.get("/getBrandEdit/:id", BrandController.getBrandEdit);
-// route.put("/updateBrand/:id", BrandController.updateBrand);
+route.post(
+  "/storeBrand",
+  uploadCloud.single("image"),
+  BrandController.storeBrand,
+);
+route.get("/getBrandEdit/:id", BrandController.getBrandEdit);
+route.put("/updateBrand/:id", BrandController.updateBrand);
 // route.delete("/deleteBrand/:id", BrandController.deleteBrand);
 // route.get("/brand/:id", BrandController.brandById);
-// route.post(
-//   "/storeBrand",
-//   Multer.single("image"),
-//   uploadImage,
-//   BrandController.storeBrand
-// );
 
 module.exports = route;
