@@ -29,7 +29,6 @@ const brand = async (req, res, next) => {
 const storeBrand = async (req, res, next) => {
   try {
     const fileData = req.file;
-
     const { error } = await brandValidate({
       ...req.body,
       brand_logo: fileData?.path,

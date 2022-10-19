@@ -8,18 +8,19 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      
     }
   }
   Brand.init(
     {
       brand_name: DataTypes.STRING,
       brand_logo: DataTypes.STRING,
+      filename: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "Brand",
-    }
+    },
   );
 
   return Brand;

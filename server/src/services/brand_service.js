@@ -53,16 +53,17 @@ const brand = () => {
 const createBrand = (data, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log(fileData)
+      console.log(fileData.filename)
       const response = await db.Brand.findOrCreate({
-        raw: true,
         where: {
           brand_name: data.brand_name,
         },
         defaults: {
-          ...data,
           id: genarateId(),
+          brand_name: data.brand_name,
           brand_logo: fileData?.path,
-          filename: fileData?.filename
+          filename: fileData?.filename,
         },
       });
       resolve({
