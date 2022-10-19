@@ -38,6 +38,9 @@ const brandValidate = (data) => {
   });
   return brandSchema.validate(data);
 };
+
+export const filename = Joi.string().required()
+export const id = Joi.string().required()
 module.exports = {
   userValidate,
   categoriesValidate,
