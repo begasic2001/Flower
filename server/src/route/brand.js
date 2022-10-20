@@ -16,7 +16,7 @@ route.post(
 );
 route.get("/getBrandEdit/:id", BrandController.getBrandEdit);
 route.put("/updateBrand/:id", BrandController.updateBrand);
-// route.delete("/deleteBrand/:id", BrandController.deleteBrand);
+route.delete("/deleteBrand/:id", BrandController.deleteBrand);
 // route.get("/brand/:id", BrandController.brandById);
 
 module.exports = route;

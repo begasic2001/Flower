@@ -5,7 +5,7 @@ module.exports = {
   },
 
   down: function (queryInterface, Sequelize) {
-    // logic for reverting the changes
+    // logic for reverting the changes 
     return queryInterface.removeColumn("Brands", "filename");
   },
 };

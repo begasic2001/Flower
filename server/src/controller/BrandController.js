@@ -61,11 +61,19 @@ const updateBrand = async (req, res, next) => {
 
 const deleteBrand = async (req, res, next) => {
   try {
-    const { error } = joi.object({ id, filename }).validate(req.body);
+    const { filename } = req.body;
+    const id = req.params.id
+    console.log(filename,id);
+    const { error } = joi
+      .object({ id, filename })
+      .validate(req.params.id, filename);
     if (error) {
       throw createError(error.details[0].message);
     }
-    const response = await services.deleteBook(req.body.id, req.body.filename);
+    const response = await services.deleteBrand(
+      req.params.id,
+      req.body.filename
+    );
     return res.status(200).json(response);
   } catch (error) {
     next(error);
