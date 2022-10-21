@@ -50,11 +50,24 @@ const brand = () => {
   });
 };
 
+const brandById = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const brand = await db.Brand.findOne({
+        where: {
+          id,
+        },
+      });
+      resolve(brand);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 const createBrand = (data, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(fileData)
-      console.log(fileData.filename)
       const response = await db.Brand.findOrCreate({
         where: {
           brand_name: data.brand_name,
@@ -79,12 +92,16 @@ const createBrand = (data, fileData) => {
   });
 };
 
-const updateBrand = ({ id, ...data }, fileData) => {
+const updateBrand = ({ bid, ...data }, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (fileData) data.image = fileData?.path;
+      if (fileData) {
+        cloudinary.uploader.destroy(data.filename);
+        data.brand_logo = fileData?.path;
+        data.filename = fileData?.filename;
+      }
       const response = await db.Brand.update(data, {
-        where: { id },
+        where: { id: bid },
       });
       resolve({
         err: response[0] > 0 ? 0 : 1,
@@ -102,12 +119,13 @@ const updateBrand = ({ id, ...data }, fileData) => {
   });
 };
 
-const deleteBrand = (id, filename) => {
+const deleteBrand = (bid, filename) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await db.Brand.destroy({
-        where: { id },
+        where: { id: bid },
       });
+
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,
@@ -121,6 +139,7 @@ const deleteBrand = (id, filename) => {
 
 module.exports = {
   brand,
+  brandById,
   createBrand,
   updateBrand,
   deleteBrand,

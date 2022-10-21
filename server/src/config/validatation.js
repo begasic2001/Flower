@@ -39,11 +39,13 @@ const brandValidate = (data) => {
   return brandSchema.validate(data);
 };
 
-export const filename = Joi.string().required()
-export const id = Joi.string().required()
+const filename = Joi.string().required();
+const bid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
   subcategoriesValidate,
   brandValidate,
+  bid,
+  filename,
 };
