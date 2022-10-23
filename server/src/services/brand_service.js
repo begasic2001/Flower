@@ -1,5 +1,3 @@
-import { categoriesValidate } from "../config/validatation";
-import createError from "http-errors";
 import db from "../models/index";
 import { v4 as genarateId } from "uuid";
 const cloudinary = require("cloudinary").v2;

@@ -14,6 +14,9 @@ module.exports = {
       brand_logo: {
         type: Sequelize.STRING,
       },
+      filename:{
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

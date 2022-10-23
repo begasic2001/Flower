@@ -65,7 +65,6 @@ const updateBrand = async (req, res, next) => {
     }
     const response = await services.updateBrand(req.body, fileData);
     if (response) res.redirect("/api/brand/brand");
-    //res.json(response);
   } catch (error) {
     next(error);
   }
@@ -81,7 +80,6 @@ const deleteBrand = async (req, res, next) => {
     const response = await services.deleteBrand(req.query.bid,req.query.filename);
     
     if (response) res.redirect("/api/brand/brand");
-    // return res.json(response);
   } catch (error) {
     next(error);
   }

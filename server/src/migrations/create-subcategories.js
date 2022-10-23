@@ -4,12 +4,11 @@ module.exports = {
 		await queryInterface.createTable("subCategories", {
 			id: {
 				allowNull: false,
-				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER,
+				type: Sequelize.STRING,
 			},
 			categories_id: {
-				type: Sequelize.INTEGER,
+				type: Sequelize.STRING,
 			},
 			subcategory_name: {
 				type: Sequelize.STRING,

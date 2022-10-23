@@ -1,6 +1,7 @@
 import { categoriesValidate } from "../config/validatation";
 import createError from "http-errors";
 import db from "../models/index";
+import { v4 as genarateId } from "uuid";
 const dashboard = (req, res) => {
   res.render("admin/dashboard");
 };
@@ -65,6 +66,7 @@ const storeCategory = async (req, res, next) => {
       throw createError.Conflict(`${cat_name} is has already `);
     }
     await db.Categories.create({
+      id: genarateId(),
       cat_name,
     });
     res.redirect("/api/cate/category");
