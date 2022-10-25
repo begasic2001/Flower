@@ -7,7 +7,7 @@ import joi from "joi";
 const subCategoryView = async (req, res, next) => {
   try {
     const subCategory = await services.subCategory();
-    console.log({result:subCategory})
+    console.log({ result: subCategory });
     // res.render("admin/subCategory/subCategory", {
     //   subCategory,
     // });
@@ -30,9 +30,8 @@ const getSubCategoryEdit = async (req, res) => {
 
 const subCategory = async (req, res, next) => {
   try {
-    const subCategory = await db.Subcategories.findAll({});
+    const subCategory = await services.subCategory();
     res.json({
-      status: 1,
       result: subCategory,
     });
   } catch (error) {
@@ -42,11 +41,6 @@ const subCategory = async (req, res, next) => {
 
 const subCategoryById = async (req, res, next) => {
   try {
-    const subCategory = await db.Subcategories.findAll({});
-    res.json({
-      status: 1,
-      result: subCategory,
-    });
   } catch (error) {
     next(error);
   }
@@ -54,74 +48,39 @@ const subCategoryById = async (req, res, next) => {
 
 const storeSubCategory = async (req, res, next) => {
   try {
-    const { subcategory_name, categories_id } = req.body;
     const { error } = subcategoriesValidate(req.body);
     if (error) {
       throw createError(error.details[0].message);
     }
-    const isExistSubCategories = await db.Subcategories.findOne({
-      where: { subcategory_name, categories_id },
-    });
-    if (isExistSubCategories) {
-      throw createError.Conflict(
-        `${subcategory_name} or ${categories_id}is has already`,
-      );
-    }
-    const saveCreateSubCategory = await db.Subcategories.create({
-      subcategory_name,
-      categories_id,
-    });
-    res.json({
-      status: "Create Success",
-      element: saveCreateSubCategory,
-    });
+    const newSubCategory = await services.createSubCategory(req.body);
+    
+    // res.json({
+    //   result: newSubCategory,
+    // });
   } catch (error) {
     next(error);
   }
 };
 const updateSubCategory = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const { categories_id, subcategory_name } = req.body;
-    const { error } = subcategoriesValidate(req.body);
+    const { error } = joi.object({ subid }).validate({ cid: req.body.subid });
     if (error) {
       throw createError(error.details[0].message);
     }
-    const isExistUpdateSubCate = await db.Subcategories.findOne({
-      where: {
-        id,
-        categories_id,
-        subcategory_name,
-      },
-    });
-    if (isExistUpdateSubCate) {
-      throw createError.Conflict(
-        `${subcategory_name} or ${categories_id} is has already `,
-      );
-    }
-    await db.Subcategories.update(
-      {
-        categories_id,
-        subcategory_name,
-      },
-      {
-        where: { id: id },
-      },
-    );
-    res.json({
-      message: "Update Success",
-    });
+    const response = await services.updateSubCategory(req.body)
+   
   } catch (error) {
     next(error);
   }
 };
 const deleteSubCategory = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    await db.Subcategories.destroy({ where: { id } });
-    res.json({
-      message: "Delete Success",
-    });
+      const { error } = joi.object({ subid }).validate({ subid: req.query.subid });
+    if (error) {
+      throw createError(error.details[0].message);
+    }
+      const response = await services.deleteSubCategory(req.query)
+    
   } catch (error) {
     next(error);
   }

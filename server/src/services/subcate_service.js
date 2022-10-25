@@ -1,16 +1,15 @@
 import db from "../models/index";
 import { v4 as genarateId } from "uuid";
-const cloudinary = require("cloudinary").v2;
 
 const subCategory = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const subcategory = await db.Subcategories.findAll({
-        nest: true,
-        raw: true,
         include: {
           model: db.Categories,
         },
+        nest: true,
+        raw: true,
       });
 
       resolve(subcategory);
@@ -27,6 +26,11 @@ const subCategoryById = (id) => {
         where: {
           id,
         },
+        include: {
+          model: db.Categories,
+        },
+        nest: true,
+        raw: true,
       });
       resolve(subcategory);
     } catch (error) {
@@ -69,7 +73,7 @@ const updateSubCategory = ({ subid, ...data }) => {
         mes:
           response[0] > 0
             ? `${response[0]} SubCategory updated`
-            : "Cannot update new Subcategory/ categories ID not found",
+            : "Cannot update new Subcategory/ Subcategory ID not found",
       });
     } catch (error) {
       reject(error);

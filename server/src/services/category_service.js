@@ -6,12 +6,11 @@ const category = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const category = await db.Categories.findAll({
-        nest: true,
-        raw: true,
         include: {
           model: db.Subcategories,
         },
-        
+        nest: true,
+        raw: true,
       });
       resolve(category);
     } catch (error) {
