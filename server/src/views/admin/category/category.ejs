@@ -23,7 +23,7 @@
                     <table id="datatable1" class="table display responsive nowrap">
                         <thead>
                             <tr>
-                                <th class="wd-15p">ID</th>
+                                <th class="wd-15p">STT</th>
                                 <th class="wd-15p">Category name</th>
                                 <th class="wd-20p">Action</th>
                               
@@ -36,7 +36,7 @@
                                 <td><%= c.cat_name %></td>
                                 <td>
                                     <a href="/api/cate/getCategoryEdit/<%= c.id %>" class="btn btn-sm btn-info">Edit</a>
-                                    <a href="" class="btn btn-sm btn-danger" id="delete" data-id="<%= c.id %>">Delete</a>
+                                    <a href="" class="btn btn-sm btn-danger" id="delete" data-name="<%= c.cat_name %>" data-id="<%= c.id %>">Delete</a>
                                 </td>
                               
                             </tr>
@@ -148,8 +148,9 @@
      $(document).on("click", "#delete", function (e) {
             e.preventDefault();
             let id = $(this).attr("data-id");
+            let name= $(this).attr("data-name");
             swal({
-                title: `Are you Want to delete ${id} `,
+                title: `Do you want to delete ${name} `,
                 text: "Once Delete, This will be Permanently Delete!",
                 icon: "warning",
                 buttons: true,
@@ -157,9 +158,10 @@
             }).then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: "./deleteCategory/" + id,
+                        url: `./deleteCategory/?cid=${id}`,
                         type: "DELETE",
                     }).then(() => {
+                        swal("ok");
                         window.location.reload();
                     });
                 } else {

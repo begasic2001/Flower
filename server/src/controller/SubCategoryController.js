@@ -1,7 +1,34 @@
-import { subcategoriesValidate } from "../config/validatation";
+import { subcategoriesValidate, subid } from "../config/validatation";
 import createError from "http-errors";
+import * as services from "../services/subcate_service";
 import db from "../models/index";
-const sub_Category = async (req, res, next) => {
+import joi from "joi";
+
+const subCategoryView = async (req, res, next) => {
+  try {
+    const subCategory = await services.subCategory();
+    console.log({result:subCategory})
+    // res.render("admin/subCategory/subCategory", {
+    //   subCategory,
+    // });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getSubCategoryEdit = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const subCategory = await services.subCategoryById(id);
+    res.render("admin/subCategory/edit-subCategory", {
+      subCategory,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const subCategory = async (req, res, next) => {
   try {
     const subCategory = await db.Subcategories.findAll({});
     res.json({
@@ -12,7 +39,20 @@ const sub_Category = async (req, res, next) => {
     next(error);
   }
 };
-const sub_StoreCategory = async (req, res, next) => {
+
+const subCategoryById = async (req, res, next) => {
+  try {
+    const subCategory = await db.Subcategories.findAll({});
+    res.json({
+      status: 1,
+      result: subCategory,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const storeSubCategory = async (req, res, next) => {
   try {
     const { subcategory_name, categories_id } = req.body;
     const { error } = subcategoriesValidate(req.body);
@@ -39,7 +79,7 @@ const sub_StoreCategory = async (req, res, next) => {
     next(error);
   }
 };
-const sub_UpdateCategory = async (req, res, next) => {
+const updateSubCategory = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { categories_id, subcategory_name } = req.body;
@@ -75,7 +115,7 @@ const sub_UpdateCategory = async (req, res, next) => {
     next(error);
   }
 };
-const sub_DeleteCategory = async (req, res, next) => {
+const deleteSubCategory = async (req, res, next) => {
   try {
     const id = req.params.id;
     await db.Subcategories.destroy({ where: { id } });
@@ -87,8 +127,11 @@ const sub_DeleteCategory = async (req, res, next) => {
   }
 };
 module.exports = {
-  sub_Category,
-  sub_StoreCategory,
-  sub_UpdateCategory,
-  sub_DeleteCategory,
+  subCategoryView,
+  getSubCategoryEdit,
+  subCategory,
+  subCategoryById,
+  storeSubCategory,
+  updateSubCategory,
+  deleteSubCategory,
 };

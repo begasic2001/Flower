@@ -41,11 +41,15 @@ const brandValidate = (data) => {
 
 const filename = Joi.string().required();
 const bid = Joi.string().required();
+const cid = Joi.string().required();
+const subid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
   subcategoriesValidate,
   brandValidate,
   bid,
+  cid,
+  subid,
   filename,
 };

@@ -54,5 +54,15 @@ Content-Type: application/json
     "brand_name": "Đồng Tháp"
 }
 
+###
+
+get {{host}}/subcate/subcategory HTTP/1.1
+Content-Type: application/json
+
+###
+get {{host}}/cate/category HTTP/1.1
+Content-Type: application/json
+
+
 
 

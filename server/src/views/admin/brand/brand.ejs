@@ -23,7 +23,7 @@
                     <table id="datatable1" class="table display responsive nowrap">
                         <thead>
                             <tr>
-                                <th class="wd-15p">ID</th>
+                                <th class="wd-15p">STT</th>
                                 <th class="wd-15p">Brand logo</th>
                                 <th class="wd-15p">Brand name</th>
                                 <th class="wd-20p">Action</th>
@@ -38,9 +38,7 @@
                                     <td><%= c.brand_name %></td>
                                     <td>
                                         <a href="/api/brand/getBrandEdit/<%= c.id %>" class="btn btn-sm btn-info">Edit</a>
-                                    <!--/api/admin/deleteCategory/<%= c.id %>-->
-                                    <!-- /api/cate/deleteCategory/<%= c.id %>-->
-                                        <a href="" class="btn btn-sm btn-danger" id="delete" data-id="<%= c.id %>" data-filename="<%= c.filename %>">Delete</a>
+                                        <a href="" class="btn btn-sm btn-danger" id="delete" data-id="<%= c.id %>" data-name="<%= c.brand_name %>" data-filename="<%= c.filename %>">Delete</a>
                                     </td>
                                   
                                 </tr>
@@ -160,16 +158,16 @@
             e.preventDefault();
             let id = $(this).attr("data-id");
             let filename = $(this).attr("data-filename");
+            let name = $(this).attr("data-name");
             var link = $(this).attr("href");
             swal({
-                title: `Are you Want to delete ${id} `,
+                title: `Are you Want to delete ${name} `,
                 text: "Once Delete, This will be Permanently Delete!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
             }).then((willDelete) => {
                 if (willDelete) {
-                    //?bid=${id}&filename=${filename}
                     $.ajax({
                         url: `./deleteBrand/?bid=${id}&filename=${filename}`,
                         type: "DELETE",

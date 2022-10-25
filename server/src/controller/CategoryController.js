@@ -1,16 +1,17 @@
-import { categoriesValidate } from "../config/validatation";
+import { categoriesValidate, cid } from "../config/validatation";
+import * as services from "../services/category_service";
 import createError from "http-errors";
-import db from "../models/index";
-import { v4 as genarateId } from "uuid";
+import joi from "joi";
 const dashboard = (req, res) => {
   res.render("admin/dashboard");
 };
-const categoryView = async (req, res) => {
+const categoryView = async (req, res, next) => {
   try {
-    const category = await db.Categories.findAll({});
-    res.render("admin/category/category", {
-      category,
-    });
+    const category = await services.category();
+    console.log({ result: category });
+    // res.render("admin/category/category", {
+    //   category,
+    // });
   } catch (error) {
     next(error);
   }
@@ -18,7 +19,7 @@ const categoryView = async (req, res) => {
 const getCategoryEdit = async (req, res) => {
   try {
     const id = req.params.id;
-    const category = await db.Categories.findOne({ where: { id } });
+    const category = await services.categoryById(id);
     res.render("admin/category/edit-category", {
       category,
     });
@@ -29,9 +30,8 @@ const getCategoryEdit = async (req, res) => {
 
 const category = async (req, res, next) => {
   try {
-    const category = await db.Categories.findAll({});
+    const category = await services.Category();
     res.json({
-      status: 1,
       result: category,
     });
   } catch (error) {
@@ -40,52 +40,40 @@ const category = async (req, res, next) => {
 };
 const categoryById = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const category = await db.Categories.findOne({ where: { id } });
-    if (!category) {
-      throw createError.NotFound();
-    }
-    res.json({
-      status: 1,
-      result: category,
-    });
+    // const id = req.params.id;
+    // const category = await db.Categories.findOne({ where: { id } });
+    // if (!category) {
+    //   throw createError.NotFound();
+    // }
+    // res.json({
+    //   status: 1,
+    //   result: category,
+    // });
   } catch (error) {
     next(error);
   }
 };
 const storeCategory = async (req, res, next) => {
   try {
-    const { cat_name } = req.body;
     const { error } = categoriesValidate(req.body);
 
     if (error) {
       throw createError(error.details[0].message);
     }
-    const isExistCatName = await db.Categories.findOne({ where: { cat_name } });
-    if (isExistCatName) {
-      throw createError.Conflict(`${cat_name} is has already `);
-    }
-    await db.Categories.create({
-      id: genarateId(),
-      cat_name,
-    });
-    res.redirect("/api/cate/category");
+    const newCategory = await services.createCategory(req.body);
+    if (newCategory) res.redirect("/api/cate/category");
   } catch (error) {
     next(error);
   }
 };
 const updateCategory = async (req, res, next) => {
   try {
-    const cat_nameID = req.params.id;
-    const cat_name = req.body.cat_name;
-    const { error } = categoriesValidate(req.body);
-
+    const { error } = joi.object({ cid }).validate({ cid: req.body.cid });
     if (error) {
       throw createError(error.details[0].message);
     }
-
-    await db.Categories.update({ cat_name }, { where: { id: cat_nameID } });
-    res.redirect("/api/cate/category");
+    const response = await services.updateCategory(req.body);
+    if (response) res.redirect("/api/cate/category");
   } catch (error) {
     next(error);
   }
@@ -93,9 +81,12 @@ const updateCategory = async (req, res, next) => {
 
 const deleteCategory = async (req, res, next) => {
   try {
-    const cat_nameID = req.params.id;
-    await db.Categories.destroy({ where: { id: cat_nameID } });
-    res.redirect("/api/cate/category");
+    const { error } = joi.object({ cid }).validate(req.query);
+    if (error) {
+      throw createError(error.details[0].message);
+    }
+    const response = await services.deleteCategory(req.query.cid);
+    if (response) res.redirect("/api/cate/category");
   } catch (error) {
     next(error);
   }
