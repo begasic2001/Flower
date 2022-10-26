@@ -1,27 +1,31 @@
 import { subcategoriesValidate, subid } from "../config/validatation";
 import createError from "http-errors";
 import * as services from "../services/subcate_service";
-import db from "../models/index";
+import * as services2 from "../services/category_service";
 import joi from "joi";
 
 const subCategoryView = async (req, res, next) => {
   try {
     const subCategory = await services.subCategory();
-    res.json(subCategory)
-    // res.render("admin/subCategory/subCategory", {
-    //   subCategory,
-    // });
+    const category = await services2.category();
+
+    res.render("admin/subcategory/subcategory", {
+      subCategory,
+      category,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-const getSubCategoryEdit = async (req, res) => {
+const getSubCategoryEdit = async (req, res, next) => {
   try {
     const id = req.params.id;
     const subCategory = await services.subCategoryById(id);
-    res.render("admin/subCategory/edit-subCategory", {
+    const category = await services2.category();
+    res.render("admin/subcategory/edit-subcategory", {
       subCategory,
+      category,
     });
   } catch (error) {
     next(error);
@@ -53,21 +57,20 @@ const storeSubCategory = async (req, res, next) => {
       throw createError(error.details[0].message);
     }
     const newSubCategory = await services.createSubCategory(req.body);
-
-    // res.json({
-    //   result: newSubCategory,
-    // });
+    if (newSubCategory) res.redirect("/api/subcate/subCategory");
   } catch (error) {
     next(error);
   }
 };
 const updateSubCategory = async (req, res, next) => {
   try {
-    const { error } = joi.object({ subid }).validate({ cid: req.body.subid });
+    console.log(req.body)
+    const { error } = joi.object({ subid }).validate({ subid: req.body.subid });
     if (error) {
       throw createError(error.details[0].message);
     }
     const response = await services.updateSubCategory(req.body);
+    if (response) res.redirect("/api/subcate/subCategory");
   } catch (error) {
     next(error);
   }
@@ -80,7 +83,8 @@ const deleteSubCategory = async (req, res, next) => {
     if (error) {
       throw createError(error.details[0].message);
     }
-    const response = await services.deleteSubCategory(req.query);
+    const response = await services.deleteSubCategory(req.query.subid);
+    if (response) res.redirect("/api/subcate/subCategory");
   } catch (error) {
     next(error);
   }

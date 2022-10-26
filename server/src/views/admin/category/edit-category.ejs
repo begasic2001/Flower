@@ -76,30 +76,6 @@
 <script src="/lib/datatables/jquery.dataTables.js"></script>
 <script src="/lib/datatables-responsive/dataTables.responsive.js"></script>
 <script src="/lib/select2/js/select2.min.js"></script>
-<script>
-    $(function () {
-        'use strict';
-
-        $('#datatable1').DataTable({
-            responsive: true,
-            language: {
-                searchPlaceholder: 'Search...',
-                sSearch: '',
-                lengthMenu: '_MENU_ items/page',
-            }
-        });
-
-        $('#datatable2').DataTable({
-            bLengthChange: false,
-            searching: false,
-            responsive: true
-        });
-
-        // Select2
-        $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
-
-    });
-</script>
 <script src="/lib/jquery.sparkline.bower/jquery.sparkline.min.js"></script>
 <script src="/lib/d3/d3.js"></script>
 <script src="/lib/rickshaw/rickshaw.min.js"></script>
@@ -114,32 +90,6 @@
 <script src="/js/dashboard.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-<script>
-    $(document).on("click", "#delete", function (e) {
-        e.preventDefault();
-        let id = $(this).attr("data-id");
-        swal({
-            title: `Are you Want to delete ${id} `,
-            text: "Once Delete, This will be Permanently Delete!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        }).then((willDelete) => {
-            if (willDelete) {
-                $.ajax({
-                    url: "./deleteCategory/" + id,
-                    type: "DELETE",
-                }).then(() => {
-                    window.location.reload();
-                });
-            } else {
-                swal("Safe Data!");
-            }
-        });
-    });
-</script>
-
 </body>
 
 </html>

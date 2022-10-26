@@ -13,6 +13,7 @@ const subCategory = () => {
         raw: true,
         nest: true,
       });
+      
       resolve(subcategory);
     } catch (error) {
       reject(error);
@@ -29,7 +30,9 @@ const subCategoryById = (id) => {
         },
         include: {
           model: db.Categories,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
         nest: true,
         raw: true,
       });

@@ -4,7 +4,9 @@ import { v4 as genarateId } from "uuid";
 const category = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findAll({});
+      const category = await db.Categories.findAll({
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
       resolve(category);
     } catch (error) {
       reject(error);
@@ -19,6 +21,7 @@ const categoryById = (id) => {
         where: {
           id,
         },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
       });
       resolve(category);
     } catch (error) {

@@ -25,8 +25,8 @@ const categoriesValidate = (data) => {
 
 const subcategoriesValidate = (data) => {
   const subCategorySchema = Joi.object({
-    categories_id: Joi.number().integer().required(),
-    subcategory_name: Joi.string.required(),
+    categories_id: Joi.string().required(),
+    subcategory_name: Joi.string().required(),
   });
   return subCategorySchema.validate(data);
 };
