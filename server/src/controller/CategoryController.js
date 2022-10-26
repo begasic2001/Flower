@@ -8,10 +8,9 @@ const dashboard = (req, res) => {
 const categoryView = async (req, res, next) => {
   try {
     const category = await services.category();
-    console.log({ result: category });
-    // res.render("admin/category/category", {
-    //   category,
-    // });
+    res.render("admin/category/category", {
+      category,
+    });
   } catch (error) {
     next(error);
   }

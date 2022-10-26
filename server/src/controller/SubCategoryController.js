@@ -7,7 +7,7 @@ import joi from "joi";
 const subCategoryView = async (req, res, next) => {
   try {
     const subCategory = await services.subCategory();
-    console.log({ result: subCategory });
+    res.json(subCategory)
     // res.render("admin/subCategory/subCategory", {
     //   subCategory,
     // });
@@ -53,7 +53,7 @@ const storeSubCategory = async (req, res, next) => {
       throw createError(error.details[0].message);
     }
     const newSubCategory = await services.createSubCategory(req.body);
-    
+
     // res.json({
     //   result: newSubCategory,
     // });
@@ -67,20 +67,20 @@ const updateSubCategory = async (req, res, next) => {
     if (error) {
       throw createError(error.details[0].message);
     }
-    const response = await services.updateSubCategory(req.body)
-   
+    const response = await services.updateSubCategory(req.body);
   } catch (error) {
     next(error);
   }
 };
 const deleteSubCategory = async (req, res, next) => {
   try {
-      const { error } = joi.object({ subid }).validate({ subid: req.query.subid });
+    const { error } = joi
+      .object({ subid })
+      .validate({ subid: req.query.subid });
     if (error) {
       throw createError(error.details[0].message);
     }
-      const response = await services.deleteSubCategory(req.query)
-    
+    const response = await services.deleteSubCategory(req.query);
   } catch (error) {
     next(error);
   }

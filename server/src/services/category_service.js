@@ -1,17 +1,10 @@
 import db from "../models/index";
 import { v4 as genarateId } from "uuid";
-const cloudinary = require("cloudinary").v2;
 
 const category = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findAll({
-        include: {
-          model: db.Subcategories,
-        },
-        nest: true,
-        raw: true,
-      });
+      const category = await db.Categories.findAll({});
       resolve(category);
     } catch (error) {
       reject(error);

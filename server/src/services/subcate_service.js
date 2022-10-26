@@ -7,11 +7,12 @@ const subCategory = () => {
       const subcategory = await db.Subcategories.findAll({
         include: {
           model: db.Categories,
+          attributes: { exclude: ["createdAt", "updatedAt"] },
         },
-        nest: true,
+        attributes: { exclude: ["createdAt", "updatedAt", "categories_id"] },
         raw: true,
+        nest: true,
       });
-
       resolve(subcategory);
     } catch (error) {
       reject(error);

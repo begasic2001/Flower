@@ -6,6 +6,7 @@
     "host":"localhost", 
     "dialect": "mysql",
     "logging": false,
+    "raw":true,
     "timezone": "+07:00"
   },
   "test": {

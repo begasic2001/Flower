@@ -4,6 +4,7 @@ const sequelize = new Sequelize("TMDT", "root", null, {
 	host: "localhost",
 	dialect: "mysql",
 	logging: false,
+	raw:true
 	// DESKTOP-VVF1AMR
 });
 
