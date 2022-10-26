@@ -8,9 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "categories_id",
         targetKey: "id",
       });
-      // this.hasMany(models.Product, {
-      //   foreignKey: subcat_id,
-      // });
+      this.hasMany(models.Product, {
+        foreignKey: "subcat_id",
+      });
     }
   }
   Subcategories.init(

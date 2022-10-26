@@ -8,24 +8,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // this.belongsTo(models.Categories, {
-      //   foreignKey: categories_id,
-      //   targetKey: id,
-      // });
-      // this.belongsTo(models.Subcategories, {
-      //   foreignKey: subcat_id,
-      //   targetKey: id,
-      // });
-      // this.belongsTo(models.Brand, {
-      //   foreignKey: brand_id,
-      //   targetKey: id,
-      // });
-      // this.hasMany(models.Order_details, {
-      //   foreignKey: product_id,
-      // });
-      // this.hasMany(models.Wishlist, {
-      //   foreignKey: product_id,
-      // });
+      this.belongsTo(models.Categories, {
+        foreignKey: "categories_id",
+        targetKey: "id",
+      });
+      this.belongsTo(models.Subcategories, {
+        foreignKey: "subcat_id",
+        targetKey: "id",
+      });
+      this.belongsTo(models.Brand, {
+        foreignKey: "brand_id",
+        targetKey: "id",
+      });
+      this.hasMany(models.Order_details, {
+        foreignKey: "product_id",
+      });
+      this.hasMany(models.Wishlist, {
+        foreignKey: "product_id",
+      });
     }
   }
   Product.init(

@@ -9,18 +9,20 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // this.hasMany(models.Wishlist, {
-      //   foreignKey: user_id,
-      // });
-      // this.hasMany(models.Order, {
-      //   foreignKey: user_id,
-      // });
+      this.hasMany(models.Wishlist, {
+        foreignKey: "user_id",
+      });
+      this.hasMany(models.Order, {
+        foreignKey: "user_id",
+      });
     }
   }
   User.init(
     {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
+      name: DataTypes.STRING,
+      phone: DataTypes.STRING,
     },
     {
       sequelize,

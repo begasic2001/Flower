@@ -5,8 +5,9 @@ POST {{host}}/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"luongminhthanh914@gmail.com",
-    "password":"123456"
+    "email":"luongminhthanh915@gmail.com",
+    "password":"123456",
+    "name":"minh thanh 5"
 }
 ###
 
@@ -14,7 +15,7 @@ POST {{host}}/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"luongminhthanh914@gmail.com",
+    "email":"luongminhthanh91@gmail.com",
     "password":"123456"
 }
 
@@ -37,7 +38,7 @@ DELETE {{host}}/auth/logout HTTP/1.1
 Content-Type: application/json
 
 {
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTY2NDgwODM1MSwiZXhwIjoxNjY0ODE1NTUxfQ.R9IRG_UroKqDZADXOlfAtoHLo28XnTUFLmCZpibI2KQ"
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkiLCJpYXQiOjE2NjY3OTY0NzMsImV4cCI6MTY2NjgwMzY3M30.jNNkk9Yq7ZEi29QD_75rfMHGjxD9ZQVHblrbIM9oMEA"
 
 }
 
@@ -62,6 +63,10 @@ Content-Type: application/json
 ###
 get {{host}}/cate/category HTTP/1.1
 Content-Type: application/json
+###
+get {{host}}/auth/getAllUser HTTP/1.1
+Content-Type: application/json
+
 
 
 
