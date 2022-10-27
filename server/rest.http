@@ -67,6 +67,18 @@ Content-Type: application/json
 get {{host}}/auth/getAllUser HTTP/1.1
 Content-Type: application/json
 
+###
+get {{host}}/product/getSubCate/ddde7b0c-0b3f-411a-9978-7fc7cb7ec6ad HTTP/1.1
+Content-Type: application/json
+###
+get {{host}}/product/storeProduct HTTP/1.1
+Content-Type: application/json
+
+{
+    "categories_id":"ddde7b0c-0b3f-411a-9978-7fc7cb7ec6ad"
+}
+
+
 
 
 

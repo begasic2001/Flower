@@ -55,7 +55,7 @@ const register = async (req, res, next) => {
     if (error) {
       throw createError(error.details[0].message);
     }
-    const isExistEmail = await db.User.findOne({ where: { email: email } });
+    const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {
       throw createError.Conflict(`${email} is has already`);
     }
@@ -69,7 +69,6 @@ const register = async (req, res, next) => {
       element: savedUser,
     });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -158,6 +157,7 @@ const deleteUser = async (req, res, next) => {
       status: 1,
       message: "Delete Success",
     });
+    2;
   } catch (error) {
     next(error);
   }
