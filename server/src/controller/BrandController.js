@@ -50,7 +50,6 @@ const storeBrand = async (req, res, next) => {
     }
     const newBrand = await services.createBrand(req.body, fileData);
     if (newBrand) res.redirect("/api/brand/brand");
-    // res.json(newBrand);
   } catch (error) {
     next(error);
   }

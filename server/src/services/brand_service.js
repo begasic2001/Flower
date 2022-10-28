@@ -2,40 +2,7 @@ import db from "../models/index";
 import { v4 as genarateId } from "uuid";
 const cloudinary = require("cloudinary").v2;
 
-const getAny = ({ page, limit, order, name, available, ...query }) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const queries = { raw: true, nest: true };
-      const offset = !page || +page <= 1 ? 0 : +page - 1;
-      const fLimit = +limit || +process.env.LIMIT_BRAND;
-      queries.offset = offset * fLimit;
-      queries.limit = fLimit;
-      if (order) queries.order = [order];
-      if (name) query.title = { [Op.substring]: name };
-      if (available) query.available = { [Op.between]: available };
-      const response = await db.Brand.findAndCountAll({
-        where: query,
-        ...queries,
-        attributes: {
-          exclude: ["category_code", "description"],
-        },
-        include: [
-          {
-            model: db.Category,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-            as: "categoryData",
-          },
-        ],
-      });
-      resolve({
-        err: response ? 0 : 1,
-        mes: response ? "Got" : "Cannot found category",
-        bookData: response,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+
 
 const brand = () => {
   return new Promise(async (resolve, reject) => {
@@ -141,5 +108,4 @@ module.exports = {
   createBrand,
   updateBrand,
   deleteBrand,
-  getAny,
 };

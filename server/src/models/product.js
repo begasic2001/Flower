@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       discount_price: DataTypes.STRING,
       video_link: DataTypes.STRING,
       main_slider: DataTypes.STRING,
+      best_rated: DataTypes.STRING,
       hot_new: DataTypes.STRING,
       buyone_getone: DataTypes.STRING,
       trend: DataTypes.STRING,
@@ -50,6 +51,9 @@ module.exports = (sequelize, DataTypes) => {
       img_two: DataTypes.STRING,
       img_three: DataTypes.STRING,
       status: DataTypes.STRING,
+      filename_one: DataTypes.STRING,
+      filename_two: DataTypes.STRING,
+      filename_three: DataTypes.STRING,
     },
     {
       sequelize,

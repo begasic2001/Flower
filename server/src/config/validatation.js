@@ -41,6 +41,33 @@ const brandValidate = (data) => {
   return brandSchema.validate(data);
 };
 
+const productValidate = (data) => {
+  const productSchema = Joi.object({
+    categories_id: Joi.string().required(),
+    subcat_id: Joi.string().required(),
+    brand_id: Joi.string().required(),
+    pro_name: Joi.string().required(),
+    pro_code: Joi.string().required(),
+    pro_quantity: Joi.string().required(),
+    pro_details: Joi.string(),
+    pro_color: Joi.string().required(),
+    pro_size: Joi.string().required(),
+    selling_price: Joi.string().required(),
+    discount_price: Joi.string(),
+    // video_link: Joi.string(),
+    best_rated: Joi.string(),
+    best_rated: Joi.string(),
+    main_slider: Joi.string(),
+    hot_new: Joi.string(),
+    buyone_getone: Joi.string(),
+    trend: Joi.string(),
+    filename_one: Joi.string(),
+    filename_two: Joi.string(),
+    filename_three: Joi.string(),
+  });
+  return productSchema.validate(data);
+};
+
 const filename = Joi.string().required();
 const bid = Joi.string().required();
 const cid = Joi.string().required();
@@ -50,6 +77,7 @@ module.exports = {
   categoriesValidate,
   subcategoriesValidate,
   brandValidate,
+  productValidate,
   bid,
   cid,
   subid,
