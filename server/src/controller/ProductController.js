@@ -3,7 +3,9 @@ import createError from "http-errors";
 import * as services from "../services/category_service";
 import * as services2 from "../services/brand_service";
 import * as services_product from "../services/product_service";
+const cloudinary = require("cloudinary").v2;
 import joi from "joi";
+import fs from "fs";
 
 const getAddProduct = async (req, res, next) => {
   try {
@@ -45,7 +47,13 @@ const getSubCate = async (req, res, next) => {
 
 const storeProduct = async (req, res, next) => {
   try {
-    res.json(req.body);
+    const urls = [];
+    const files = req.files;
+    for (const file of files) {
+       const { path,filename } = file;
+       urls.push({path,filename});
+    }
+    console.log(urls[0].path)
   } catch (error) {
     next(error);
   }

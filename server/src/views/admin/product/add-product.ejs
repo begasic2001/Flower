@@ -12,7 +12,7 @@
                 <div class="card pd-20 pd-sm-40">
                     <h6 class="card-body-title">Thêm Sản Phẩm Mới</h6>
                    
-                    <form action="/api/product/storeProduct" method="POST" >
+                    <form action="/api/product/storeProduct" method="POST" enctype="multipart/form-data">
 
                         <div class="form-layout">
                             <div class="row mg-b-25">
@@ -33,8 +33,8 @@
                                         <label class="form-control-label">Số lượng: <span class="tx-danger">*</span></label>
                                         <input class="form-control" type="text" name="pro_quantity">
                                     </div>
-                                </div> -->
-                                <!-- <div class="col-lg-4">
+                                </div> 
+                                <div class="col-lg-4">
                                     <div class="form-group mg-b-10-force">
                                         <label class="form-control-label">Danh mục: <span class="tx-danger">*</span></label>
                                         <select class="form-control select2" name="categories_id">
@@ -44,16 +44,16 @@
                                             <% }); %>
                                         </select>
                                     </div>
-                                </div> -->
-                                <!-- <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-4">
                                         <div class="form-group mg-b-10-force">
                                             <label class="form-control-label">Danh mục con: <span class="tx-danger">*</span></label>
                                             <select class="form-control select2" name="subcat_id">
                                               
                                             </select>
                                         </div>
-                                </div> -->
-                                <!-- <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-4">
                                             <div class="form-group mg-b-10-force">
                                                 <label class="form-control-label">Nhà cung cấp: <span class="tx-danger">*</span></label>
                                                 <select class="form-control select2" name="brand_id">
@@ -62,8 +62,8 @@
                                                     <% }); %>
                                                 </select>
                                             </div>
-                                </div> -->
-                                <!-- <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-4">
                                     <div class="form-group mg-b-10-force">
                                         <label class="form-control-label">Kích thước: <span class="tx-danger">*</span></label><br>
                                         <input class="form-control" type="text" name="pro_size" id="size" data-role="tagsinput" style="margin:0 0 10px">
@@ -80,65 +80,65 @@
                                         <label class="form-control-label">Giá bán: <span class="tx-danger">*</span></label><br>
                                         <input class="form-control" type="text" name="selling_price">
                                     </div>
-                                </div> -->
-                                <!-- <div class="col-lg-12">
+                                </div>
+                                 <div class="col-lg-12">
                                     <div class="form-group mg-b-10-force">
                                         <label class="form-control-label">Chi tiết sản phẩm: <span class="tx-danger">*</span></label><br>
-                                        <input class="form-control" type="text" name="pro_details" id="summernote">
+                                        <textarea name="pro_details" id="summernote" cols="30" rows="10"></textarea>
                                     </div>
-                                </div> -->
-                                <!-- <div class="col-lg-12">
+                                </div>
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <label class="form-control-label">Video: <span class="tx-danger">*</span></label>
                                         <input class="form-control" name="video_link" type="text">
                                     </div>
-                                </div>  -->
-                                <!-- <div class="col-lg-4">
+                                </div>
+                                 <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Hình 1: <span class="tx-danger">*</span></label><br>
                                         <label class="custom-file">
-                                            <input type="file" id="file" class="custom-file-input" name="img_one" onchange="readURL(this);"
+                                            <input type="file" id="file" class="custom-file-input" name="image" onchange="readURL(this);"
                                                 >
                                             <span class="custom-file-control"></span>
                                             <img src="#" id="one">
                                         </label>
                                 
                                     </div>
-                                </div>col-4 -->
+                                </div>
                                 
                                 
-                                <!-- <div class="col-lg-4">
+                                <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Hình 2: <span class="tx-danger">*</span></label><br>
                                         <label class="custom-file">
-                                            <input type="file" id="file" class="custom-file-input" name="img_two" onchange="readURL2(this);"
+                                            <input type="file" id="file" class="custom-file-input" name="image" onchange="readURL2(this);"
                                                 >
                                             <span class="custom-file-control"></span>
                                             <img src="#" id="two">
                                         </label>
                                 
                                     </div>
-                                </div col-4 -->
-                                <!-- <div class="col-lg-4">
+                                </div>
+                                <div class="col-lg-4">
                                     <div class="form-group">
                                         <label class="form-control-label">Hình 3: <span class="tx-danger">*</span></label><br>
                                         <label class="custom-file">
-                                            <input type="file" id="file" class="custom-file-input" name="img_three" onchange="readURL3(this);"
+                                            <input type="file" id="file" class="custom-file-input" name="image" onchange="readURL3(this);"
                                                 >
                                             <span class="custom-file-control"></span>
                                             <img src="#" id="three">
                                         </label>
                                 
                                     </div>
-                                </div> -->
+                                </div>
                                 
-                                </div><!-- row -->
+                                </div>
                                 
                                 <hr>
                                 <br><br>
                                 
                                 <div class="row">
-                                <!-- 
+                                
                                     <div class="col-lg-4">
                                         <label class="ckbox">
                                             <input type="checkbox" name="main_slider" value="1">
@@ -180,7 +180,7 @@
                                             <span>Mid Slider</span>
                                         </label>
                                 
-                                    </div> -->
+                                    </div>
                             </div>
                     
                             <div class="form-layout-footer">
