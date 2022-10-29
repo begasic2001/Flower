@@ -3,7 +3,7 @@ module.exports = {
     // logic for transforming into the new state
     return queryInterface.addColumn(
       "Products",
-      "filename_three",
+      "best_rated",
       Sequelize.STRING
     );
   },
@@ -12,7 +12,7 @@ module.exports = {
     // logic for reverting the changes
     return queryInterface.addColumn(
       "Products",
-      "filename_three",
+      "best_rated",
       Sequelize.STRING
     );
   },

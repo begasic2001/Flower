@@ -52,7 +52,48 @@ const getSubCate = async (categories_id) => {
     }
   });
 };
+const productById = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const product = await db.Product.findOne({
+        where: {
+          id,
+        },
+        include: [
+          {
+            model: db.Categories,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+          {
+            model: db.Subcategories,
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "categories_id"],
+            },
+          },
+          {
+            model: db.Brand,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
 
+        attributes: {
+          exclude: [
+            "createdAt",
+            "updatedAt",
+            "categories_id",
+            "subcat_id",
+            "brand_id",
+          ],
+        },
+        raw: true,
+        nest: true,
+      });
+      resolve(product);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 const product = async () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -125,7 +166,7 @@ const storeProduct = async (data, urls, filenames) => {
   });
 };
 
-const updateProduct = ({ pid, ...data }, fileData) => {
+const updateProduct = ({ pid, ...data }, urls, filenames) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (fileData) {
@@ -172,6 +213,7 @@ const deleteProduct = (bid, filename) => {
 module.exports = {
   getSubCate,
   getAny,
+  productById,
   product,
   storeProduct,
 };

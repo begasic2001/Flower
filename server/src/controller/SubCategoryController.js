@@ -64,7 +64,6 @@ const storeSubCategory = async (req, res, next) => {
 };
 const updateSubCategory = async (req, res, next) => {
   try {
-    console.log(req.body)
     const { error } = joi.object({ subid }).validate({ subid: req.body.subid });
     if (error) {
       throw createError(error.details[0].message);

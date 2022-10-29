@@ -10,11 +10,11 @@
 
             <div class="sl-pagebody">
                 <div class="sl-page-title">
-                    <h5>Brand Table</h5>
+                    <h5>Bảng sản phẩm</h5>
                 </div><!-- sl-page-title -->
 
                 <div class="card pd-20 pd-sm-40">
-                    <h6 class="card-body-title">BRAND LIST
+                    <h6 class="card-body-title">Danh sách sản phẩm
                         <a href="" class="btn btn-sm btn-warning" style="float: right;" data-toggle="modal"
                             data-target="#modaldemo3">Add New</a>
                     </h6>
@@ -66,15 +66,15 @@
                                             <% }%>
                                         </td>
                                         <td>
-                                            <a href="/api/brand/getBrandEdit/"
+                                            <a href="/api/product/getProductEdit/<%= d.id %>"
                                                 class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
                                             <a href="" class="btn btn-sm btn-danger" id="delete" data-id=""
                                                 data-name=""
                                                 data-filename=""><i class="fa fa-trash"></i></a>
                                             <a href="/api/brand/getBrandEdit/" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
-                                            <a href=""  class="btn btn-sm btn-info" id="delete" data-id="" data-name="" data-filename=""><i class="fa fa-thumbs-up"></i></a>
+                                            <a href=""  class="btn btn-sm btn-info" data-id="" data-name="" data-filename=""><i class="fa fa-thumbs-up"></i></a>
                                         </td>
-
+                                        
                                     </tr>
                                     <% }); %>
                             </tbody>

@@ -2,6 +2,7 @@
 import createError from "http-errors";
 import * as services from "../services/category_service";
 import * as services2 from "../services/brand_service";
+import * as services3 from "../services/subcate_service";
 import * as services_product from "../services/product_service";
 const cloudinary = require("cloudinary").v2;
 import { productValidate } from "../config/validatation";
@@ -20,10 +21,10 @@ const getAddProduct = async (req, res, next) => {
 
 const productView = async (req, res, next) => {
   try {
-    const product = await services_product.product()
-    res.render("admin/product/product",{
-      product
-    })
+    const product = await services_product.product();
+    res.render("admin/product/product", {
+      product,
+    });
   } catch (error) {
     next(error);
   }
@@ -31,6 +32,18 @@ const productView = async (req, res, next) => {
 
 const getProductEdit = async (req, res, next) => {
   try {
+    const id = req.params.id;
+    const product = await services_product.productById(id);
+    const category = await services.category();
+    const brand = await services2.brand();
+    const subcategory = await services3.subCategory();
+
+    res.render("admin/product/edit-product", {
+      product,
+      category,
+      brand,
+      subcategory,
+    });
   } catch (error) {
     next(error);
   }
@@ -50,8 +63,41 @@ const storeProduct = async (req, res, next) => {
   try {
     let urls = [];
     let filenames = [];
-    const file = req.files;
-    console.log(file)
+    const files = req.files;
+    if (files) {
+      for (const file of files) {
+        const { path, filename } = file;
+        filenames.push(filename);
+        urls.push(path);
+      }
+    }
+    const { error } = productValidate({
+      ...req.body,
+    });
+    if (error) {
+      if (files) cloudinary.api.delete_resources(filenames);
+      throw createError(error.details[0].message);
+    }
+
+    const response = await services_product.storeProduct(
+      req.body,
+      urls,
+      filenames,
+    );
+
+    if (response) res.redirect("/api/product/addProduct");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateProduct = async (req, res, next) => {
+  try {
+    let urls = [];
+    let filenames = [];
+    const files = req.files;
+    res.json(req.body)
+    console.log(files)
     // if (files) {
     //   for (const file of files) {
     //     const { path, filename } = file;
@@ -70,17 +116,10 @@ const storeProduct = async (req, res, next) => {
     // const response = await services_product.storeProduct(
     //   req.body,
     //   urls,
-    //   filenames
+    //   filenames,
     // );
-    
-    //if(response) res.redirect("/api/product/addProduct");
-  } catch (error) {
-    next(error);
-  }
-};
 
-const updateProduct = async (req, res, next) => {
-  try {
+    // if (response) res.redirect("/api/product/addProduct");
   } catch (error) {
     next(error);
   }

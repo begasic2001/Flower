@@ -1,2 +1,416 @@
 <%- include ('../../layouts/header'); -%>
     <%- include ('../../layouts/sidebar'); -%>
+    <div class="sl-mainpanel">
+        <nav class="breadcrumb sl-breadcrumb">
+            <a class="breadcrumb-item" href="index.html">Starlight</a>
+            <span class="breadcrumb-item active">Thêm Sản Phẩm</span>
+        </nav>
+
+        <div class="sl-pagebody">
+            <div class="card pd-20 pd-sm-40">
+                <h6 class="card-body-title">Sửa Sản Phẩm 
+                    <a href="/api/product/product" class="btn btn-success btn-sm pull-right">Xem Sản Phẩm</a>
+                </h6>
+                
+                <form action="/api/product/updateProduct?_method=PUT" method="POST" enctype="multipart/form-data">
+
+                    <div class="form-layout">
+                        <div class="row mg-b-25">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Tên sản phẩm: <span class="tx-danger">*</span></label>
+                                    <input class="form-control" type="text" name="pro_name" value="<%= product.pro_name %>" >
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Mã sản phẩm: <span class="tx-danger">*</span></label>
+                                    <input class="form-control" type="text" name="pro_code" value="<%= product.pro_code %>">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Số lượng: <span class="tx-danger">*</span></label>
+                                    <input class="form-control" type="text" name="pro_quantity" value="<%= product.pro_quantity %>">
+                                </div>
+                            </div> 
+                            <div class="col-lg-4">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">Danh mục: <span class="tx-danger">*</span></label>
+                                    <select class="form-control select2" name="categories_id" >
+                                        <option label="Chọn danh mục"></option>
+                                        <% category.map(function(cate){ %>
+                                        <option value="<%= cate.id %>"  <% if(cate.id==product.Category.id){ %>
+                                            selected="selected"
+                                            <%} %>><%= cate.cat_name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                    <div class="form-group mg-b-10-force">
+                                        <label class="form-control-label">Danh mục con: <span class="tx-danger">*</span></label>
+                                        <select class="form-control select2" name="subcat_id">
+                                            <% subcategory.map(function(sub){ %>
+                                                <option value="<%= sub.id %>"  <% if(sub.id==product.Subcategory.id){ %>
+                                                selected="selected"
+                                                <%} %>><%= sub.subcategory_name %></option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                            </div>
+                            <div class="col-lg-4">
+                                        <div class="form-group mg-b-10-force">
+                                            <label class="form-control-label">Nhà cung cấp: <span class="tx-danger">*</span></label>
+                                            <select class="form-control select2" name="brand_id">
+                                                <% brand.map(function(brand){ %>
+                                                <option value="<%= brand.id %>"><%= brand.brand_name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">Kích thước: <span class="tx-danger">*</span></label><br>
+                                    <input class="form-control" type="text" name="pro_size" id="size" data-role="tagsinput" value="<%= product.pro_size %>">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">Màu sắc: <span class="tx-danger">*</span></label><br>
+                                    <input class="form-control" type="text" name="pro_color" id="color" data-role="tagsinput" value="<%= product.pro_color %>">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">Giá bán: <span class="tx-danger">*</span></label><br>
+                                    <input class="form-control" type="text" name="selling_price" value="<%= product.selling_price %>">
+                                </div>
+                            </div>
+                             <div class="col-lg-12">
+                                <div class="form-group mg-b-10-force">
+                                    <label class="form-control-label">Chi tiết sản phẩm: <span class="tx-danger">*</span></label><br>
+                                    <textarea name="pro_details" id="summernote" cols="30" rows="10"><%= product.pro_details %>"</textarea>
+                                </div>
+                            </div> 
+                             <!-- <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Video: <span class="tx-danger">*</span></label>
+                                    <input class="form-control" name="video_link" type="text">
+                                </div>
+                            </div>  -->
+                           
+                             
+                             <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Hình hiện tại</label>
+                                        <% if (product.img_one) { %>
+                                        <p><img src="<%= product.img_one %>" width="100px" height="100px"></p>
+                                        <% }else{ %>
+                                            <p>Chưa có hình</p>
+                                        <% }%>
+                                    </div><br>
+                                    <label class="form-control-label">Hình 1: <span class="tx-danger">*</span></label><br>
+                                    <label class="custom-file">
+                                        <input type="file" id="file" class="custom-file-input" name="image1" onchange="readURL(this);">
+                                        <span class="custom-file-control"></span>
+                                        <img src="#" id="one">
+                                    </label>
+                            
+                                </div>
+                            </div> 
+                            
+                            <br>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Hình hiện tại</label>
+                                        <% if (product.img_two) { %>
+                                        <p><img src="<%= product.img_two %>" width="100px" height="100px"></p>
+                                        <% }else{ %>
+                                            <p>Chưa có hình</p>
+                                        <% }%>
+                                    </div><br>
+                                    <label class="form-control-label">Hình 2: <span class="tx-danger">*</span></label><br>
+                                    <label class="custom-file">
+                                        <input type="file" id="file" class="custom-file-input" name="image2" onchange="readURL2(this);">
+                                        <span class="custom-file-control"></span>
+                                        <img src="#" id="two">
+                                    </label>
+                            
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Hình hiện tại</label>
+                                        <% if (product.img_three) { %>
+                                        <p><img src="<%= product.img_three %>" width="100px" height="100px"></p>
+                                        <% }else{ %>
+                                            <p>Chưa có hình</p>
+                                        <% }%>
+                                    </div><br>
+                                    <label class="form-control-label">Hình 3: <span class="tx-danger">*</span></label><br>
+                                    <label class="custom-file">
+                                        <input type="file" id="file" class="custom-file-input" name="image3" onchange="readURL3(this);"
+                                            >
+                                        <span class="custom-file-control"></span>
+                                        <img src="#" id="three">
+                                    </label>
+                            
+                                </div>
+                            </div>
+                            
+                            </div>
+                            
+                            <hr>
+                            <br><br>
+                            
+                            <div class="row">
+                            
+                                <div class="col-lg-4">
+                                    <label class="ckbox">
+                                        <% if (product.main_slider ==="1" ) { %>
+                                        <input type="checkbox" name="main_slider" checked value="1">
+                                        <% }else{ %>
+                                        <input type="checkbox" name="main_slider" value="1">
+                                        <% }%>
+                                        <span>Slide chính</span>
+                                    </label>
+                            
+                                </div>
+                            
+                                <!-- <div class="col-lg-4">
+                                    <label class="ckbox">
+                                        <input type="checkbox" name="hot_new" value="1">
+                                        <span>Hot Deal</span>
+                                    </label>
+                            
+                                </div> -->
+                            
+                            
+                            
+                             <div class="col-lg-4">
+                                    <label class="ckbox">
+                                        <% if (product.best_rated ==="1" ) { %>
+                                        <input type="checkbox" name="best_rated" checked value="1">
+                                        <% }else{ %>
+                                        <input type="checkbox" name="best_rated" value="1">
+                                        <% }%>
+                                        <span>Đánh giá tốt</span>
+                                    </label>
+                            
+                                </div>
+                                    <div class="col-lg-4">
+                                        <label class="ckbox">
+                                            <% if (product.hot_new ==="1" ) { %>
+                                            <input type="checkbox" name="hot_new" value="1" checked>
+                                            <% }else{ %>
+                                            <input type="checkbox" name="hot_new" value="1">
+                                            <% }%>
+                                            <span>Hot_New</span>
+                                        </label>
+                                    
+                                    </div>
+                            
+                                <div class="col-lg-4">
+                                    <label class="ckbox">
+                                        <% if (product.hot_new ==="1" ) { %>
+                                        <input type="checkbox" name="trend" value="1" checked>
+                                        <% }else{ %>
+                                        <input type="checkbox" name="trend" value="1">
+                                        <% }%>
+                                        <span>Trend Product </span>
+                                    </label>
+                            
+                                </div>
+                            
+                                <div class="col-lg-4">
+                                    <label class="ckbox">
+                                        <% if (product.hot_new ==="1" ) { %>
+                                        <input type="checkbox" name="buyone_getone" value="1" checked>
+                                        <% }else{ %>
+                                        <input type="checkbox" name="buyone_getone" value="1" >
+                                        <% }%>
+                                        <span>Mua 1 Tặng 1</span>
+                                    </label>
+                                
+                                </div>
+                                <div class="form-group">
+                                    
+                                    <input type="hidden" class="form-control" name="pid" value="<%= product.id %>">
+        
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" class="form-control" name="filename_one" value="<%= product.filename_one %>">
+                                    <input type="hidden" class="form-control" name="filename_two" value="<%= product.filename_two %>">
+                                    <input type="hidden" class="form-control" name="filename_three" value="<%= product.filename_three %>">
+                                    <input type="hidden" class="form-control" name="img_one" value="<%= product.img_one %>">
+                                    <input type="hidden" class="form-control" name="img_two" value="<%= product.img_two %>">
+                                    <input type="hidden" class="form-control" name="img_three" value="<%= product.img_threeF %>">
+                                </div>
+                        </div>
+                        
+                        <div class="form-layout-footer">
+                            <button class="btn btn-info mg-r-5">Submit Form</button>
+                            <button class="btn btn-secondary">Cancel</button>
+                        </div><!-- form-layout-footer -->
+                    </div><!-- form-layout -->
+                </form>
+            </div><!-- card -->
+
+
+
+        </div><!-- sl-pagebody -->
+
+    </div><!-- sl-mainpanel -->
+    <!-- ########## END: MAIN PANEL ########## -->
+
+    
+
+    <script src="/lib/jquery/jquery.js"></script>
+    <script src="/lib/popper.js/popper.js"></script>
+    <script src="/lib/bootstrap/bootstrap.js"></script>
+    <script src="/lib/jquery-ui/jquery-ui.js"></script>
+    <script src="/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="/lib/highlightjs/highlight.pack.js"></script>
+    <script src="/lib/datatables/jquery.dataTables.js"></script>
+    <script src="/lib/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+    <script>
+       
+            'use strict';
+
+            $('#datatable1').DataTable({
+                responsive: true,
+                language: {
+                    searchPlaceholder: 'Search...',
+                    sSearch: '',
+                    lengthMenu: '_MENU_ items/page',
+                }
+            });
+
+            $('#datatable2').DataTable({
+                bLengthChange: false,
+                searching: false,
+                responsive: true
+            });
+
+            // Select2
+            $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+      
+    </script>
+    <script src="/lib/jquery.sparkline.bower/jquery.sparkline.min.js"></script>
+    <script src="/lib/d3/d3.js"></script>
+    <script src="/lib/rickshaw/rickshaw.min.js"></script>
+    <script src="/lib/chart.js/Chart.js"></script>
+    <script src="/lib/Flot/jquery.flot.js"></script>
+    <script src="/lib/Flot/jquery.flot.pie.js"></script>
+    <script src="/lib/Flot/jquery.flot.resize.js"></script>
+    <script src="/lib/flot-spline/jquery.flot.spline.js"></script>
+
+    <script src="/js/starlight.js"></script>
+    <script src="/js/ResizeSensor.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <scrip src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="/lib/medium-editor/medium-editor.js"></script>
+        <script src="/lib/summernote/summernote-bs4.min.js"></script>
+        <script>
+           
+                // Inline editor
+                var editor = new MediumEditor('.editable');
+
+                // Summernote editor
+                $('#summernote').summernote({
+                    height: 150,
+                    tooltip: false
+                })
+          
+        </script>
+        <script>
+            
+                $('select[name="categories_id"]').on('change', function () {
+                    let categories_id = $(this).val();
+                    if (categories_id) {
+                        $.ajax({
+                            url: "./getSubCate/" + categories_id,
+                            type: "GET",
+                            success: function (data) {
+                                var d = $('select[name="subcat_id"]').empty();
+                                $.each(data, function (key, value) {
+                                    value.map(value2 =>{
+                                        $('select[name="subcat_id"]').append('<option value="' + value2.id + '">' + value2.subcategory_name + '</option>');
+                                    })
+
+                                });
+                            },
+                        });
+
+                    } else {
+                        $('select[name="subcat_id"]').empty();
+                    }
+
+                });
+           
+        </script>
+        
+        
+        <script>
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#one')
+                            .attr('src', e.target.result)
+                            .width(100)
+                            .height(100);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+        
+        <script>
+            function readURL2(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#two')
+                            .attr('src', e.target.result)
+                            .width(100)
+                            .height(100);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+        
+        
+        
+        <script>
+            function readURL3(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#three')
+                            .attr('src', e.target.result)
+                            .width(100)
+                            .height(100);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+
+
+
+
+        </body>
+
+        </html>
