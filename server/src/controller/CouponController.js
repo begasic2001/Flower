@@ -22,7 +22,17 @@ const coupon = async (req, res, next) => {
         next(error);
       }
 };
-const getCouponEdit = async (req, res, next) => {};
+const getCouponEdit = async (req, res, next) => {
+    try{
+        const id = req.params.id;
+        const coupon = await coupon_service.couponById(id);
+        res.render('admin/coupon/edit-coupon',{
+            coupon,
+        });
+    } catch (error) {
+        next(error);
+    };
+};
 const couponById = async (req, res, next) => {};
 const storeCoupon = async(req, res, next) => {
     try {
@@ -32,7 +42,14 @@ const storeCoupon = async(req, res, next) => {
         next(error);
     }
 };
-const updateCoupon = async(req, res, next) => {};
+const updateCoupon = async(req, res, next) => {
+    try{
+        const response = await coupon_service.updateCoupon(req.body)
+        if (response) res.redirect("/api/coup/coupon");
+    } catch (error) {
+        next(error);
+    };
+};
 const deleteCoupon = async (req, res, next) => {
     try {
         const response = await coupon_service.deleteCoupon(req.query.cpid);

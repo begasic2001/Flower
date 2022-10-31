@@ -17,7 +17,7 @@ const coupon = () => {
 const couponById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findOne({
+      const category = await db.Coupon.findOne({
         where: {
           id,
         },
@@ -53,18 +53,18 @@ const createCoupon = (data) => {
   });
 };
 
-const updateCoupon = ({ cid, ...data }) => {
+const updateCoupon = ({ cpid, ...data }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.update(data, {
-        where: { id: cid },
+      const response = await db.Coupon.update(data, {
+        where: { id: cpid },
       });
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
           response[0] > 0
-            ? `${response[0]} Categories updated`
-            : "Cannot update new categories/ categories ID not found",
+            ? `${response[0]} Coupon updated`
+            : "Cannot update new coupon/ coupon ID not found",
       });
     } catch (error) {
       reject(error);

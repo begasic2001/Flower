@@ -26,6 +26,7 @@
                                     <th class="wd-5p">STT</th>
                                     <th class="wd-15p">Mã coupon</th>
                                     <th class="wd-15p">Giảm</th>
+                                    <th class="wd-20p">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,8 +36,8 @@
                                         <td><%= c.coupon %></td>
                                         <td><%= c.discount %></td>
                                         <td>
-                                            <!-- <a href="/api/subcate/getSubCategoryEdit/"
-                                                class="btn btn-sm btn-info">Edit</a> -->
+                                            <a href="/api/coup/getCouponEdit/<%= c.id %>"
+                                                class="btn btn-sm btn-info">Edit</a>
                                             <a href="" class="btn btn-sm btn-danger" id="delete"
                                                 data-name="<%= c.coupon %>" data-id="<%= c.id %>">Delete</a>
                                         </td>
@@ -67,7 +68,7 @@
                         <div class="form-group">
                             <label for="exampleInputEmail1">Mã Coupon</label>
                             <input type="text" class="form-control" 
-                            name="coupon" placeholder="Category">
+                            name="coupon" placeholder="Coupon">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Giảm</label>
