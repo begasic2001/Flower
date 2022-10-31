@@ -4,6 +4,8 @@ import routerBrand from "./brand.js";
 import routerSubCate from "./subcategory.js";
 import routerProduct from "./product.js";
 import routerOrder from "./order.js";
+import routerCoupon from "./coupon.js";
+
 const app = (app) => {
   app.use("/api/auth", routerUser);
   app.use("/api/cate", routerCategory);
@@ -11,6 +13,7 @@ const app = (app) => {
   app.use("/api/subcate", routerSubCate);
   app.use("/api/product", routerProduct);
   app.use("/api/order", routerOrder);
+  app.use("/api/coup", routerCoupon);
 };
 
 module.exports = app;

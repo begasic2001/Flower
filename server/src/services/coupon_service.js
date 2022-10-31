@@ -4,10 +4,10 @@ import { v4 as genarateId } from "uuid";
 const coupon = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findAll({
+      const coupon = await db.Coupon.findAll({
         attributes: { exclude: ["createdAt", "updatedAt"] },
       });
-      resolve(category);
+      resolve(coupon);
     } catch (error) {
       reject(error);
     }
@@ -33,18 +33,19 @@ const couponById = (id) => {
 const createCoupon = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.findOrCreate({
+      const response = await db.Coupon.findOrCreate({
         where: {
-          cat_name: data.cat_name,
+          coupon: data.coupon,
         },
         defaults: {
           id: genarateId(),
-          cat_name: data.cat_name,
+          coupon: data.coupon,
+          discount: data.discount,
         },
       });
       resolve({
         status: response[1] ? 0 : 1,
-        msg: response[1] ? "Created" : "Category has been created",
+        msg: response[1] ? "Created" : "Coupon has been created",
       });
     } catch (error) {
       reject(error);
@@ -71,11 +72,11 @@ const updateCoupon = ({ cid, ...data }) => {
   });
 };
 
-const deleteCoupon = (cid) => {
+const deleteCoupon = (cpid) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.destroy({
-        where: { id: cid },
+      const response = await db.Coupon.destroy({
+        where: { id: cpid },
       });
 
       resolve({
@@ -88,4 +89,10 @@ const deleteCoupon = (cid) => {
   });
 };
 
-
+module.exports ={
+  coupon,
+  couponById,
+  createCoupon,
+  updateCoupon,
+  deleteCoupon
+}
