@@ -64,6 +64,7 @@ const productValidate = (data) => {
     filename_one: Joi.string(),
     filename_two: Joi.string(),
     filename_three: Joi.string(),
+    
   });
   return productSchema.validate(data);
 };
@@ -72,6 +73,7 @@ const filename = Joi.string().required();
 const bid = Joi.string().required();
 const cid = Joi.string().required();
 const subid = Joi.string().required();
+const pid = Joi.string().required()
 module.exports = {
   userValidate,
   categoriesValidate,
@@ -82,4 +84,5 @@ module.exports = {
   cid,
   subid,
   filename,
+  pid
 };

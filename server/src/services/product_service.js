@@ -166,15 +166,37 @@ const storeProduct = async (data, urls, filenames) => {
   });
 };
 
-const updateProduct = ({ pid, ...data }, urls, filenames) => {
+const updateProduct = (
+  { pid, ...data },
+  fieldname1,
+  fieldname2,
+  fieldname3,
+  filenames,
+) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (fileData) {
-        cloudinary.uploader.destroy(data.filename);
-        data.brand_logo = fileData?.path;
-        data.filename = fileData?.filename;
+      // console.log(data)
+      // console.log(fieldname1)
+      // console.log(fieldname2)
+      // console.log(fieldname3)
+      // console.log(filenames)
+      if (fieldname1) {
+        cloudinary.uploader.destroy(data.filename_one);
+        data.img_one = fieldname1?.urls[0];
+        data.filename_one = fieldname1?.filenames[0];
       }
-      const response = await db.Brand.update(data, {
+      if (fieldname2) {
+        cloudinary.uploader.destroy(data.filename_two);
+        data.img_two = fieldname2?.urls[0];
+        data.filename_two = fieldname2?.filenames[0];
+      }
+      if (fieldname3) {
+        cloudinary.uploader.destroy(data.filename_three);
+        data.img_three = fieldname3?.urls[0];
+        data.filename_three = fieldname3?.filenames[0];
+      }
+      console.log(data);
+      const response = await db.Product.update(data, {
         where: { id: pid },
       });
       resolve({
@@ -184,11 +206,11 @@ const updateProduct = ({ pid, ...data }, urls, filenames) => {
             ? `${response[0]} Product updated`
             : "Cannot update new product/ product ID not found",
       });
-      if (fileData && response[0] === 0)
-        cloudinary.uploader.destroy(fileData.filename);
+      if (filenames && response[0] === 0)
+        cloudinary.uploader.destroy(filenames);
     } catch (error) {
       reject(error);
-      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+      if (filenames) cloudinary.uploader.destroy(filenames);
     }
   });
 };
@@ -216,4 +238,6 @@ module.exports = {
   productById,
   product,
   storeProduct,
+  updateProduct,
+  deleteProduct,
 };

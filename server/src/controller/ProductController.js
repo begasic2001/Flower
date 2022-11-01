@@ -5,7 +5,8 @@ import * as services2 from "../services/brand_service";
 import * as services3 from "../services/subcate_service";
 import * as services_product from "../services/product_service";
 const cloudinary = require("cloudinary").v2;
-import { productValidate } from "../config/validatation";
+import { productValidate, pid } from "../config/validatation";
+import joi from "joi";
 const getAddProduct = async (req, res, next) => {
   try {
     const category = await services.category();
@@ -52,6 +53,7 @@ const getProductEdit = async (req, res, next) => {
 const getSubCate = async (req, res, next) => {
   try {
     const categories_id = req.params.categories_id;
+    console.log(categories_id);
     const response = await services_product.getSubCate(categories_id);
     res.json({ response });
   } catch (error) {
@@ -93,33 +95,71 @@ const storeProduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
   try {
-    let urls = [];
-    let filenames = [];
     const files = req.files;
-    res.json(req.body)
-    console.log(files)
-    // if (files) {
-    //   for (const file of files) {
-    //     const { path, filename } = file;
-    //     filenames.push(filename);
-    //     urls.push(path);
-    //   }
-    // }
-    // const { error } = productValidate({
-    //   ...req.body,
-    // });
-    // if (error) {
-    //   if (files) cloudinary.api.delete_resources(filenames);
-    //   throw createError(error.details[0].message);
-    // }
+    const filenames = [];
+    let filename1 = [];
+    let urls1 = [];
+    let filename2 = [];
+    let urls2 = [];
+    let filename3 = [];
+    let urls3 = [];
+    let fieldname3 = {};
+    let fieldname2 = {};
+    let fieldname1 = {};
+    if (files.image1) {
+      for (const file of files.image1) {
+        const { path, filename } = file;
 
-    // const response = await services_product.storeProduct(
-    //   req.body,
-    //   urls,
-    //   filenames,
-    // );
+        filename1.push(filename);
+        filenames.push(filename);
+        urls1.push(path);
+      }
+      fieldname1 = {
+        filename1,
+        urls1,
+      };
+    }
+    if (files.image2) {
+      for (const file of files.image2) {
+        const { path, filename } = file;
+        filename2.push(filename);
+        filenames.push(filename);
 
-    // if (response) res.redirect("/api/product/addProduct");
+        urls2.push(path);
+        fieldname2 = {
+          filenames,
+          urls,
+        };
+      }
+    }
+    if (files.image3) {
+      for (const file of files.image3) {
+        const { path, filename } = file;
+        filename3.push(filename);
+        filenames.push(filename);
+        urls3.push(path);
+        fieldname3 = {
+          filename3,
+          urls3,
+        };
+      }
+    }
+    console.log(fieldname1)
+    console.log(fieldname2)
+    const { error } = joi.object({ pid }).validate({ pid: req.body.pid });
+    if (error) {
+      if (files) cloudinary.api.delete_resources(filenames);
+      throw createError(error.details[0].message);
+    }
+    const response = await services_product.updateProduct(
+      req.body,
+      fieldname1,
+      fieldname2,
+      fieldname3,
+      filenames,
+    );
+
+    if (response) res.redirect("/api/product/product");
   } catch (error) {
     next(error);
   }

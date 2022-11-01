@@ -21,11 +21,16 @@
                        
                   
                                     <div class="modal-body pd-20">
-                                        <form action="/api/cate/updateCoupon/?_method=PUT" method="POST">
+                                        <form action="/api/coup/updateCoupon?_method=PUT" method="POST">
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1">Mã Giảm</label>
                                                 <input type="text" class="form-control" name="coupon" placeholder="Coupon"
                                                     value="<%= coupon.coupon %>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1">Giảm</label>
+                                                <input type="text" class="form-control" name="discount" placeholder="discount"
+                                                    value="<%= coupon.discount %>">
                                             </div>
                                             <div class="form-group">
                                     

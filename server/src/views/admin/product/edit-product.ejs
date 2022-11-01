@@ -99,10 +99,9 @@
                                     <input class="form-control" name="video_link" type="text">
                                 </div>
                             </div>  -->
-                           
-                             
-                             <div class="col-lg-4">
-                                <div class="form-group">
+                            <hr>
+                             <div class="row">
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình hiện tại</label>
                                         <% if (product.img_one) { %>
@@ -110,20 +109,26 @@
                                         <% }else{ %>
                                             <p>Chưa có hình</p>
                                         <% }%>
-                                    </div><br>
-                                    <label class="form-control-label">Hình 1: <span class="tx-danger">*</span></label><br>
-                                    <label class="custom-file">
-                                        <input type="file" id="file" class="custom-file-input" name="image1" onchange="readURL(this);">
-                                        <span class="custom-file-control"></span>
-                                        <img src="#" id="one">
-                                    </label>
-                            
+                                    </div>
                                 </div>
-                            </div> 
-                            
-                            <br>
-                            <div class="col-lg-4">
-                                <div class="form-group">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                       
+                                        <label class="form-control-label">Hình 1: <span class="tx-danger">*</span></label><br>
+                                        <label class="custom-file">
+                                            <input type="file" id="file" class="custom-file-input" name="image1" onchange="readURL(this);">
+                                            <span class="custom-file-control"></span>
+                                            
+                                        </label>
+                                
+                                    </div>
+                                </div> 
+                                <div class="col-lg-4">
+                                    <img src="#" id="one">
+                                </div>
+                                
+                                
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình hiện tại</label>
                                         <% if (product.img_two) { %>
@@ -131,18 +136,24 @@
                                         <% }else{ %>
                                             <p>Chưa có hình</p>
                                         <% }%>
-                                    </div><br>
-                                    <label class="form-control-label">Hình 2: <span class="tx-danger">*</span></label><br>
-                                    <label class="custom-file">
-                                        <input type="file" id="file" class="custom-file-input" name="image2" onchange="readURL2(this);">
-                                        <span class="custom-file-control"></span>
-                                        <img src="#" id="two">
-                                    </label>
-                            
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <br>
+                                        <label class="form-control-label">Hình 2: <span class="tx-danger">*</span></label><br>
+                                        <label class="custom-file">
+                                            <input type="file" id="file" class="custom-file-input" name="image2" onchange="readURL2(this);">
+                                            <span class="custom-file-control"></span>
+                                            
+                                        </label>
+                                
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <img src="#" id="two">
+                                </div>
+                                <div class="col-lg-2">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình hiện tại</label>
                                         <% if (product.img_three) { %>
@@ -150,17 +161,26 @@
                                         <% }else{ %>
                                             <p>Chưa có hình</p>
                                         <% }%>
-                                    </div><br>
-                                    <label class="form-control-label">Hình 3: <span class="tx-danger">*</span></label><br>
-                                    <label class="custom-file">
-                                        <input type="file" id="file" class="custom-file-input" name="image3" onchange="readURL3(this);"
-                                            >
-                                        <span class="custom-file-control"></span>
-                                        <img src="#" id="three">
-                                    </label>
-                            
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                    
+                                        <label class="form-control-label">Hình 3: <span class="tx-danger">*</span></label><br>
+                                        <label class="custom-file">
+                                            <input type="file" id="file" class="custom-file-input" name="image3" onchange="readURL3(this);"
+                                                >
+                                            <span class="custom-file-control"></span>
+                                            
+                                        </label>
+                                
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <img src="#" id="three">
+                                </div>
+                             </div>
+                        
                             
                             </div>
                             
@@ -246,9 +266,6 @@
                                     <input type="hidden" class="form-control" name="filename_one" value="<%= product.filename_one %>">
                                     <input type="hidden" class="form-control" name="filename_two" value="<%= product.filename_two %>">
                                     <input type="hidden" class="form-control" name="filename_three" value="<%= product.filename_three %>">
-                                    <input type="hidden" class="form-control" name="img_one" value="<%= product.img_one %>">
-                                    <input type="hidden" class="form-control" name="img_two" value="<%= product.img_two %>">
-                                    <input type="hidden" class="form-control" name="img_three" value="<%= product.img_threeF %>">
                                 </div>
                         </div>
                         
@@ -339,7 +356,7 @@
                     let categories_id = $(this).val();
                     if (categories_id) {
                         $.ajax({
-                            url: "./getSubCate/" + categories_id,
+                            url: "/api/product/getSubCate/"+categories_id ,
                             type: "GET",
                             success: function (data) {
                                 var d = $('select[name="subcat_id"]').empty();
@@ -347,9 +364,11 @@
                                     value.map(value2 =>{
                                         $('select[name="subcat_id"]').append('<option value="' + value2.id + '">' + value2.subcategory_name + '</option>');
                                     })
-
                                 });
                             },
+                            error:function(){
+                                console.log("bị lỗi")
+                            }
                         });
 
                     } else {
