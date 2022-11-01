@@ -8,11 +8,38 @@ import {
   verifyRefreshToken,
 } from "../services/jwt_service";
 import { userValidate } from "../config/validatation";
+import user_service from "../services/user_service";
 import { v4 as genarateId } from "uuid";
+import joi from "joi";
+import { query } from "express";
 const getAllUser = async (req, res, next) => {
   try {
-    const allUser = await db.User.findAll({});
-    res.json(allUser);
+    const allUser = await user_service.user();
+    // res.json(allUser);
+    res.render('admin/user/user',{
+      allUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const user = async (req, res, next) => {
+  try {
+    const user = await user_service.user();
+    res.json({
+      result: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const getUserEdit = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const user = await user_service.userById(id);
+    res.render("admin/user/edit-user", {
+      user,
+    });
   } catch (error) {
     next(error);
   }
@@ -23,12 +50,12 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      throw createError(error.details[0].message);
+      res.render(createError(error.details[0].message));
     }
 
     const user = await db.User.findOne({ where: { email } });
     if (!user) {
-      throw createError.NotFound("User not register");
+      res.render(createError.NotFound("User not register"));
     }
 
     const isValid = await user.comparePassword(password);
@@ -53,11 +80,11 @@ const register = async (req, res, next) => {
     const { email } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      throw createError(error.details[0].message);
+      res.render(createError(error.details[0].message));
     }
     const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {
-      throw createError.Conflict(`${email} is has already`);
+      res.render(createError.Conflict(`${email} is has already`));
     }
 
     const savedUser = await db.User.create({
@@ -124,51 +151,33 @@ const getList = async (req, res, next) => {
 };
 const updateUser = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const { email } = req.body;
-    const { error } = userValidate(req.body);
-
+    const{error} = joi.object({uid }).validate({ uid: req.body.uid});
     if (error) {
       throw createError(error.details[0].message);
     }
-    const isExistEmail = await db.User.findOne({ where: { email } });
-    if (isExistEmail) {
-      throw createError.Conflict(`${email} is has already`);
-    }
-
-    const savedUpdateUser = await db.User.update(req.body, {
-      where: { id },
-    });
-    return res.json({
-      status: 1,
-      element: savedUpdateUser,
-    });
+    const response = await user_service.updateUser(req.body);
+    if(response) res.redirect("/api/auth/user");
   } catch (error) {
     next(error);
   }
 };
 const deleteUser = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    await db.User.destroy({
-      where: { id },
-    });
-    return res.json({
-      status: 1,
-      message: "Delete Success",
-    });
-    2;
+    const response = await user_service.deleteUser(req.query.uid);
+    if(response) res.redirect("/api/auth/user");
   } catch (error) {
     next(error);
   }
 };
 module.exports = {
   getAllUser,
+  user,
   login,
   refreshToken,
   register,
   logout,
   getList,
+  getUserEdit,
   updateUser,
   deleteUser,
 };

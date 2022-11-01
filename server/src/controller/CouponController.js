@@ -1,6 +1,6 @@
 import coupon_service from "../services/coupon_service";
 import createError from "http-errors";
-import { brandValidate, bid, filename } from "../config/validatation";
+import { couponValidate, cpid } from "../config/validatation";
 import joi from "joi";
 const CouponView = async (req, res, next) => {
   try {
@@ -36,6 +36,10 @@ const getCouponEdit = async (req, res, next) => {
 const couponById = async (req, res, next) => {};
 const storeCoupon = async (req, res, next) => {
   try {
+    const {error} = couponValidate(req.body);
+    if(error){
+        throw createError(error.details[0].message);
+    }
     const newCoupon = await coupon_service.createCoupon(req.body);
     if (newCoupon) res.redirect("coupon");
   } catch (error) {
@@ -44,7 +48,10 @@ const storeCoupon = async (req, res, next) => {
 };
 const updateCoupon = async (req, res, next) => {
   try {
-    
+    const {error} = joi.object({ cpid }).validate({cpid: req.body.cpid});
+    if(error){
+        throw createError(error.details[0].message);
+    }
     const response = await coupon_service.updateCoupon(req.body)
     if (response) res.redirect("/api/coup/coupon");
   } catch (error) {
@@ -53,6 +60,10 @@ const updateCoupon = async (req, res, next) => {
 };
 const deleteCoupon = async (req, res, next) => {
   try {
+    const {error} = joi.object({ cpid }).validate({cpid: req.body.cpid});
+    if(error){
+        throw createError(error.details[0].message);
+    }
     const response = await coupon_service.deleteCoupon(req.query.cpid);
     if (response) res.redirect("/api/coup/coupon");
   } catch (error) {

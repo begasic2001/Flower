@@ -33,6 +33,14 @@ const subcategoriesValidate = (data) => {
   return subCategorySchema.validate(data);
 };
 
+const couponValidate = (data) => {
+  const couponSchema = Joi.object({
+    coupon: Joi.string().required(),
+    discount: Joi.string().required()
+  });
+  return couponSchema.validate(data);
+};
+
 const brandValidate = (data) => {
   const brandSchema = Joi.object({
     brand_name: Joi.string().required(),
@@ -73,16 +81,19 @@ const filename = Joi.string().required();
 const bid = Joi.string().required();
 const cid = Joi.string().required();
 const subid = Joi.string().required();
-const pid = Joi.string().required()
+const pid = Joi.string().required();
+const cpid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
   subcategoriesValidate,
   brandValidate,
   productValidate,
+  couponValidate,
   bid,
   cid,
   subid,
   filename,
-  pid
+  pid,
+  cpid,
 };
