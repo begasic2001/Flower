@@ -68,10 +68,12 @@
                                         <td>
                                             <a href="/api/product/getProductEdit/<%= d.id %>"
                                                 class="btn btn-sm btn-info"><i class="fa fa-edit"></i></a>
-                                            <a href="" class="btn btn-sm btn-danger" id="delete" data-id=""
-                                                data-name=""
-                                                data-filename=""><i class="fa fa-trash"></i></a>
-                                            <a href="/api/brand/getBrandEdit/" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                                            <a href="" class="btn btn-sm btn-danger" id="delete" data-id="<%= d.id %>"
+                                                data-name=" <%= d.pro_name %>"
+                                                data-filename1="<%= d.filename_one %>"
+                                                data-filename2="<%= d.filename_two %>"
+                                                data-filename3="<%= d.filename_three %>"><i class="fa fa-trash"></i></a>
+                                            <a href="/api/brand/get/" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
                                             <a href=""  class="btn btn-sm btn-info" data-id="" data-name="" data-filename=""><i class="fa fa-thumbs-up"></i></a>
                                         </td>
                                         
@@ -158,8 +160,10 @@
         <script>
             $(document).on("click", "#delete", function (e) {
                 e.preventDefault();
-                let id = $(this).attr("data-id");
-                let filename = $(this).attr("data-filename");
+                let pid = $(this).attr("data-id");
+                let filename1 = $(this).attr("data-filename1");
+                let filename2 = $(this).attr("data-filename2");
+                let filename3 = $(this).attr("data-filename3");
                 let name = $(this).attr("data-name");
                 var link = $(this).attr("href");
                 swal({
@@ -171,7 +175,7 @@
                 }).then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: `./deleteBrand/?bid=${id}&filename=${filename}`,
+                            url: `./deleteProduct/?pid=${pid}&filename1=${filename1}&filename2=${filename2}&filename3=${filename3}`,
                             type: "DELETE",
 
                         }).then(() => {

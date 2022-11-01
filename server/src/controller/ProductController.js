@@ -144,10 +144,6 @@ const updateProduct = async (req, res, next) => {
         };
       }
     }
-    console.log(fieldname1);
-    console.log(fieldname2);
-    console.log(fieldname3);
-    console.log(filenames)
     const { error } = joi.object({ pid }).validate({ pid: req.body.pid });
     if (error) {
       if (files) cloudinary.api.delete_resources(filenames);
@@ -169,6 +165,22 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
+    //console.log(req.query)
+    const {pid,...data} = req.query
+    let filenames = [];
+    for (const filename in data) {
+      if (data[filename]) {
+        filenames.push(data[filename]);
+      }
+    }
+    const { error } = joi.object({ pid }).validate({pid});
+    if (error) {
+      throw createError(error.details[0].message);
+    }
+
+    const response = await services_product.deleteProduct(req.query.pid,filenames)
+    res.json(response)
+    //if (response) res.redirect("/api/product/product");
   } catch (error) {
     next(error);
   }
