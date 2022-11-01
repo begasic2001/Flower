@@ -127,8 +127,8 @@ const updateProduct = async (req, res, next) => {
 
         urls2.push(path);
         fieldname2 = {
-          filenames,
-          urls,
+          filename2,
+          urls2,
         };
       }
     }
@@ -144,8 +144,10 @@ const updateProduct = async (req, res, next) => {
         };
       }
     }
-    console.log(fieldname1)
-    console.log(fieldname2)
+    console.log(fieldname1);
+    console.log(fieldname2);
+    console.log(fieldname3);
+    console.log(filenames)
     const { error } = joi.object({ pid }).validate({ pid: req.body.pid });
     if (error) {
       if (files) cloudinary.api.delete_resources(filenames);
