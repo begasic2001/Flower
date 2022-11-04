@@ -253,11 +253,11 @@ const deleteProduct = async (pid, filenames) => {
   });
 };
 
-const activeProduct = async (status, id) => {
+const activeProduct = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
 
-      const response = await db.Product.update(status, {
+      const response = await db.Product.update({status:"1"}, {
         where: {
           id,
         },
@@ -272,14 +272,17 @@ const activeProduct = async (status, id) => {
   });
 };
 
-const inactiveProduct = async (status, id) => {
+const inactiveProduct = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Product.update(status, {
-        where: {
-          id,
-        },
-      });
+      const response = await db.Product.update(
+        { status: "0" },
+        {
+          where: {
+            id,
+          },
+        }
+      );
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} updated`,

@@ -14,13 +14,13 @@ route.get("/productDetail/:id", ProductController.getproductDetail);
 //
 // API
 route.get("/getSubCate/:categories_id", ProductController.getSubCate);
-route.post("/activeProduct/:id", ProductController.activeProduct);
-route.post("/inactiveProduct/:id", ProductController.inactiveProduct);
+route.put("/activeProduct/:id", ProductController.activeProduct);
+route.put("/inactiveProduct/:id", ProductController.inactiveProduct);
 // route.get("/productAPI", ProductController.product);
 route.post(
   "/storeProduct",
   uploadCloud.array("image"),
-  ProductController.storeProduct,
+  ProductController.storeProduct
 );
 route.get("/getProductEdit/:id", ProductController.getProductEdit);
 route.put("/updateProduct/", cpUpload, ProductController.updateProduct);

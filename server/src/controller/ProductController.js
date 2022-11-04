@@ -73,11 +73,9 @@ const getSubCate = async (req, res, next) => {
 
 const activeProduct = async (req, res, next) => {
   try {
-    
     const id = req.params.id;
-    const status = "1";
-    const response = await services_product.activeProduct(status,id);
-    res.json(response)
+    const response = await services_product.activeProduct(id);
+    res.json(response);
   } catch (error) {
     next(error);
   }
@@ -86,9 +84,8 @@ const activeProduct = async (req, res, next) => {
 const inactiveProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const status = "0";
-    const response = await services_product.inactiveProduct(status,id);
-    res.json(response)
+    const response = await services_product.inactiveProduct(id);
+    res.json(response);
   } catch (error) {
     next(error);
   }
@@ -117,7 +114,7 @@ const storeProduct = async (req, res, next) => {
     const response = await services_product.storeProduct(
       req.body,
       urls,
-      filenames,
+      filenames
     );
 
     if (response) res.redirect("/api/product/addProduct");
@@ -187,7 +184,7 @@ const updateProduct = async (req, res, next) => {
       fieldname1,
       fieldname2,
       fieldname3,
-      filenames,
+      filenames
     );
 
     if (response) res.redirect("/api/product/product");
@@ -212,7 +209,7 @@ const deleteProduct = async (req, res, next) => {
 
     const response = await services_product.deleteProduct(
       req.query.pid,
-      filenames,
+      filenames
     );
 
     if (response) res.redirect("/api/product/product");

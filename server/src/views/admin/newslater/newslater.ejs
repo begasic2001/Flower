@@ -10,11 +10,11 @@
 
             <div class="sl-pagebody">
                 <div class="sl-page-title">
-                    <h5>Bảng sản phẩm</h5>
+                    <h5>NEWSLATERS</h5>
                 </div><!-- sl-page-title -->
 
                 <div class="card pd-20 pd-sm-40">
-                    <h6 class="card-body-title">Danh sách sản phẩm
+                    <h6 class="card-body-title">SUBSCRIBER LIST
                         <a href="" class="btn btn-sm btn-warning" style="float: right;" data-toggle="modal"
                             data-target="#modaldemo3">Add New</a>
                     </h6>
@@ -23,24 +23,32 @@
                         <table id="datatable1" class="table display responsive nowrap">
                             <thead>
                                 <tr>
-                                    <th class="wd-5p">STT</th>
-                                    <th class="wd-15p">Mã coupon</th>
-                                    <th class="wd-15p">Giảm</th>
-                                    <th class="wd-20p">Action</th>
+                                    <th class="wd-15p">STT</th>
+                                    <th class="wd-15p">Email</th>
+                                    <th class="wd-15p">Thời gian đăng ký</th>
+                                    <th class="wd-20p">Hành động</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <% coupon.map(function(c,index){ %>
+                                <% newslater.map(function(n,index){ %>
                                     <tr>
-                                        <td><%= index + 1 %></td>
-                                        <td><%= c.coupon %></td>
-                                        <td><%= c.discount %></td>
                                         <td>
-                                            <a href="/api/coup/getCouponEdit/<%= c.id %>"
+                                            <%= index +1 %>
+                                        </td>
+                                        <td>
+                                            <%= n.email %>
+                                        </td>
+                                        <td>
+                                            <%= let date = moment(n.createdAt, "YYYY-MM-DD");console.log(date.fromNow()); %>
+                                        </td>
+                                        <td>
+                                            <a href="/api/coupon/getNewslatersEdit/<%= n.id %>"
                                                 class="btn btn-sm btn-info">Edit</a>
                                             <a href="" class="btn btn-sm btn-danger" id="delete"
-                                                data-name="<%= c.coupon %>" data-id="<%= c.id %>">Delete</a>
+                                                data-name="" data-id="<%= n.id %>">Delete</a>
                                         </td>
+
                                     </tr>
                                     <% }); %>
                             </tbody>
@@ -53,37 +61,33 @@
             </div><!-- sl-pagebody -->
         </div><!-- sl-mainpanel -->
         <!-- ########## END: MAIN PANEL ########## -->
+
         <!-- LARGE MODAL -->
-    <div id="modaldemo3" class="modal fade">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content tx-size-sm">
-                <div class="modal-header pd-x-20">
-                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Coupon Add</h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body pd-20">
-                    <form action="/api/coup/storeCoupon" method="POST">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Mã Coupon</label>
-                            <input type="text" class="form-control" 
-                            name="coupon" placeholder="Coupon">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Giảm</label>
-                            <input type="text" class="form-control" 
-                            name="discount" placeholder="discount">
-                        </div>
+        <div id="modaldemo3" class="modal fade">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content tx-size-sm">
+                    <div class="modal-header pd-x-20">
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Category Add</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body pd-20">
+                        <form action="/api/cate/storeCategory" method="POST">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Category name</label>
+                                <input type="text" class="form-control" name="cat_name" placeholder="Category">
+                            </div>
                     </div><!-- modal-body -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-info pd-x-20">Submit</button>
                         <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
                     </div>
                     </form>
-            </div>
-        </div><!-- modal-dialog -->
-    </div><!-- modal -->
+                </div>
+            </div><!-- modal-dialog -->
+        </div><!-- modal -->
+
         <footer class="sl-footer">
             <div class="footer-left">
 
@@ -100,7 +104,7 @@
         </footer>
         </div><!-- sl-mainpanel -->
         <!-- ########## END: MAIN PANEL ########## -->
-
+        <script src="https://momentjs.com/downloads/moment.min.js"></script>
         <script src="/lib/jquery/jquery.js"></script>
         <script src="/lib/popper.js/popper.js"></script>
         <script src="/lib/bootstrap/bootstrap.js"></script>
@@ -150,34 +154,31 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-
-
         <script>
             $(document).on("click", "#delete", function (e) {
-            e.preventDefault();
-            let id = $(this).attr("data-id");
-            let name= $(this).attr("data-name");
-            swal({
-                title: `Do you want to delete ${name} `,
-                text: "Once Delete, This will be Permanently Delete!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((willDelete) => {
-                if (willDelete) {
-                    $.ajax({
-                        url: `./deleteCoupon/?cpid=${id}`,
-                        type: "DELETE",
-                    }).then((data) => {
-                        console.log(data)
-                        swal("ok");
-                        window.location.reload();
-                    });
-                } else {
-                    swal("Safe Data!");
-                }
+                e.preventDefault();
+                let id = $(this).attr("data-id");
+                let name = $(this).attr("data-name");
+                swal({
+                    title: `Do you want to delete ${name} `,
+                    text: "Once Delete, This will be Permanently Delete!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url: `./deleteCategory/?cid=${id}`,
+                            type: "DELETE",
+                        }).then(() => {
+                            swal("ok");
+                            window.location.reload();
+                        });
+                    } else {
+                        swal("Safe Data!");
+                    }
+                });
             });
-        });
         </script>
 
         </body>

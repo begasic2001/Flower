@@ -200,18 +200,46 @@
                 }).then((willUpdate) => {
                     if (willUpdate) {
                         $.ajax({
-                            url: `/api/product/activeProduct/${id}_METHOD=PUT`,
-                            type: "POST",
+                            url: `/api/product/activeProduct/${id}`,
+                            type: "PUT",
 
-                        }).then((data) => {
-                            console.log(this.url);
-                            console.log(data)
+                        }).then(() => {
+                            swal("Trạng Thái Được Cập Nhật").then(()=>{
+
+                                window.location.reload()
+                            })
                         });
                     } else {
                         swal("Safe Data!");
                     }
                 });
             });
+
+               $(document).on("click", "#update1", function (e) {
+                    e.preventDefault();
+                    let id = $(this).attr("data-id");
+                    swal({
+                        title: `Are you Want to change status `,
+                        text: "Once Delete, This will be Permanently Delete!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willUpdate) => {
+                        if (willUpdate) {
+                            $.ajax({
+                                url: `/api/product/inactiveProduct/${id}`,
+                                type: "PUT",
+
+                            }).then((data) => {
+                                 swal("Trạng Thái Được Cập Nhật").then(() => {
+                                    window.location.reload()
+                                })
+                            });
+                        } else {
+                            swal("Safe Data!");
+                        }
+                    });
+                });
             </script>
         </body>
 

@@ -10,5 +10,11 @@ route.post("/storeCoupon", CouponController.storeCoupon);
 route.get("/getCouponEdit/:id", CouponController.getCouponEdit);
 route.put("/updateCoupon/", CouponController.updateCoupon);
 route.delete("/deleteCoupon/", CouponController.deleteCoupon);
+route.get("/newslaters", CouponController.newslaters);
+route.get("/getNewslatersEdit/:id", CouponController.getNewslatersEdit);
+route.post("/storeNewslater", CouponController.storeNewslater);
+route.put("/updateNewslater", CouponController.updateNewslater);
+route.delete("/deleteNewslater", CouponController.deleteNewslater);
+//getNewslatersEdit
 // route.get("/coupon/:id", CouponController.couponById);
 module.exports = route;

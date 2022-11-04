@@ -7,15 +7,13 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../services/jwt_service";
-import { userValidate } from "../config/validatation";
+import { userValidate, uid } from "../config/validatation";
 import user_service from "../services/user_service";
 import { v4 as genarateId } from "uuid";
 import joi from "joi";
-import { query } from "express";
 const getAllUser = async (req, res, next) => {
   try {
     const allUser = await user_service.user();
-    // res.json(allUser);
     res.render('admin/user/user',{
       allUser,
     });

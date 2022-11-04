@@ -83,6 +83,7 @@ const cid = Joi.string().required();
 const subid = Joi.string().required();
 const pid = Joi.string().required();
 const cpid = Joi.string().required();
+const uid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
@@ -96,4 +97,5 @@ module.exports = {
   filename,
   pid,
   cpid,
+  uid,
 };
