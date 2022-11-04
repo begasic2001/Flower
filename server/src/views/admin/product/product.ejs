@@ -15,8 +15,7 @@
 
                 <div class="card pd-20 pd-sm-40">
                     <h6 class="card-body-title">Danh sách sản phẩm
-                        <a href="" class="btn btn-sm btn-warning" style="float: right;" data-toggle="modal"
-                            data-target="#modaldemo3">Add New</a>
+                        <a href="/api/product/addProduct" class="btn btn-sm btn-warning" style="float: right;">Add New</a>
                     </h6>
 
                     <div class="table-wrapper">
@@ -60,9 +59,10 @@
                                        
                                         <td>
                                             <% if (d.status ==="1" ) { %>
-                                           <span class="badge badge-success">Active</span>
+                                               
+                                                <a href="" data-id="<%= d.id %>"  id="update1"><span class="badge badge-success"> Active</span></a>
                                             <% }else{ %>
-                                            <span class="badge badge-danger">Inactive</span>
+                                                <a href="" data-id="<%= d.id %>" id="update2"><span class="badge badge-danger">Inactive</span></a>
                                             <% }%>
                                         </td>
                                         <td>
@@ -73,7 +73,7 @@
                                                 data-filename1="<%= d.filename_one %>"
                                                 data-filename2="<%= d.filename_two %>"
                                                 data-filename3="<%= d.filename_three %>"><i class="fa fa-trash"></i></a>
-                                            <a href="/api/brand/get/" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
+                                            <a href="/api/product/productDetail/<%= d.id %>" class="btn btn-sm btn-warning"><i class="fa fa-eye"></i></a>
                                             <a href=""  class="btn btn-sm btn-info" data-id="" data-name="" data-filename=""><i class="fa fa-thumbs-up"></i></a>
                                         </td>
                                         
@@ -89,20 +89,6 @@
             </div><!-- sl-pagebody -->
         </div><!-- sl-mainpanel -->
         <!-- ########## END: MAIN PANEL ########## -->
-        <footer class="sl-footer">
-            <div class="footer-left">
-
-            </div>
-            <div class="footer-right d-flex align-items-center">
-                <span class="tx-uppercase mg-r-10">Share:</span>
-                <a target="_blank" class="pd-x-5"
-                    href="https://www.facebook.com/sharer/sharer.php?u=http%3A//themepixels.me/starlight"><i
-                        class="fa fa-facebook tx-20"></i></a>
-                <a target="_blank" class="pd-x-5"
-                    href="https://twitter.com/home?status=Starlight,%20your%20best%20choice%20for%20premium%20quality%20admin%20template%20from%20Bootstrap.%20Get%20it%20now%20at%20http%3A//themepixels.me/starlight"><i
-                        class="fa fa-twitter tx-20"></i></a>
-            </div>
-        </footer>
         </div><!-- sl-mainpanel -->
         <!-- ########## END: MAIN PANEL ########## -->
 
@@ -201,7 +187,32 @@
                 readURL(this);
             });
         </script>
+            <script>
+                 $(document).on("click", "#update2", function (e) {
+                e.preventDefault();
+                let id = $(this).attr("data-id");
+                swal({
+                    title: `Are you Want to change status `,
+                    text: "Once Delete, This will be Permanently Delete!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                }).then((willUpdate) => {
+                    if (willUpdate) {
+                        $.ajax({
+                            url: `/api/product/activeProduct/${id}_METHOD=PUT`,
+                            type: "POST",
 
+                        }).then((data) => {
+                            console.log(this.url);
+                            console.log(data)
+                        });
+                    } else {
+                        swal("Safe Data!");
+                    }
+                });
+            });
+            </script>
         </body>
 
         </html>

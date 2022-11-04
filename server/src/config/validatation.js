@@ -14,6 +14,7 @@ const userValidate = (data) => {
       .required(),
     name: Joi.string(),
     phone: Joi.string(),
+    //avatar: Joi.string(),
   });
 
   return userSchema.validate(data);
@@ -36,7 +37,7 @@ const subcategoriesValidate = (data) => {
 const couponValidate = (data) => {
   const couponSchema = Joi.object({
     coupon: Joi.string().required(),
-    discount: Joi.string().required()
+    discount: Joi.string().required(),
   });
   return couponSchema.validate(data);
 };
@@ -72,7 +73,6 @@ const productValidate = (data) => {
     filename_one: Joi.string(),
     filename_two: Joi.string(),
     filename_three: Joi.string(),
-    
   });
   return productSchema.validate(data);
 };

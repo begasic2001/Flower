@@ -23,11 +23,12 @@ module.exports = (sequelize, DataTypes) => {
       password: DataTypes.STRING,
       name: DataTypes.STRING,
       phone: DataTypes.STRING,
+      //avatar: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "User",
-    }
+    },
   );
 
   User.beforeCreate(async function (user) {

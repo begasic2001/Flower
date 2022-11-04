@@ -31,6 +31,17 @@ const productView = async (req, res, next) => {
   }
 };
 
+const getproductDetail = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const product = await services_product.productById(id);
+    res.render("admin/product/detail-product", {
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 const getProductEdit = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -53,9 +64,31 @@ const getProductEdit = async (req, res, next) => {
 const getSubCate = async (req, res, next) => {
   try {
     const categories_id = req.params.categories_id;
-    console.log(categories_id);
     const response = await services_product.getSubCate(categories_id);
     res.json({ response });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const activeProduct = async (req, res, next) => {
+  try {
+    
+    const id = req.params.id;
+    const status = "1";
+    const response = await services_product.activeProduct(status,id);
+    res.json(response)
+  } catch (error) {
+    next(error);
+  }
+};
+
+const inactiveProduct = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const status = "0";
+    const response = await services_product.inactiveProduct(status,id);
+    res.json(response)
   } catch (error) {
     next(error);
   }
@@ -165,22 +198,24 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
-    //console.log(req.query)
-    const {pid,...data} = req.query
+    const { pid, ...data } = req.query;
     let filenames = [];
     for (const filename in data) {
       if (data[filename]) {
         filenames.push(data[filename]);
       }
     }
-    const { error } = joi.object({ pid }).validate({pid});
+    const { error } = joi.object({ pid }).validate({ pid });
     if (error) {
       throw createError(error.details[0].message);
     }
 
-    const response = await services_product.deleteProduct(req.query.pid,filenames)
-    res.json(response)
-    //if (response) res.redirect("/api/product/product");
+    const response = await services_product.deleteProduct(
+      req.query.pid,
+      filenames,
+    );
+
+    if (response) res.redirect("/api/product/product");
   } catch (error) {
     next(error);
   }
@@ -188,9 +223,12 @@ const deleteProduct = async (req, res, next) => {
 
 module.exports = {
   getAddProduct,
+  getproductDetail,
   productView,
   getProductEdit,
   getSubCate,
+  activeProduct,
+  inactiveProduct,
   storeProduct,
   updateProduct,
   deleteProduct,

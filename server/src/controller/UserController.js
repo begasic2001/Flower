@@ -77,10 +77,11 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
+    console.log(req.body)
     const { email } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      res.render(createError(error.details[0].message));
+      throw(createError(error.details[0].message));
     }
     const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {

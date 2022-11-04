@@ -10,8 +10,12 @@ const cpUpload = uploadCloud.fields([
 // Admin product
 route.get("/product", ProductController.productView);
 route.get("/addProduct", ProductController.getAddProduct);
+route.get("/productDetail/:id", ProductController.getproductDetail);
+//
 // API
 route.get("/getSubCate/:categories_id", ProductController.getSubCate);
+route.post("/activeProduct/:id", ProductController.activeProduct);
+route.post("/inactiveProduct/:id", ProductController.inactiveProduct);
 // route.get("/productAPI", ProductController.product);
 route.post(
   "/storeProduct",

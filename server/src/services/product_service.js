@@ -1,35 +1,43 @@
 import db from "../models/index";
+import { Op } from "sequelize";
 import { v4 as genarateId } from "uuid";
 const cloudinary = require("cloudinary").v2;
-const getAny = ({ page, limit, order, name, available, ...query }) =>
+const getAny = ({ page, limit, order, name, available, price, ...query }) =>
   new Promise(async (resolve, reject) => {
     try {
       const queries = { raw: true, nest: true };
       const offset = !page || +page <= 1 ? 0 : +page - 1;
-      const fLimit = +limit || +process.env.LIMIT_BRAND;
+      const fLimit = +limit || +process.env.LIMIT_PRODUCT;
       queries.offset = offset * fLimit;
       queries.limit = fLimit;
       if (order) queries.order = [order];
       if (name) query.title = { [Op.substring]: name };
       if (available) query.available = { [Op.between]: available };
-      const response = await db.Brand.findAndCountAll({
+      if (price) query.price = { [Op.between]: available };
+      const response = await db.Product.findAndCountAll({
         where: query,
         ...queries,
-        attributes: {
-          exclude: ["category_code", "description"],
-        },
         include: [
           {
-            model: db.Category,
+            model: db.Categories,
             attributes: { exclude: ["createdAt", "updatedAt"] },
-            as: "categoryData",
+          },
+          {
+            model: db.Subcategories,
+            attributes: {
+              exclude: ["createdAt", "updatedAt", "categories_id"],
+            },
+          },
+          {
+            model: db.Brand,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
           },
         ],
       });
       resolve({
         err: response ? 0 : 1,
-        mes: response ? "Got" : "Cannot found category",
-        bookData: response,
+        mes: response ? "Got" : "Cannot found product",
+        productData: response,
       });
     } catch (error) {
       reject(error);
@@ -203,6 +211,11 @@ const updateProduct = (
             : "";
         }
       }
+      data.main_slider = data.main_slider === "1" ? "1" : "0";
+      data.best_rated = data.best_rated === "1" ? "1" : "0";
+      data.hot_new = data.hot_new === "1" ? "1" : "0";
+      data.trend = data.trend === "1" ? "1" : "0";
+      data.buyone_getone = data.buyone_getone === "1" ? "1" : "0";
       const response = await db.Product.update(data, {
         where: { id: pid },
       });
@@ -214,7 +227,7 @@ const updateProduct = (
             : "Cannot update new product/ product ID not found",
       });
       if (filenames && response[0] === 0)
-      cloudinary.api.delete_resources(filenames);
+        cloudinary.api.delete_resources(filenames);
     } catch (error) {
       reject(error);
       if (filenames) cloudinary.api.delete_resources(filenames);
@@ -222,7 +235,7 @@ const updateProduct = (
   });
 };
 
-const deleteProduct = async (pid,filenames) => {
+const deleteProduct = async (pid, filenames) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await db.Product.destroy({
@@ -239,6 +252,43 @@ const deleteProduct = async (pid,filenames) => {
     }
   });
 };
+
+const activeProduct = async (status, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      const response = await db.Product.update(status, {
+        where: {
+          id,
+        },
+      });
+      resolve({
+        err: response > 0 ? 0 : 1,
+        mes: `${response} updated`,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const inactiveProduct = async (status, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Product.update(status, {
+        where: {
+          id,
+        },
+      });
+      resolve({
+        err: response > 0 ? 0 : 1,
+        mes: `${response} updated`,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   getSubCate,
   getAny,
@@ -247,4 +297,6 @@ module.exports = {
   storeProduct,
   updateProduct,
   deleteProduct,
+  activeProduct,
+  inactiveProduct,
 };
