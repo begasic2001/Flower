@@ -3,6 +3,7 @@ import * as newslaters_service from "../services/newslaters_service";
 import createError from "http-errors";
 import { couponValidate, cpid } from "../config/validatation";
 import joi from "joi";
+const moment = require("moment");
 const CouponView = async (req, res, next) => {
   try {
     const coupon = await coupon_service.coupon();
@@ -75,8 +76,10 @@ const deleteCoupon = async (req, res, next) => {
 const newslaters = async (req, res, next) => {
   try {
     const newslater = await newslaters_service.newslaters();
+    const createdAt = moment(newslater[0].createdAt,'YYYY-MM-DD').fromNow();
     res.render("admin/newslater/newslater", {
       newslater,
+      createdAt,
     });
   } catch (error) {
     next(error);

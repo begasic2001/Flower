@@ -14,7 +14,7 @@ import joi from "joi";
 const getAllUser = async (req, res, next) => {
   try {
     const allUser = await user_service.user();
-    res.render('admin/user/user',{
+    res.render("admin/user/user", {
       allUser,
     });
   } catch (error) {
@@ -75,11 +75,11 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const { email } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      throw(createError(error.details[0].message));
+      throw createError(error.details[0].message);
     }
     const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {
@@ -150,12 +150,12 @@ const getList = async (req, res, next) => {
 };
 const updateUser = async (req, res, next) => {
   try {
-    const{error} = joi.object({uid }).validate({ uid: req.body.uid});
+    const { error } = joi.object({ uid }).validate({ uid: req.body.uid });
     if (error) {
       throw createError(error.details[0].message);
     }
     const response = await user_service.updateUser(req.body);
-    if(response) res.redirect("/api/auth/user");
+    if (response) res.redirect("/api/auth/user");
   } catch (error) {
     next(error);
   }
@@ -163,7 +163,7 @@ const updateUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const response = await user_service.deleteUser(req.query.uid);
-    if(response) res.redirect("/api/auth/user");
+    if (response) res.redirect("/api/auth/user");
   } catch (error) {
     next(error);
   }
