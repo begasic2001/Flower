@@ -1,7 +1,7 @@
 import coupon_service from "../services/coupon_service";
 import * as newslaters_service from "../services/newslaters_service";
 import createError from "http-errors";
-import { couponValidate, cpid } from "../config/validatation";
+import { newid } from "../config/validatation";
 import joi from "joi";
 const moment = require("moment");
 const CouponView = async (req, res, next) => {
@@ -76,34 +76,27 @@ const deleteCoupon = async (req, res, next) => {
 const newslaters = async (req, res, next) => {
   try {
     const newslater = await newslaters_service.newslaters();
-    const createdAt = moment(newslater[0].createdAt,'YYYY-MM-DD').fromNow();
     res.render("admin/newslater/newslater", {
       newslater,
-      createdAt,
     });
   } catch (error) {
     next(error);
   }
 };
 
-const getNewslatersEdit = async (req, res, next) => {
-  try {
-  } catch (error) {}
-};
-
-const storeNewslater = async (req, res, next) => {
-  try {
-  } catch (error) {}
-};
-
-const updateNewslater = async (req, res, next) => {
-  try {
-  } catch (error) {}
-};
-
 const deleteNewslater = async (req, res, next) => {
   try {
-  } catch (error) {}
+    const { error } = joi
+      .object({ newid })
+      .validate({ newid: req.query.newid });
+    if (error) {
+      throw createError(error.details[0].message);
+    }
+    const response = await newslaters_service.deleteNewslater(req.query.newid);
+    if (response) res.redirect("/api/coup/newslaters");
+  } catch (error) {
+    next(error);
+  }
 };
 module.exports = {
   coupon,
@@ -114,8 +107,5 @@ module.exports = {
   updateCoupon,
   deleteCoupon,
   newslaters,
-  getNewslatersEdit,
-  storeNewslater,
-  updateNewslater,
   deleteNewslater,
 };

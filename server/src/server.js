@@ -5,6 +5,7 @@ import route from "./route/route";
 import connect_mysql from "./config/connect_mysql";
 import path from "path";
 import methodOverride from "method-override";
+import moment from 'moment'
 require("./config/connect_redis");
 require("dotenv").config();
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.locals.moment = moment;
 connect_mysql();
 route(app);
 

@@ -67,6 +67,15 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
+      filename_one: {
+        type: Sequelize.STRING,
+      },
+      filename_two: {
+        type: Sequelize.STRING,
+      },
+      filename_three: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
