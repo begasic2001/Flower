@@ -3,8 +3,7 @@
         <!-- ########## START: MAIN PANEL ########## -->
         <div class="sl-mainpanel">
             <nav class="breadcrumb sl-breadcrumb">
-                <a class="breadcrumb-item" href="index.html">Starlight</a>
-                <a class="breadcrumb-item" href="index.html">Tables</a>
+                <a class="breadcrumb-item" href="index.html">Flower</a>
                 <span class="breadcrumb-item active">Data Table</span>
             </nav>
 
@@ -153,8 +152,8 @@
                 let name = $(this).attr("data-name");
                 var link = $(this).attr("href");
                 swal({
-                    title: `Are you Want to delete ${name} `,
-                    text: "Once Delete, This will be Permanently Delete!",
+                    title: `Bạn có muốn xoá ${name} `,
+                    text: "Sau khi Xóa, Điều này sẽ được Xóa vĩnh viễn !!!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -165,8 +164,9 @@
                             type: "DELETE",
 
                         }).then(() => {
-                            swal("ok");
-                            window.location.reload();
+                            swal(`Xoá thành công ${name}`).then(()=>{
+                                window.location.reload();
+                            })
                         });
                     } else {
                         swal("Safe Data!");

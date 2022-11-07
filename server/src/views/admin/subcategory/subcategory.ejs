@@ -3,20 +3,19 @@
         <!-- ########## START: MAIN PANEL ########## -->
         <div class="sl-mainpanel">
             <nav class="breadcrumb sl-breadcrumb">
-                <a class="breadcrumb-item" href="index.html">Starlight</a>
-                <a class="breadcrumb-item" href="index.html">Tables</a>
+                <a class="breadcrumb-item" href="index.html">Flower</a>
                 <span class="breadcrumb-item active">Data Table</span>
             </nav>
 
             <div class="sl-pagebody">
                 <div class="sl-page-title">
-                    <h5>SubCategory Table</h5>
+                    <h5>Bảng danh mục con</h5>
                 </div><!-- sl-page-title -->
 
                 <div class="card pd-20 pd-sm-40">
-                    <h6 class="card-body-title">SUBCATEGORY LIST
+                    <h6 class="card-body-title">Danh sách danh mục con
                         <a href="" class="btn btn-sm btn-warning" style="float: right;" data-toggle="modal"
-                            data-target="#modaldemo3">Add New</a>
+                            data-target="#modaldemo3">Thêm</a>
                     </h6>
 
                     <div class="table-wrapper">
@@ -24,11 +23,21 @@
                             <thead>
                                 <tr>
                                     <th class="wd-15p">STT</th>
-                                    <th class="wd-15p">SubCategory name</th>
-                                    <th class="wd-20p">Action</th>
+                                    <th class="wd-15p">Tên danh mục con</th>
+                                    <th class="wd-20p">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <% if(typeof error != 'undefined') { %>
+                                    <% error.details.forEach(function(error) { %>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <%= error.message %>
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                              <span aria-hidden="true">×</span>
+                                            </button>
+                                          </div>
+                                    <% }) %>
+                                <% } %>
                                 <% subCategory.map(function(sub,index){ %>
                                     <tr>
                                         <td>
@@ -62,7 +71,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content tx-size-sm">
                     <div class="modal-header pd-x-20">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">SubCategory Add</h6>
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Thêm danh mục con</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -70,11 +79,11 @@
                     <div class="modal-body pd-20">
                         <form action="/api/subcate/storeSubCategory" method="POST">
                             <div class="form-group">
-                                <label for="exampleInputEmail1">SubCategory name</label>
+                                <label for="exampleInputEmail1">Danh mục con</label>
                                 <input type="text" class="form-control" name="subcategory_name" placeholder="SubCategory">
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Category name</label>
+                                <label for="exampleInputEmail1">Danh mục</label>
                                 <select name="categories_id" class="form-group">
                                     <% category.map(function(cate){ %>
                                     <option value="<%= cate.id %>"><%= cate.cat_name %></option>
@@ -90,21 +99,6 @@
                 </div>
             </div><!-- modal-dialog -->
         </div><!-- modal -->
-
-        <footer class="sl-footer">
-            <div class="footer-left">
-
-            </div>
-            <div class="footer-right d-flex align-items-center">
-                <span class="tx-uppercase mg-r-10">Share:</span>
-                <a target="_blank" class="pd-x-5"
-                    href="https://www.facebook.com/sharer/sharer.php?u=http%3A//themepixels.me/starlight"><i
-                        class="fa fa-facebook tx-20"></i></a>
-                <a target="_blank" class="pd-x-5"
-                    href="https://twitter.com/home?status=Starlight,%20your%20best%20choice%20for%20premium%20quality%20admin%20template%20from%20Bootstrap.%20Get%20it%20now%20at%20http%3A//themepixels.me/starlight"><i
-                        class="fa fa-twitter tx-20"></i></a>
-            </div>
-        </footer>
         </div><!-- sl-mainpanel -->
         <!-- ########## END: MAIN PANEL ########## -->
 
@@ -163,8 +157,8 @@
                 let id = $(this).attr("data-id");
                 let name = $(this).attr("data-name");
                 swal({
-                    title: `Do you want to delete ${name} `,
-                    text: "Once Delete, This will be Permanently Delete!",
+                    title: `Bạn có muốn xoá ${name}`,
+                    text: "Sau khi Xóa, Điều này sẽ được Xóa vĩnh viễn !!!",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -174,8 +168,10 @@
                             url: `./deleteSubCategory/?subid=${id}`,
                             type: "DELETE",
                         }).then(() => {
-                            swal("ok");
-                            window.location.reload();
+                            swal(`Xoá thành công ${name}`).then(()=>{
+                                window.location.reload();
+                            })
+                           
                         });
                     } else {
                         swal("Safe Data!");

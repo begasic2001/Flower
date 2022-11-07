@@ -39,17 +39,20 @@ const brand = async (req, res, next) => {
 // const brandById = async (req, res, next) => {};
 const storeBrand = async (req, res, next) => {
   try {
+    
     const fileData = req.file;
     const { error } = await brandValidate({
       ...req.body,
       brand_logo: fileData?.path,
     });
     if (error) {
+      const brand = await services.brand();
       if (fileData) cloudinary.uploader.destroy(fileData.filename);
-      throw createError(error.details[0].message);
+      res.render("admin/brand/brand", { error ,brand});
+    } else {
+      const newBrand = await services.createBrand(req.body, fileData);
+      if (newBrand) res.redirect("/api/brand/brand");
     }
-    const newBrand = await services.createBrand(req.body, fileData);
-    if (newBrand) res.redirect("/api/brand/brand");
   } catch (error) {
     next(error);
   }
@@ -71,13 +74,15 @@ const updateBrand = async (req, res, next) => {
 
 const deleteBrand = async (req, res, next) => {
   try {
-    
     const { error } = joi.object({ bid, filename }).validate(req.query);
     if (error) {
       throw createError(error.details[0].message);
     }
-    const response = await services.deleteBrand(req.query.bid,req.query.filename);
-    
+    const response = await services.deleteBrand(
+      req.query.bid,
+      req.query.filename,
+    );
+
     if (response) res.redirect("/api/brand/brand");
   } catch (error) {
     next(error);

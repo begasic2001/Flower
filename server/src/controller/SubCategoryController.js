@@ -53,11 +53,15 @@ const subCategoryById = async (req, res, next) => {
 const storeSubCategory = async (req, res, next) => {
   try {
     const { error } = subcategoriesValidate(req.body);
+    
     if (error) {
-      throw createError(error.details[0].message);
+      const subCategory = await services.subCategory();
+    const category = await services2.category();
+      res.render("admin/subcategory/subcategory", { error ,subCategory,category});
+    } else {
+      const newSubCategory = await services.createSubCategory(req.body);
+      if (newSubCategory) res.redirect("/api/subcate/subCategory");
     }
-    const newSubCategory = await services.createSubCategory(req.body);
-    if (newSubCategory) res.redirect("/api/subcate/subCategory");
   } catch (error) {
     next(error);
   }

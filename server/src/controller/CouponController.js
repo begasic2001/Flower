@@ -1,9 +1,8 @@
 import coupon_service from "../services/coupon_service";
 import * as newslaters_service from "../services/newslaters_service";
 import createError from "http-errors";
-import { newid } from "../config/validatation";
+import { couponValidate, cpid, newid } from "../config/validatation";
 import joi from "joi";
-const moment = require("moment");
 const CouponView = async (req, res, next) => {
   try {
     const coupon = await coupon_service.coupon();
@@ -40,10 +39,12 @@ const storeCoupon = async (req, res, next) => {
   try {
     const { error } = couponValidate(req.body);
     if (error) {
-      throw createError(error.details[0].message);
+      const coupon = await coupon_service.coupon();
+      res.render("admin/coupon/coupon", { error ,coupon});
+    } else {
+      const newCoupon = await coupon_service.createCoupon(req.body);
+      if (newCoupon) res.redirect("coupon");
     }
-    const newCoupon = await coupon_service.createCoupon(req.body);
-    if (newCoupon) res.redirect("coupon");
   } catch (error) {
     next(error);
   }

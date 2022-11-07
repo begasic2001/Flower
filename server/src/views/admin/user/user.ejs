@@ -4,13 +4,12 @@
     <div class="sl-mainpanel">
         <nav class="breadcrumb sl-breadcrumb">
             <a class="breadcrumb-item" href="index.html">Starlight</a>
-            <a class="breadcrumb-item" href="index.html">Tables</a>
             <span class="breadcrumb-item active">Data Table</span>
         </nav>
     
         <div class="sl-pagebody">
             <div class="sl-page-title">
-                <h5>Category Table</h5>
+                <h5>Danh sách khách hàng</h5>
             </div><!-- sl-page-title -->
     
             <div class="card pd-20 pd-sm-40">
@@ -40,7 +39,6 @@
                                     <a href="/api/auth/getUserEdit/<%= c.id %>" class="btn btn-sm btn-info">Edit</a>
                                     <a href="" class="btn btn-sm btn-danger" id="delete" data-name="<%= c.name %>" data-id="<%= c.id %>">Delete</a>
                                 </td>
-                              
                             </tr>
                             <% }); %>
                         </tbody>
@@ -125,8 +123,8 @@
             let id = $(this).attr("data-id");
             let name= $(this).attr("data-name");
             swal({
-                title: `Do you want to delete ${name} `,
-                text: "Once Delete, This will be Permanently Delete!",
+                title: `Bạn có muốn xoá ${name} `,
+                text: "Sau khi Xóa, Điều này sẽ được Xóa vĩnh viễn !!!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -136,8 +134,10 @@
                         url: `./delete/?uid=${id}`,
                         type: "DELETE",
                     }).then(() => {
-                        swal("ok");
-                        window.location.reload();
+                        swal(`Xoá thành công ${name}`).then(()=>{
+                            window.location.reload();
+                        })
+                       
                     });
                 } else {
                     swal("Safe Data!");

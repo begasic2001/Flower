@@ -107,17 +107,23 @@ const storeProduct = async (req, res, next) => {
       ...req.body,
     });
     if (error) {
+      const category = await services.category();
+      const brand = await services2.brand();
       if (files) cloudinary.api.delete_resources(filenames);
-      throw createError(error.details[0].message);
+      res.render("admin/product/add-product", {
+        category,
+        brand,
+        error,
+      });
+    } else {
+      const response = await services_product.storeProduct(
+        req.body,
+        urls,
+        filenames,
+      );
+
+      if (response) res.redirect("/api/product/addProduct");
     }
-
-    const response = await services_product.storeProduct(
-      req.body,
-      urls,
-      filenames
-    );
-
-    if (response) res.redirect("/api/product/addProduct");
   } catch (error) {
     next(error);
   }
@@ -184,7 +190,7 @@ const updateProduct = async (req, res, next) => {
       fieldname1,
       fieldname2,
       fieldname3,
-      filenames
+      filenames,
     );
 
     if (response) res.redirect("/api/product/product");
@@ -209,7 +215,7 @@ const deleteProduct = async (req, res, next) => {
 
     const response = await services_product.deleteProduct(
       req.query.pid,
-      filenames
+      filenames,
     );
 
     if (response) res.redirect("/api/product/product");
