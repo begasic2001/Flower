@@ -39,7 +39,6 @@ const brand = async (req, res, next) => {
 // const brandById = async (req, res, next) => {};
 const storeBrand = async (req, res, next) => {
   try {
-    
     const fileData = req.file;
     const { error } = await brandValidate({
       ...req.body,
@@ -48,7 +47,7 @@ const storeBrand = async (req, res, next) => {
     if (error) {
       const brand = await services.brand();
       if (fileData) cloudinary.uploader.destroy(fileData.filename);
-      res.render("admin/brand/brand", { error ,brand});
+      res.render("admin/brand/brand", { error, brand });
     } else {
       const newBrand = await services.createBrand(req.body, fileData);
       if (newBrand) res.redirect("/api/brand/brand");
@@ -80,7 +79,7 @@ const deleteBrand = async (req, res, next) => {
     }
     const response = await services.deleteBrand(
       req.query.bid,
-      req.query.filename,
+      req.query.filename
     );
 
     if (response) res.redirect("/api/brand/brand");
