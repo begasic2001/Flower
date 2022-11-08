@@ -14,7 +14,8 @@ const orderView = async (req, res, next) => {
   };
   const orderDetail = async (req, res, next) => {
     try {
-      const orderDetail = await services.orderDetail();
+      const id = req.params.id
+      const orderDetail = await services.orderDetail(id);
       res.render("admin/order/orderdetail", {
         orderDetail,
       });
