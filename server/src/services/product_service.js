@@ -2,6 +2,7 @@ import db from "../models/index";
 import { Op } from "sequelize";
 import { v4 as genarateId } from "uuid";
 const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 const getAny = ({ page, limit, order, name, available, price, ...query }) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -11,9 +12,13 @@ const getAny = ({ page, limit, order, name, available, price, ...query }) =>
       queries.offset = offset * fLimit;
       queries.limit = fLimit;
       if (order) queries.order = [order];
-      if (name) query.title = { [Op.substring]: name };
-      if (available) query.available = { [Op.between]: available };
-      if (price) query.price = { [Op.between]: available };
+      if (name) query.pro_name = { [Op.substring]: name };
+      if (available) query.pro_quantity = { [Op.between]: available };
+      if (price) {
+        price[0] = +price[0];
+        price[1] = +price[1];
+        query.selling_price = { [Op.between]: price };
+      }
       const response = await db.Product.findAndCountAll({
         where: query,
         ...queries,
@@ -179,7 +184,7 @@ const updateProduct = (
   fieldname1,
   fieldname2,
   fieldname3,
-  filenames,
+  filenames
 ) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -256,12 +261,14 @@ const deleteProduct = async (pid, filenames) => {
 const activeProduct = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-
-      const response = await db.Product.update({status:"1"}, {
-        where: {
-          id,
-        },
-      });
+      const response = await db.Product.update(
+        { status: "1" },
+        {
+          where: {
+            id,
+          },
+        }
+      );
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} updated`,

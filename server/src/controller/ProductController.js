@@ -119,7 +119,7 @@ const storeProduct = async (req, res, next) => {
       const response = await services_product.storeProduct(
         req.body,
         urls,
-        filenames,
+        filenames
       );
 
       if (response) res.redirect("/api/product/addProduct");
@@ -190,7 +190,7 @@ const updateProduct = async (req, res, next) => {
       fieldname1,
       fieldname2,
       fieldname3,
-      filenames,
+      filenames
     );
 
     if (response) res.redirect("/api/product/product");
@@ -215,10 +215,19 @@ const deleteProduct = async (req, res, next) => {
 
     const response = await services_product.deleteProduct(
       req.query.pid,
-      filenames,
+      filenames
     );
 
     if (response) res.redirect("/api/product/product");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const product = async (req, res, next) => {
+  try {
+    const product = await services_product.getAny(req.query);
+    res.json(product)
   } catch (error) {
     next(error);
   }
@@ -235,4 +244,5 @@ module.exports = {
   storeProduct,
   updateProduct,
   deleteProduct,
+  product,
 };

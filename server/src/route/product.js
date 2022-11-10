@@ -13,6 +13,7 @@ route.get("/addProduct", ProductController.getAddProduct);
 route.get("/productDetail/:id", ProductController.getproductDetail);
 //
 // API
+route.get("/getProduct", ProductController.product);
 route.get("/getSubCate/:categories_id", ProductController.getSubCate);
 route.put("/activeProduct/:id", ProductController.activeProduct);
 route.put("/inactiveProduct/:id", ProductController.inactiveProduct);

@@ -5,6 +5,7 @@ import routerSubCate from "./subcategory.js";
 import routerProduct from "./product.js";
 import routerOrder from "./order.js";
 import routerCoupon from "./coupon.js";
+import routerBlog from "./blog.js";
 
 const app = (app) => {
   app.use("/api/auth", routerUser);
@@ -14,6 +15,7 @@ const app = (app) => {
   app.use("/api/product", routerProduct);
   app.use("/api/order", routerOrder);
   app.use("/api/coup", routerCoupon);
+  app.use("/api/blog", routerBlog);
 };
 
 module.exports = app;
