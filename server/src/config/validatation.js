@@ -77,6 +77,14 @@ const productValidate = (data) => {
   return productSchema.validate(data);
 };
 
+const postCategoriesValidate = (data) => {
+  const postCategoriesSchema = Joi.object({
+    cat_name_en: Joi.string().required(),
+    cat_name_vn: Joi.string().required(),
+  });
+  return postCategoriesSchema.validate(data);
+};
+
 const filename = Joi.string().required();
 const bid = Joi.string().required();
 const cid = Joi.string().required();
@@ -85,6 +93,7 @@ const pid = Joi.string().required();
 const cpid = Joi.string().required();
 const uid = Joi.string().required();
 const newid = Joi.string().required();
+const pcid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
@@ -92,6 +101,7 @@ module.exports = {
   brandValidate,
   productValidate,
   couponValidate,
+  postCategoriesValidate,
   bid,
   cid,
   subid,
@@ -100,4 +110,5 @@ module.exports = {
   cpid,
   uid,
   newid,
+  pcid
 };

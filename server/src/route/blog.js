@@ -1,6 +1,11 @@
 import express from "express";
-import BrandController from "../controller/BrandController";
+import PostCategoryController from "../controller/PostCategoryController";
 const route = express.Router();
-// 
-route.get("/category/list", BrandController.brandView);
+route.get("/category", PostCategoryController.postCategoryView);
+route.get("/getPostCategoryEdit/:id", PostCategoryController.getPostCategoryEdit);
+route.post("/storeBlogCategory", PostCategoryController.storeBlogCategory);
+route.delete("/deleteBlogCategory", PostCategoryController.deleteBlogCategory);
+route.put("/updateBlogCategory", PostCategoryController.updateBlogCategory);
+
+
 module.exports = route
