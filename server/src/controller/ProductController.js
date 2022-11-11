@@ -227,7 +227,7 @@ const deleteProduct = async (req, res, next) => {
 const product = async (req, res, next) => {
   try {
     const product = await services_product.getAny(req.query);
-    res.json(product)
+    res.json(product);
   } catch (error) {
     next(error);
   }

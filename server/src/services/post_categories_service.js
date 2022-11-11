@@ -1,6 +1,6 @@
 import db from "../models/index";
 import { v4 as genarateId } from "uuid";
-
+const cloudinary = require("cloudinary").v2;
 const postCategory = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -64,8 +64,8 @@ const updatePostCategory = ({ pcid, ...data }) => {
         err: response[0] > 0 ? 0 : 1,
         mes:
           response[0] > 0
-            ? `${response[0]} Categories updated`
-            : "Cannot update new categories/ categories ID not found",
+            ? `${response[0]} PostCategories updated`
+            : "Cannot update new Postcategories/ Postcategories ID not found",
       });
     } catch (error) {
       reject(error);
@@ -90,10 +90,85 @@ const deletePostCategory = (pcid) => {
   });
 };
 
+const createPostBlog = (data, fileData) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Post.findOrCreate({
+        where: {
+          post_en: data.post_en,
+          post_vn: data.post_vn,
+        },
+        defaults: {
+          id: genarateId(),
+          post_en: data.post_en,
+          post_vn: data.post_vn,
+          post_image: fileData?.path,
+          filename: fileData?.filename,
+          details_en: data.details_en,
+          details_vn: data.details_vn,
+          categories_id: data.categories_id,
+        },
+      });
+      resolve({
+        status: response[1] ? 0 : 1,
+        msg: response[1] ? "Created" : "Posts has been created",
+      });
+      if (fileData && !response[1])
+        cloudinary.uploader.destroy(fileData.filename);
+    } catch (error) {
+      reject(error);
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+    }
+  });
+};
+
+const listBlog = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Post.findAll({
+        include: [
+          {
+            model: db.post_categories,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
+        attributes: { exclude: ["categories_id","createdAt", "updatedAt"] },
+        raw: true,
+        nest: true,
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const deleteListPost = (lpid, filename) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(lpid)
+      console.log(filename);
+      const response = await db.Post.destroy({
+        where: { id: lpid },
+      });
+
+      resolve({
+        err: response > 0 ? 0 : 1,
+        mes: `${response} deleted`,
+      });
+      cloudinary.uploader.destroy(filename);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   postCategory,
   postCategoryById,
   createPostCategory,
   updatePostCategory,
   deletePostCategory,
+  createPostBlog,
+  listBlog,
+  deleteListPost,
 };

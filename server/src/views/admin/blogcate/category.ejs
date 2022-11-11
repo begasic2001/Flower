@@ -43,8 +43,10 @@
                             <% category.map(function(c,index){ %>
                             <tr>
                                 <td><%= index +1 %></td>
-                                <td><%= c.cat_name_vn %></td>
                                 <td><%= c.cat_name_en %></td>
+                                <td>
+                                    <%= c.cat_name_vn %>
+                                </td>
                                 <td>
                                     <a href="/api/blog/getPostCategoryEdit/<%= c.id %>" class="btn btn-sm btn-info">Edit</a>
                                     <a href="" class="btn btn-sm btn-danger" id="delete"  data-id="<%= c.id %>">Delete</a>

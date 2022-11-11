@@ -1,8 +1,13 @@
-import { postCategoriesValidate, pcid } from "../config/validatation";
+import {
+  postCategoriesValidate,
+  postBlogValidate,
+  pcid,
+  lpid,
+} from "../config/validatation";
 import * as services from "../services/post_categories_service";
 import createError from "http-errors";
 import joi from "joi";
-
+const cloudinary = require("cloudinary").v2;
 const postCategoryView = async (req, res, next) => {
   try {
     const category = await services.postCategory();
@@ -32,6 +37,7 @@ const storeBlogCategory = async (req, res, next) => {
     if (error) {
       res.render("admin/blogcate/category", {
         category,
+        error,
       });
     } else {
       const newPostCategory = await services.createPostCategory(req.body);
@@ -43,13 +49,13 @@ const storeBlogCategory = async (req, res, next) => {
 };
 const updateBlogCategory = async (req, res, next) => {
   try {
-    console.log(req.body)
-    // const { error } = joi.object({ pcid }).validate({ pcid: req.body.pcid });
-    // if (error) {
-    //   throw createError(error.details[0].message);
-    // }
-    // const response = await services.updatePostCategory(req.body);
-    // if (response) res.redirect("/api/blog/category");
+    const { error } = joi.object({ pcid }).validate({ pcid: req.body.pcid });
+    if (error) {
+      throw createError(error.details[0].message);
+    } else {
+      const response = await services.updatePostCategory(req.body);
+      if (response) res.redirect("/api/blog/category");
+    }
   } catch (error) {
     next(error);
   }
@@ -68,10 +74,75 @@ const deleteBlogCategory = async (req, res, next) => {
   }
 };
 
+const blogPost = async (req, res, next) => {
+  try {
+    const category = await services.postCategory();
+    //const category = await services2.category();
+    res.render("admin/blogcate/add-blog", {
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const listBlog = async (req, res, next) => {
+  try {
+    const listBlog = await services.listBlog();
+    res.render("admin/blogcate/blog", {
+      listBlog,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const storeBlogPost = async (req, res, next) => {
+  try {
+    const fileData = req.file;
+    const { error } = await postBlogValidate({
+      ...req.body,
+      post_image: fileData?.path,
+    });
+    if (error) {
+      const category = await services.postCategory();
+      //const category = await services2.category();
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
+      res.render("admin/blogcate/add-blog", { error, category });
+    } else {
+      const newBlogPost = await services.createPostBlog(req.body, fileData);
+      if (newBlogPost) res.redirect("/api/blog/blogPost");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteListBlog = async (req, res, next) => {
+  try {
+    console.log(req.query);
+    // const { error } = joi.object({ lpid }).validate(req.query);
+    // if (error) {
+    //   throw createError(error.details[0].message);
+    // }
+    
+    const response = await services.deleteListPost(
+      req.query.lpid,
+      req.query.filename
+    );
+    if (response) res.redirect("/api/blog/blogPost");
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getPostCategoryEdit,
   postCategoryView,
   storeBlogCategory,
   updateBlogCategory,
   deleteBlogCategory,
+  blogPost,
+  storeBlogPost,
+  listBlog,
+  deleteListBlog,
 };

@@ -85,6 +85,18 @@ const postCategoriesValidate = (data) => {
   return postCategoriesSchema.validate(data);
 };
 
+const postBlogValidate = (data) => {
+  const postBlogSchema = Joi.object({
+    categories_id: Joi.string().required(),
+    post_en: Joi.string(),
+    post_vn: Joi.string(),
+    post_image: Joi.string(),
+    details_en: Joi.string(),
+    details_vn: Joi.string(),
+  });
+  return postBlogSchema.validate(data);
+};
+
 const filename = Joi.string().required();
 const bid = Joi.string().required();
 const cid = Joi.string().required();
@@ -94,6 +106,7 @@ const cpid = Joi.string().required();
 const uid = Joi.string().required();
 const newid = Joi.string().required();
 const pcid = Joi.string().required();
+const lpid = Joi.string().required();
 module.exports = {
   userValidate,
   categoriesValidate,
@@ -102,6 +115,7 @@ module.exports = {
   productValidate,
   couponValidate,
   postCategoriesValidate,
+  postBlogValidate,
   bid,
   cid,
   subid,
@@ -110,5 +124,6 @@ module.exports = {
   cpid,
   uid,
   newid,
-  pcid
+  pcid,
+  lpid,
 };
