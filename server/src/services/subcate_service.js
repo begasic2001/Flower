@@ -4,17 +4,8 @@ import { v4 as genarateId } from "uuid";
 const subCategory = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const subcategory = await db.Subcategories.findAll({
-        include: {
-          model: db.Categories,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        attributes: { exclude: ["createdAt", "updatedAt", "categories_id"] },
-        raw: true,
-        nest: true,
-      });
-      
-      resolve(subcategory);
+      const subcategory = await db.sequelize.query(`EXEC sp_listSubCategories`);
+      resolve(subcategory[0]);
     } catch (error) {
       reject(error);
     }
@@ -24,19 +15,11 @@ const subCategory = () => {
 const subCategoryById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const subcategory = await db.Subcategories.findOne({
-        where: {
-          id,
-        },
-        include: {
-          model: db.Categories,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-        nest: true,
-        raw: true,
-      });
-      resolve(subcategory);
+      const subcategory = await db.sequelize.query(
+        `EXEC sp_SubCategoriesById :id`,
+        { replacements: { id: id } }
+      );
+      resolve(subcategory[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -46,16 +29,16 @@ const subCategoryById = (id) => {
 const createSubCategory = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Subcategories.findOrCreate({
-        where: {
-          subcategory_name: data.subcategory_name,
-        },
-        defaults: {
-          id: genarateId(),
-          categories_id: data.categories_id,
-          subcategory_name: data.subcategory_name,
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_AddSubCategory :id , :cat_id , :name`,
+        {
+          replacements: {
+            id: genarateId(),
+            cat_id: data.categories_id,
+            name: data.subcategory_name,
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "SubCategory has been created",
@@ -69,9 +52,16 @@ const createSubCategory = (data) => {
 const updateSubCategory = ({ subid, ...data }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Subcategories.update(data, {
-        where: { id: subid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_EditSubCategory :id , :cat_id , :name`,
+        {
+          replacements: {
+            id: subid,
+            cat_id: data.categories_id,
+            name: data.subcategory_name,
+          },
+        }
+      );
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
@@ -88,8 +78,10 @@ const updateSubCategory = ({ subid, ...data }) => {
 const deleteSubCategory = (subid) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Subcategories.destroy({
-        where: { id: subid },
+      const response = await db.sequelize.query(`EXEC sp_DelSubCategory :id`, {
+        replacements: {
+          id: subid,
+        },
       });
 
       resolve({

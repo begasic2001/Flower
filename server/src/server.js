@@ -2,7 +2,7 @@ import express from "express";
 import createError from "http-errors";
 import cors from "cors";
 import route from "./route/route";
-import connect_mysql from "./config/connect_mysql";
+import connect_mssql from "./config/connect_mssql";
 import path from "path";
 import methodOverride from "method-override";
 import moment from 'moment'
@@ -16,7 +16,7 @@ app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.locals.moment = moment;
-connect_mysql();
+connect_mssql();
 route(app);
 
 //using ejs template

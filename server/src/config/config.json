@@ -1,10 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
+    "username": "sa",
+    "password": "123456",
     "database": "tmdt",
     "host":"localhost", 
-    "dialect": "mysql",
+    "dialect": "mssql",
     "logging": false,
     "raw":true,
     "timezone": "+07:00"

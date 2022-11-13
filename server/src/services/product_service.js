@@ -15,9 +15,11 @@ const getAny = ({ page, limit, order, name, available, price, ...query }) =>
       if (name) query.pro_name = { [Op.substring]: name };
       if (available) query.pro_quantity = { [Op.between]: available };
       if (price) {
-        price[0] = +price[0];
-        price[1] = +price[1];
-        query.selling_price = { [Op.between]: price };
+        if (price[0] > 0 && price <= 1000000) {
+          price[0] = +price[0];
+          price[1] = +price[1];
+          query.selling_price = { [Op.between]: price };
+        }
       }
       const response = await db.Product.findAndCountAll({
         where: query,

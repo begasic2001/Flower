@@ -4,10 +4,10 @@ import { v4 as genarateId } from "uuid";
 const category = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findAll({
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+      const category = await db.sequelize.query(`EXEC sp_listCategories`, {
+        raw: true,
       });
-      resolve(category);
+      resolve(category[0]);
     } catch (error) {
       reject(error);
     }
@@ -17,13 +17,11 @@ const category = () => {
 const categoryById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Categories.findOne({
-        where: {
-          id,
-        },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+      const category = await db.sequelize.query(`EXEC sp_CategoriesById :id`,{
+        replacements:{id:id},
+        raw: true,
       });
-      resolve(category);
+      resolve(category[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -33,15 +31,12 @@ const categoryById = (id) => {
 const createCategory = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.findOrCreate({
-        where: {
-          cat_name: data.cat_name,
-        },
-        defaults: {
-          id: genarateId(),
-          cat_name: data.cat_name,
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_AddCategory :id , :name`,
+        {
+          replacements: { id: genarateId(), name: data.cat_name },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Category has been created",
@@ -55,9 +50,10 @@ const createCategory = (data) => {
 const updateCategory = ({ cid, ...data }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.update(data, {
-        where: { id: cid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_EditCategory :id , :name`,
+        { replacements: { id: cid, name: data.cat_name } }
+      );
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
@@ -74,10 +70,9 @@ const updateCategory = ({ cid, ...data }) => {
 const deleteCategory = (cid) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Categories.destroy({
-        where: { id: cid },
+      const response = await db.sequelize.query(`EXEC sp_DelCategory :id`, {
+        replacements: { id: cid },
       });
-
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,

@@ -2,13 +2,11 @@ import db from "../models/index";
 import { v4 as genarateId } from "uuid";
 const cloudinary = require("cloudinary").v2;
 
-
-
 const brand = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const brand = await db.Brand.findAll({});
-      resolve(brand);
+      const brand = await db.sequelize.query(`EXEC sp_listBrand`);
+      resolve(brand[0]);
     } catch (error) {
       reject(error);
     }
@@ -18,12 +16,10 @@ const brand = () => {
 const brandById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const brand = await db.Brand.findOne({
-        where: {
-          id,
-        },
+      const brand = await db.sequelize.query(`EXEC sp_listBrandById :id`, {
+        replacements: { id: id },
       });
-      resolve(brand);
+      resolve(brand[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -33,17 +29,17 @@ const brandById = (id) => {
 const createBrand = (data, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Brand.findOrCreate({
-        where: {
-          brand_name: data.brand_name,
-        },
-        defaults: {
-          id: genarateId(),
-          brand_name: data.brand_name,
-          brand_logo: fileData?.path,
-          filename: fileData?.filename,
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_AddBrand :id , :name , :logo , :file`,
+        {
+          replacements: {
+            id: genarateId(),
+            name: data.brand_name,
+            logo: fileData?.path,
+            file: fileData?.filename,
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Brand has been created",
@@ -87,9 +83,8 @@ const updateBrand = ({ bid, ...data }, fileData) => {
 const deleteBrand = (bid, filename) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Brand.destroy({
-        where: { id: bid },
-      });
+     
+      const response = await db.sequelize.query(`EXEC `)
 
       resolve({
         err: response > 0 ? 0 : 1,
