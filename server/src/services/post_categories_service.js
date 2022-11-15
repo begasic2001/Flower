@@ -73,6 +73,24 @@ const updatePostCategory = ({ pcid, ...data }) => {
   });
 };
 
+const updateListPostCategory = ({ lpid, ...data }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Post.update(data, {
+        where: { id: lpid },
+      });
+      resolve({
+        err: response[0] > 0 ? 0 : 1,
+        mes:
+          response[0] > 0
+            ? `${response[0]} Post updated`
+            : "Cannot update new Post/ Post ID not found",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 const deletePostCategory = (pcid) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -132,7 +150,7 @@ const listBlog = () => {
             attributes: { exclude: ["createdAt", "updatedAt"] },
           },
         ],
-        attributes: { exclude: ["categories_id","createdAt", "updatedAt"] },
+        attributes: { exclude: ["categories_id", "createdAt", "updatedAt"] },
         raw: true,
         nest: true,
       });
@@ -143,11 +161,32 @@ const listBlog = () => {
   });
 };
 
-const deleteListPost = (lpid, filename) => {
+const listBlogById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(lpid)
-      console.log(filename);
+      const response = await db.Post.findOne({
+        where: {
+          id,
+        },
+        include: [
+          {
+            model: db.post_categories,
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
+        attributes: { exclude: ["categories_id", "createdAt", "updatedAt"] },
+        raw: true,
+        nest: true,
+      });
+      resolve(response);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+const deleteListBlog = (lpid, filename) => {
+  return new Promise(async (resolve, reject) => {
+    try {
       const response = await db.Post.destroy({
         where: { id: lpid },
       });
@@ -167,8 +206,10 @@ module.exports = {
   postCategoryById,
   createPostCategory,
   updatePostCategory,
+  updateListPostCategory,
   deletePostCategory,
+  deleteListBlog,
   createPostBlog,
   listBlog,
-  deleteListPost,
+  listBlogById,
 };

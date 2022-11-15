@@ -43,6 +43,8 @@ const createCoupon = (data) => {
           discount: data.discount,
         },
       });
+      
+    
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Coupon has been created",

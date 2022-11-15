@@ -68,7 +68,7 @@ const deleteBlogCategory = async (req, res, next) => {
       throw createError(error.details[0].message);
     }
     const response = await services.deletePostCategory(req.query.pcid);
-    if (response) res.redirect("/api/cate/category");
+    if (response) res.redirect("/api/blog/category");
   } catch (error) {
     next(error);
   }
@@ -77,7 +77,6 @@ const deleteBlogCategory = async (req, res, next) => {
 const blogPost = async (req, res, next) => {
   try {
     const category = await services.postCategory();
-    //const category = await services2.category();
     res.render("admin/blogcate/add-blog", {
       category,
     });
@@ -96,6 +95,19 @@ const listBlog = async (req, res, next) => {
     next(error);
   }
 };
+const getListPostEdit = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const listBlog = await services.listBlogById(id);
+    const category = await services.postCategory();
+    res.render("admin/blogcate/edit-listblog", {
+      listBlog,
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const storeBlogPost = async (req, res, next) => {
   try {
@@ -106,7 +118,6 @@ const storeBlogPost = async (req, res, next) => {
     });
     if (error) {
       const category = await services.postCategory();
-      //const category = await services2.category();
       if (fileData) cloudinary.uploader.destroy(fileData.filename);
       res.render("admin/blogcate/add-blog", { error, category });
     } else {
@@ -118,19 +129,31 @@ const storeBlogPost = async (req, res, next) => {
   }
 };
 
+const updateListBlogCategory = async (req, res, next) => {
+  try {
+    const { error } = joi.object({ lpid }).validate({ lpid: req.body.lpid });
+    if (error) {
+      throw createError(error.details[0].message);
+    } else {
+      const response = await services.updateListPostCategory(req.body);
+      if (response) res.redirect("/api/blog/blogPost");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteListBlog = async (req, res, next) => {
   try {
-    console.log(req.query);
-    // const { error } = joi.object({ lpid }).validate(req.query);
-    // if (error) {
-    //   throw createError(error.details[0].message);
-    // }
-    
-    const response = await services.deleteListPost(
+    const { error } = joi.object({ lpid }).validate({ lpid: req.query.lpid });
+    if (error) {
+      throw createError(error.details[0].message);
+    }
+    const response = await services.deleteListBlog(
       req.query.lpid,
       req.query.filename
     );
-    if (response) res.redirect("/api/blog/blogPost");
+    if (response) res.redirect("/api/blog/listBlog");
   } catch (error) {
     next(error);
   }
@@ -140,9 +163,11 @@ module.exports = {
   postCategoryView,
   storeBlogCategory,
   updateBlogCategory,
+  updateListBlogCategory,
   deleteBlogCategory,
   blogPost,
   storeBlogPost,
   listBlog,
+  getListPostEdit,
   deleteListBlog,
 };
