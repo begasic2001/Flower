@@ -1,6 +1,7 @@
 import createError from "http-errors";
 import db from "../models/index";
 import client from "../config/connect_redis";
+import bcrypt from "bcrypt";
 import {
   signAccessToken,
   signRefreshToken,
@@ -43,6 +44,21 @@ const getUserEdit = async (req, res, next) => {
   }
 };
 
+const getLoginPage = async (req, res, next) => {
+  try {
+    res.render("layouts/signin", {});
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getRegisterPage = async (req, res, next) => {
+  try {
+    res.render("layouts/signup", {});
+  } catch (error) {
+    next(error);
+  }
+};
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -75,24 +91,33 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
   try {
-    console.log(req.body);
-    const { email } = req.body;
+    const { email, password, name, phone, avatar } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
       throw createError(error.details[0].message);
     }
     const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {
-      res.render(createError.Conflict(`${email} is has already`));
+      throw createError.Conflict(`${email} is has already`);
     }
-
-    const savedUser = await db.User.create({
-      id: genarateId(),
-      ...req.body,
-    });
-    return res.json({
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    await db.sequelize.query(
+      `EXEC sp_Register :idUser , :email , :password , :name , :phone , :avatar`,
+      {
+        replacements: {
+          idUser: genarateId(),
+          email: email,
+          password: hash,
+          name: name,
+          phone: phone,
+          avatar: avatar ? avatar : "",
+        },
+      }
+    );
+    res.json({
       status: 1,
-      element: savedUser,
+      message: "User has been created",
     });
   } catch (error) {
     next(error);
@@ -172,8 +197,10 @@ module.exports = {
   getAllUser,
   user,
   login,
+  getLoginPage,
   refreshToken,
   register,
+  getRegisterPage,
   logout,
   getList,
   getUserEdit,

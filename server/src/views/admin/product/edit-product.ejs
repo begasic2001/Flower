@@ -40,7 +40,7 @@
                                     <select class="form-control select2" name="categories_id" >
                                         <option label="Chọn danh mục"></option>
                                         <% category.map(function(cate){ %>
-                                        <option value="<%= cate.id %>"  <% if(cate.id==product.Category.id){ %>
+                                        <option value="<%= cate.id %>"  <% if(cate.id==product.categories_id){ %>
                                             selected="selected"
                                             <%} %>><%= cate.cat_name %></option>
                                         <% }); %>
@@ -52,7 +52,7 @@
                                         <label class="form-control-label">Danh mục con: <span class="tx-danger">*</span></label>
                                         <select class="form-control select2" name="subcat_id">
                                             <% subcategory.map(function(sub){ %>
-                                                <option value="<%= sub.id %>"  <% if(sub.id==product.Subcategory.id){ %>
+                                                <option value="<%= sub.id %>"  <% if(sub.id==product.subcat_id){ %>
                                                 selected="selected"
                                                 <%} %>><%= sub.subcategory_name %></option>
                                             <% }); %>
@@ -64,7 +64,9 @@
                                             <label class="form-control-label">Nhà cung cấp: <span class="tx-danger">*</span></label>
                                             <select class="form-control select2" name="brand_id">
                                                 <% brand.map(function(brand){ %>
-                                                <option value="<%= brand.id %>"><%= brand.brand_name %></option>
+                                                <option value="<%= brand.id %>" <% if(brand.id==product.brand_id){ %>
+                                                selected="selected"   
+                                                <%} %>><%= brand.brand_name %></option>
                                                 <% }); %>
                                             </select>
                                         </div>
@@ -266,6 +268,10 @@
                                     <input type="hidden" class="form-control" name="filename_one" value="<%= product.filename_one %>">
                                     <input type="hidden" class="form-control" name="filename_two" value="<%= product.filename_two %>">
                                     <input type="hidden" class="form-control" name="filename_three" value="<%= product.filename_three %>">
+                                    <input type="hidden" class="form-control" name="img_one" value="<%= product.img_one %>">
+                                    <input type="hidden" class="form-control" name="img_two" value="<%= product.img_two %>">
+                                    <input type="hidden" class="form-control" name="img_three" value="<%= product.img_three %>">
+                                    
                                 </div>
                         </div>
                         

@@ -122,7 +122,7 @@ const storeProduct = async (req, res, next) => {
         filenames
       );
 
-      if (response) res.redirect("/api/product/addProduct");
+      if (response) res.redirect("/api/product/product");
     }
   } catch (error) {
     next(error);

@@ -2,6 +2,7 @@ import Joi from "joi";
 
 const userValidate = (data) => {
   const userSchema = Joi.object({
+    id:Joi.string(),
     email: Joi.string()
       .email({
         minDomainSegments: 2,

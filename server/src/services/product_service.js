@@ -70,40 +70,10 @@ const getSubCate = async (categories_id) => {
 const productById = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const product = await db.Product.findOne({
-        where: {
-          id,
-        },
-        include: [
-          {
-            model: db.Categories,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-          {
-            model: db.Subcategories,
-            attributes: {
-              exclude: ["createdAt", "updatedAt", "categories_id"],
-            },
-          },
-          {
-            model: db.Brand,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-        ],
-
-        attributes: {
-          exclude: [
-            "createdAt",
-            "updatedAt",
-            "categories_id",
-            "subcat_id",
-            "brand_id",
-          ],
-        },
-        raw: true,
-        nest: true,
+      const product = await db.sequelize.query(`EXEC sp_ProductById :id`, {
+        replacements: {id : id},
       });
-      resolve(product);
+      resolve(product[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -112,37 +82,8 @@ const productById = async (id) => {
 const product = async () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const product = await db.Product.findAll({
-        include: [
-          {
-            model: db.Categories,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-          {
-            model: db.Subcategories,
-            attributes: {
-              exclude: ["createdAt", "updatedAt", "categories_id"],
-            },
-          },
-          {
-            model: db.Brand,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-        ],
-
-        attributes: {
-          exclude: [
-            "createdAt",
-            "updatedAt",
-            "categories_id",
-            "subcat_id",
-            "brand_id",
-          ],
-        },
-        raw: true,
-        nest: true,
-      });
-      resolve(product);
+      const product = await db.sequelize.query(`EXEC sp_ListProduct`);
+      resolve(product[0]);
     } catch (error) {
       reject(error);
     }
@@ -152,22 +93,63 @@ const product = async () => {
 const storeProduct = async (data, urls, filenames) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Product.findOrCreate({
-        where: {
-          pro_name: data.pro_name,
-        },
-        defaults: {
-          id: genarateId(),
-          ...data,
-          status: "1",
-          img_one: urls[0],
-          img_two: urls[1],
-          img_three: urls[2],
-          filename_one: filenames[0],
-          filename_two: filenames[1],
-          filename_three: filenames[2],
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_createpro 
+  :idpro ,
+	:cateid ,
+	:subid ,
+	:brandid ,
+	:proname ,
+	:procode ,
+	:proquan ,
+	:prodetail ,
+	:procolor ,
+	:prosize ,
+	:sellprice ,
+	:discount_price ,
+	:video_link ,
+	:main_slider ,
+	:hot_new ,
+	:buyone_getone ,
+	:trend ,
+	:img_one ,
+	:img_two ,
+	:img_three ,
+	:status ,
+	:filename_one ,
+	:filename_two ,
+	:filename_three ,
+	:best_rated  `,
+        {
+          replacements: {
+            idpro: genarateId(),
+            cateid: data.categories_id,
+            subid: data.subcat_id,
+            brandid: data.brand_id,
+            proname: data.pro_name,
+            procode: data.pro_code,
+            proquan: data.pro_quantity,
+            prodetail: data.pro_details,
+            procolor: data.pro_color,
+            prosize: data.pro_size,
+            sellprice: data.selling_price,
+            discount_price: data.discount_price ? data.discount_price : "",
+            video_link: data.video_link ? data.data.video_link : "",
+            main_slider: data.main_slider ? data.main_slider : "",
+            hot_new: data.hot_new ? data.hot_new : "",
+            buyone_getone: data.buyone_getone ? data.buyone_getone : "",
+            trend: data.trend ? data.trend : "",
+            img_one: urls[0] ? urls[0] : "",
+            img_two: urls[1] ? urls[1] : "",
+            img_three: urls[2] ? urls[2] : "",
+            status: "1",
+            filename_one: filenames[0] ? filenames[0] : "",
+            filename_two: filenames[1] ? filenames[1] : "",
+            filename_three: filenames[2] ? filenames[2] : "",
+            best_rated: data.best_rated ? data.best_rated : "",
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Product has been created",
@@ -193,7 +175,9 @@ const updateProduct = (
       if (fieldname1) {
         if (fieldname1.filename1) {
           cloudinary.uploader.destroy(data?.filename_one);
-          data.img_one = fieldname1?.urls1[0] ? fieldname1?.urls1[0] : "";
+          data.img_one = fieldname1?.urls1[0]
+            ? fieldname1?.urls1[0]
+            : data.img_one;
           data.filename_one = fieldname1?.filename1[0]
             ? fieldname1?.filename1[0]
             : "";
@@ -203,7 +187,9 @@ const updateProduct = (
       if (fieldname2) {
         if (fieldname2.filename2) {
           cloudinary.uploader.destroy(data?.filename_two);
-          data.img_two = fieldname2?.urls2[0] ? fieldname2?.urls2[0] : "";
+          data.img_two = fieldname2?.urls2[0]
+            ? fieldname2?.urls2[0]
+            : data.img_two;
           data.filename_two = fieldname2?.filename2[0]
             ? fieldname2?.filename2[0]
             : "";
@@ -212,7 +198,9 @@ const updateProduct = (
       if (fieldname3) {
         if (fieldname3.filename3) {
           cloudinary.uploader.destroy(data?.filename_three);
-          data.img_three = fieldname3?.urls3[0] ? fieldname3?.urls3[0] : "";
+          data.img_three = fieldname3?.urls3[0]
+            ? fieldname3?.urls3[0]
+            : data.img_three;
           data.filename_three = fieldname3?.filename3[0]
             ? fieldname3?.filename3[0]
             : "";
@@ -223,9 +211,60 @@ const updateProduct = (
       data.hot_new = data.hot_new === "1" ? "1" : "0";
       data.trend = data.trend === "1" ? "1" : "0";
       data.buyone_getone = data.buyone_getone === "1" ? "1" : "0";
-      const response = await db.Product.update(data, {
-        where: { id: pid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_updatepro :idpro ,
+	:cateid ,
+	:subid ,
+	:brandid ,
+	:proname ,
+	:procode ,
+	:proquan ,
+	:prodetail ,
+	:procolor ,
+	:prosize ,
+	:sellprice ,
+	:discount_price ,
+	:video_link ,
+	:main_slider ,
+	:hot_new ,
+	:buyone_getone ,
+	:trend ,
+	:img_one ,
+	:img_two ,
+	:img_three ,
+	:filename_one ,
+	:filename_two ,
+	:filename_three ,
+	:best_rated  `,
+        {
+          replacements: {
+            idpro: pid,
+            cateid: data.categories_id,
+            subid: data.subcat_id,
+            brandid: data.brand_id,
+            proname: data.pro_name,
+            procode: data.pro_code,
+            proquan: data.pro_quantity,
+            prodetail: data.pro_details,
+            procolor: data.pro_color,
+            prosize: data.pro_size,
+            sellprice: data.selling_price,
+            discount_price: data.discount_price ? data.discount_price : "",
+            video_link: data.video_link ? data.data.video_link : "",
+            main_slider: data.main_slider ? data.main_slider : "",
+            hot_new: data.hot_new ? data.hot_new : "",
+            buyone_getone: data.buyone_getone ? data.buyone_getone : "",
+            trend: data.trend ? data.trend : "",
+            img_one: data.img_one,
+            img_two: data.img_two,
+            img_three: data.img_three,
+            filename_one: data.filename_one,
+            filename_two: data.filename_two,
+            filename_three: data.filename_three,
+            best_rated: data.best_rated ? data.best_rated : "",
+          },
+        }
+      );
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
@@ -245,10 +284,16 @@ const updateProduct = (
 const deleteProduct = async (pid, filenames) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Product.destroy({
-        where: { id: pid },
-      });
-
+      console.log(pid);
+      const response = await db.sequelize.query(
+        `EXEC sp_DeleteProduct :idProduct`,
+        {
+          replacements: {
+            idProduct: pid,
+          },
+        }
+      );
+      console.log(response);
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,

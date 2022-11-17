@@ -23,7 +23,9 @@
                             <thead>
                                 <tr>
                                     <th class="wd-5p">STT</th>
+                                    <th class="wd-15p">Tiêu đề(English)</th>
                                     <th class="wd-15p">Tiêu đề</th>
+                                    <th class="wd-15p">Hình ảnh</th>
                                     <th class="wd-20p">Thể loại</th>
                                     <th class="wd-20p">Hành động</th>
                                 </tr>
@@ -49,10 +51,16 @@
                                                             <%- l.details_vn %>
                                                         </td>
                                                         <td>
+                                                            <%- l.details_en %>
+                                                        </td>
+                                                        <td>
                                                             <%= l.post_category.cat_name_vn %>
                                                         </td>
                                                         <td>
-                                                            <a href=""
+                                                            <img src="<%= l.post_image %>" width="100px" height="100px" alt="" srcset="">
+                                                        </td>
+                                                        <td>
+                                                            <a href="/api/blog/getListPostEdit/<%= l.id %>"
                                                                 class="btn btn-sm btn-info">Edit</a>
                                                             <a href="" class="btn btn-sm btn-danger" id="delete"
                                                             

@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       pro_quantity: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       pro_details: {
         type: Sequelize.STRING,
@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       selling_price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       discount_price: {
         type: Sequelize.STRING,

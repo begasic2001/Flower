@@ -4,10 +4,8 @@ import { v4 as genarateId } from "uuid";
 const coupon = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const coupon = await db.Coupon.findAll({
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      });
-      resolve(coupon);
+      const coupon = await db.sequelize.query(`EXEC sp_ListCoupon`);
+      resolve(coupon[0]);
     } catch (error) {
       reject(error);
     }
@@ -17,13 +15,12 @@ const coupon = () => {
 const couponById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.Coupon.findOne({
-        where: {
-          id,
+      const category = await db.sequelize.query(`EXEC sp_CouponById :id`, {
+        replacements: {
+          id: id,
         },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
       });
-      resolve(category);
+      resolve(category[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -33,18 +30,16 @@ const couponById = (id) => {
 const createCoupon = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Coupon.findOrCreate({
-        where: {
-          coupon: data.coupon,
-        },
-        defaults: {
-          id: genarateId(),
-          coupon: data.coupon,
-          discount: data.discount,
-        },
-      });
-      
-    
+      const response = await db.sequelize.query(
+        `EXEC sp_storeCoupon :id , :coupon , :discount`,
+        {
+          replacements: {
+            id: genarateId(),
+            coupon: data.coupon,
+            discount: data.discount,
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Coupon has been created",
@@ -58,9 +53,16 @@ const createCoupon = (data) => {
 const updateCoupon = ({ cpid, ...data }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Coupon.update(data, {
-        where: { id: cpid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_udpateCoupon :id , :coupon , :discount`,
+        {
+          replacements: {
+            id: cpid,
+            coupon: data.coupon,
+            discount: data.discount,
+          },
+        }
+      );
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
@@ -77,9 +79,14 @@ const updateCoupon = ({ cpid, ...data }) => {
 const deleteCoupon = (cpid) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Coupon.destroy({
-        where: { id: cpid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_deleteCoupon :id `,
+        {
+          replacements: {
+            id: cpid
+          },
+        }
+      );
 
       resolve({
         err: response > 0 ? 0 : 1,
@@ -91,10 +98,10 @@ const deleteCoupon = (cpid) => {
   });
 };
 
-module.exports ={
+module.exports = {
   coupon,
   couponById,
   createCoupon,
   updateCoupon,
-  deleteCoupon
-}
+  deleteCoupon,
+};

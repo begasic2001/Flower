@@ -35,19 +35,19 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mg-b-10-force">
                                         <label class="form-control-label">Danh mục: <span class="tx-danger">*</span></label><br>
-                                        <strong><%= product.Category.cat_name %></strong>
+                                        <strong><%= product.cat_name %></strong>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                         <div class="form-group mg-b-10-force">
                                             <label class="form-control-label">Danh mục con: <span class="tx-danger">*</span></label><br>
-                                            <strong><%= product.Subcategory.subcategory_name %></strong>
+                                            <strong><%= product.subcategory_name %></strong>
                                         </div>
                                 </div>
                                 <div class="col-lg-4">
                                             <div class="form-group mg-b-10-force">
                                                 <label class="form-control-label">Nhà cung cấp: <span class="tx-danger">*</span></label><br>
-                                                <strong><%= product.Brand.brand_name %></strong>
+                                                <strong><%= product.brand_name %></strong>
                                             </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -165,7 +165,7 @@
                                 
                                     <div class="col-lg-4">
                                         <label class="ckbox">
-                                            <% if (product.hot_new ==="1" ) { %>
+                                            <% if (product.trend ==="1" ) { %>
                                             <input type="checkbox" name="trend" value="1" checked disabled>
                                             <% }else{ %>
                                             <input type="checkbox" name="trend" value="1" disabled>

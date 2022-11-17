@@ -31,7 +31,7 @@
                                     <select name="categories_id" class="form-group">
                                         <% category.map(function(cate){ %>
                                             <option value="<%= cate.id %>" 
-                                                <% if(cate.id==subCategory.id){ %>
+                                                <% if(cate.id==subCategory.categories_id){ %>
                                                     selected="selected"
                                                     <%} %>
                                                 >
