@@ -10,7 +10,7 @@
             <div class="sl-pagebody">
                 <div class="card pd-20 pd-sm-40">
                     <h6 class="card-body-title">Sửa bài viết mới
-                        <a href="/api/blog/updateListBlogCategory" class="btn btn-success btn-sm pull-right">Tất cả bài viết</a>
+                        <a href="/api/blog/listBlog" class="btn btn-success btn-sm pull-right">Tất cả bài viết</a>
                     </h6>
 
                     <form action="/api/blog/updateListBlogCategory?_method=PUT" method="POST" enctype="multipart/form-data">
@@ -47,7 +47,7 @@
                                                         <select class="form-control select2" name="categories_id">
                                                             <option label="Chọn danh mục"></option>
                                                             <% category.map(function(cate){ %>
-                                                                <option value="<%= cate.id %>"  <% if(cate.id==listBlog.post_category.id){ %>
+                                                                <option value="<%= cate.id %>"  <% if(cate.id==listBlog.categories_id){ %>
                                                                     selected="selected"
                                                                     <%} %>><%= cate.cat_name_vn %></option>
                                                                 <% }); %>
@@ -90,7 +90,7 @@
                                                 <div class="form-group">
                                     
                                                     <input type="hidden" class="form-control" name="lpid" value="<%= listBlog.id %>">
-                        
+                                                    <input type="hidden" class="form-control" name="filename" value="<%= listBlog.filename %>">
                                                 </div>
                                             </div>
                                                 <div class="form-layout-footer">

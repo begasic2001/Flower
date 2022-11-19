@@ -54,7 +54,11 @@
                                                             <%- l.details_en %>
                                                         </td>
                                                         <td>
-                                                            <%= l.post_category.cat_name_vn %>
+                                                            <% category.map(function(c){ %>
+                                                            <%   if(c.id == l.categories_id){ %>
+                                                                <%= c.cat_name_vn %>
+                                                            <%  } %>
+                                                            <%})%>
                                                         </td>
                                                         <td>
                                                             <img src="<%= l.post_image %>" width="100px" height="100px" alt="" srcset="">

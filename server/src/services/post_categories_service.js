@@ -4,10 +4,8 @@ const cloudinary = require("cloudinary").v2;
 const postCategory = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.post_categories.findAll({
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      });
-      resolve(category);
+      const category = await db.sequelize.query(`EXEC sp_listPost`);
+      resolve(category[0]);
     } catch (error) {
       reject(error);
     }
@@ -17,13 +15,10 @@ const postCategory = () => {
 const postCategoryById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const category = await db.post_categories.findOne({
-        where: {
-          id,
-        },
-        attributes: { exclude: ["createdAt", "updatedAt"] },
+      const category = await db.sequelize.query(`EXEC sp_listPostById :id`, {
+        replacements: { id: id },
       });
-      resolve(category);
+      resolve(category[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -33,17 +28,16 @@ const postCategoryById = (id) => {
 const createPostCategory = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.post_categories.findOrCreate({
-        where: {
-          cat_name_en: data.cat_name_en,
-          cat_name_vn: data.cat_name_vn,
-        },
-        defaults: {
-          id: genarateId(),
-          cat_name_en: data.cat_name_en,
-          cat_name_vn: data.cat_name_vn,
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_createPost :id , :cat_name_en , :cat_name_vn`,
+        {
+          replacements: {
+            id: genarateId(),
+            cat_name_en: data.cat_name_en,
+            cat_name_vn: data.cat_name_vn,
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "PostCategory has been created",
@@ -57,9 +51,16 @@ const createPostCategory = (data) => {
 const updatePostCategory = ({ pcid, ...data }) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.post_categories.update(data, {
-        where: { id: pcid },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_updatePost :id , :cat_name_en , :cat_name_vn`,
+        {
+          replacements: {
+            id: pcid,
+            cat_name_en: data.cat_name_en,
+            cat_name_vn: data.cat_name_vn,
+          },
+        }
+      );
       resolve({
         err: response[0] > 0 ? 0 : 1,
         mes:
@@ -73,29 +74,88 @@ const updatePostCategory = ({ pcid, ...data }) => {
   });
 };
 
-const updateListPostCategory = ({ lpid, ...data }) => {
+const updateListPostCategory = ({ lpid, ...data }, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Post.update(data, {
-        where: { id: lpid },
-      });
-      resolve({
-        err: response[0] > 0 ? 0 : 1,
-        mes:
-          response[0] > 0
-            ? `${response[0]} Post updated`
-            : "Cannot update new Post/ Post ID not found",
-      });
+      if (fileData) {
+        console.log(data)
+        console.log(fileData)
+        cloudinary.uploader.destroy(data.filename);
+        data.post_image = fileData?.path;
+        data.filename = fileData?.filename;
+        const response = await db.sequelize.query(
+          `EXEC sp_updatePostBlog  :id ,
+            :categories_id ,
+            :post_en ,
+            :post_vn ,
+            :details_en ,
+            :details_vn ,
+            :post_image ,
+            :filename  `,
+          {
+            replacements: {
+              id: lpid,
+              categories_id: data.categories_id,
+              post_en: data.post_en,
+              post_vn: data.post_vn,
+              details_en: data.details_en,
+              details_vn: data.details_vn,
+              post_image: data.post_image,
+              filename: data.filename,
+            },
+          }
+        );
+        resolve({
+          err: response[0] > 0 ? 0 : 1,
+          mes:
+            response[0] > 0
+              ? `${response[0]} Post updated`
+              : "Cannot update new Post/ Post ID not found",
+        });
+      } else {
+        const response = await db.sequelize.query(
+          `EXEC sp_updatePostBlogNoImage  :id ,
+            :categories_id ,
+            :post_en ,
+            :post_vn ,
+            :details_en ,
+            :details_vn
+           `,
+          {
+            replacements: {
+              id: lpid,
+              categories_id: data.categories_id,
+              post_en: data.post_en,
+              post_vn: data.post_vn,
+              details_en: data.details_en,
+              details_vn: data.details_vn,
+            },
+          }
+        );
+        resolve({
+          err: response[0] > 0 ? 0 : 1,
+          mes:
+            response[0] > 0
+              ? `${response[0]} Post updated`
+              : "Cannot update new Post/ Post ID not found",
+        });
+      }
+
+      if (fileData && response[0] === 0)
+        cloudinary.uploader.destroy(fileData.filename);
     } catch (error) {
       reject(error);
+      if (fileData) cloudinary.uploader.destroy(fileData.filename);
     }
   });
 };
 const deletePostCategory = (pcid) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.post_categories.destroy({
-        where: { id: pcid },
+      const response = await db.sequelize.query(`EXEC sp_deletePost :id`, {
+        replacements: {
+          id: pcid,
+        },
       });
 
       resolve({
@@ -111,22 +171,28 @@ const deletePostCategory = (pcid) => {
 const createPostBlog = (data, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Post.findOrCreate({
-        where: {
-          post_en: data.post_en,
-          post_vn: data.post_vn,
-        },
-        defaults: {
-          id: genarateId(),
-          post_en: data.post_en,
-          post_vn: data.post_vn,
-          post_image: fileData?.path,
-          filename: fileData?.filename,
-          details_en: data.details_en,
-          details_vn: data.details_vn,
-          categories_id: data.categories_id,
-        },
-      });
+      const response = await db.sequelize.query(
+        `EXEC sp_createPostBlog  :id ,
+            :categories_id ,
+            :post_en ,
+            :post_vn ,
+            :details_en ,
+            :details_vn ,
+            :post_image ,
+            :filename  `,
+        {
+          replacements: {
+            id: genarateId(),
+            post_en: data.post_en,
+            post_vn: data.post_vn,
+            post_image: fileData?.path,
+            filename: fileData?.filename,
+            details_en: data.details_en,
+            details_vn: data.details_vn,
+            categories_id: data.categories_id,
+          },
+        }
+      );
       resolve({
         status: response[1] ? 0 : 1,
         msg: response[1] ? "Created" : "Posts has been created",
@@ -143,18 +209,8 @@ const createPostBlog = (data, fileData) => {
 const listBlog = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Post.findAll({
-        include: [
-          {
-            model: db.post_categories,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-        ],
-        attributes: { exclude: ["categories_id", "createdAt", "updatedAt"] },
-        raw: true,
-        nest: true,
-      });
-      resolve(response);
+      const response = await db.sequelize.query(`EXEC sp_listPostBlog`);
+      resolve(response[0]);
     } catch (error) {
       reject(error);
     }
@@ -164,21 +220,13 @@ const listBlog = () => {
 const listBlogById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Post.findOne({
-        where: {
-          id,
-        },
-        include: [
-          {
-            model: db.post_categories,
-            attributes: { exclude: ["createdAt", "updatedAt"] },
-          },
-        ],
-        attributes: { exclude: ["categories_id", "createdAt", "updatedAt"] },
-        raw: true,
-        nest: true,
-      });
-      resolve(response);
+      const response = await db.sequelize.query(
+        `EXEC sp_listPostBlogById :id`,
+        {
+          replacements: { id: id },
+        }
+      );
+      resolve(response[0][0]);
     } catch (error) {
       reject(error);
     }
@@ -187,8 +235,8 @@ const listBlogById = (id) => {
 const deleteListBlog = (lpid, filename) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Post.destroy({
-        where: { id: lpid },
+      const response = await db.sequelize.query(`EXEC sp_deletePostBlog :id`, {
+        replacements: { id: lpid },
       });
 
       resolve({

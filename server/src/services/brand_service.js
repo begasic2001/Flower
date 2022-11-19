@@ -60,7 +60,6 @@ const updateBrand = ({ bid, ...data }, fileData) => {
         cloudinary.uploader.destroy(data.filename);
         data.brand_logo = fileData?.path;
         data.filename = fileData?.filename;
-        console.log(data)
         const response = await db.sequelize.query(
            `EXEC sp_EditBrand :id , :name , :logo , :file`,
            {

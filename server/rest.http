@@ -25,7 +25,7 @@ Content-Type: application/json
 
 GET  {{host}}/auth/getlist HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY2NDk4MTk1NCwiZXhwIjoxNjY0OTg1NTU0fQ.nH85KRpuH2JCftVHQ5wnzIC_rGj30AQHaawg7TrNpWE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2Njg3ODYzMDIsImV4cCI6MTY2ODc4OTkwMn0.amUtjOVkdhnewVmglfVK0C8CIcvUHfZ0iGgCNtMkpas
 ###
 POST {{host}}/auth/refresh-token HTTP/1.1
 Content-Type: application/json

@@ -19,5 +19,11 @@ route.post(
 );
 //listBlog
 route.get("/listBlog", PostCategoryController.listBlog);
+route.get("/getListPostEdit/:id", PostCategoryController.getListPostEdit);
+route.put(
+  "/updateListBlogCategory",
+  uploadCloud.single("image"),
+  PostCategoryController.updateListBlogCategory
+);
 route.delete("/deleteListBlog", PostCategoryController.deleteListBlog);
 module.exports = route;
