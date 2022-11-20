@@ -50,6 +50,16 @@ const getAny = ({ page, limit, order, name, available, price, ...query }) =>
       reject(error);
     }
   });
+  const getProductClientByStatus = async (categories_id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      
+      
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
 const getSubCate = async (categories_id) => {
   return new Promise(async (resolve, reject) => {
@@ -349,6 +359,7 @@ const inactiveProduct = async (id) => {
 module.exports = {
   getSubCate,
   getAny,
+  getProductClientByStatus,
   productById,
   product,
   storeProduct,
