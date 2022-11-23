@@ -16,22 +16,25 @@
                         <ul class="cat_menu">
                             <li class="hassubs">
                                 <% category.map(function(c){ %>
-                                    <a href="#"><i class="fas fa-chevron-right"></i><%= c.cat_name %></a>
+                                    <a href="#"><i class="fas fa-chevron-right"></i>
+                                        <%= c.cat_name %>
+                                    </a>
                                     <% if(subCategory){ %>
-                                    <% subCategory.map(function(s){ %>
-                                    <% if(c.id==s.categories_id){ %>
-                                    <ul>
-                                        <li class="hassubs">
-                                            <a href="#">
-                                            <%=  s.subcategory_name  %>
-                                            <i class="fas fa-chevron-right"></i></a>
-                                        </li>
-                                    </ul>
-                                    <% } %>
-                                    <% }) %>
-                                    <% } %>
-                                <% }) %>
-                                
+                                        <% subCategory.map(function(s){ %>
+                                            <% if(c.id==s.categories_id){ %>
+                                                <ul>
+                                                    <li class="hassubs">
+                                                        <a href="#">
+                                                            <%= s.subcategory_name %>
+                                                                <i class="fas fa-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                                <% } %>
+                                                    <% }) %>
+                                                        <% } %>
+                                                            <% }) %>
+
                             </li>
                         </ul>
                     </div>

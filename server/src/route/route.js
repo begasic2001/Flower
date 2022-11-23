@@ -6,7 +6,8 @@ import routerProduct from "./product.js";
 import routerOrder from "./order.js";
 import routerCoupon from "./coupon.js";
 import routerBlog from "./blog.js";
-import routerClient from "./client.js"
+import routerClient from "./client.js";
+import routerCart from "./cart.js"
 const app = (app) => {
   app.use("/api/auth", routerUser);
   app.use("/api/cate", routerCategory);
@@ -16,8 +17,8 @@ const app = (app) => {
   app.use("/api/order", routerOrder);
   app.use("/api/coup", routerCoupon);
   app.use("/api/blog", routerBlog);
+  app.use("/api/cart", routerCart);
   app.use("/", routerClient);
-  
 };
 
 module.exports = app;

@@ -90,9 +90,33 @@ Content-Type: application/json
 {
     "categories_id":"ddde7b0c-0b3f-411a-9978-7fc7cb7ec6ad"
 }
+###
 
+POST {{host}}/cart/addToCart HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2NjkyMjE2MDAsImV4cCI6MTY2OTIyNTIwMH0.p0MCKbyBraSFmPAbhpz-Bq97yafdcfqL8YmfZ3jH5BQ
 
+{
+    "productId":"06fa3ae7-badc-408f-9a2c-f5d2243f7d70"
+}
+###
+GET {{host}}/cart/getCart HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2NjkyMjE2MDAsImV4cCI6MTY2OTIyNTIwMH0.p0MCKbyBraSFmPAbhpz-Bq97yafdcfqL8YmfZ3jH5BQ
 
+###
+DELETE  {{host}}/cart/removeCart HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2NjkyMjE2MDAsImV4cCI6MTY2OTIyNTIwMH0.p0MCKbyBraSFmPAbhpz-Bq97yafdcfqL8YmfZ3jH5BQ
+
+{
+    "productId":"06fa3ae7-badc-408f-9a2c-f5d2243f7d70"
+}
+
+###
+DELETE  {{host}}/cart/deleteCart HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2NjkyMjE2MDAsImV4cCI6MTY2OTIyNTIwMH0.p0MCKbyBraSFmPAbhpz-Bq97yafdcfqL8YmfZ3jH5BQ
 
 
 
