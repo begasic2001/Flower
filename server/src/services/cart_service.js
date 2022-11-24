@@ -57,17 +57,40 @@ const removeElementCart = (userId, productId) => {
   });
 };
 
-const destroyCart = (userId, productId) => {
+const updateCart = (userId, productId, amount) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await db.sequelize.query(
-        `EXEC sp_destroyCart :CUS  `,
+        `EXEC sp_updateCart :CUS , :ITEM , :AMOUNT`,
         {
           replacements: {
-            CUS: userId
+            CUS: userId,
+            ITEM: productId,
+            AMOUNT: amount,
           },
         }
       );
+      resolve({
+        err: response[0] > 0 ? 0 : 1,
+        mes:
+          response[0] > 0
+            ? `${response[0]} cart updated`
+            : "Cannot update new cart/ cart ID not found",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+const destroyCart = (userId, productId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.sequelize.query(`EXEC sp_destroyCart :CUS  `, {
+        replacements: {
+          CUS: userId,
+        },
+      });
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,
@@ -82,4 +105,5 @@ module.exports = {
   addToCart,
   removeElementCart,
   destroyCart,
+  updateCart,
 };

@@ -5,5 +5,6 @@ const route = express.Router();
 route.get("/getCart", verifyAccessToken, CartController.getCart);
 route.post("/addToCart", verifyAccessToken, CartController.addToCart);
 route.delete("/removeCart", verifyAccessToken, CartController.removeElementCart);
+route.put("/updateCart", verifyAccessToken, CartController.updateCart);
 route.delete("/deleteCart", verifyAccessToken, CartController.deleteCart);
 module.exports = route;

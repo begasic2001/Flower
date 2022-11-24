@@ -224,6 +224,7 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+// client
 const product = async (req, res, next) => {
   try {
     const product = await services_product.getAny(req.query);

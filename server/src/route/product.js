@@ -13,11 +13,10 @@ route.get("/addProduct", ProductController.getAddProduct);
 route.get("/productDetail/:id", ProductController.getproductDetail);
 //
 // API
-route.get("/getProduct", ProductController.product);
+
 route.get("/getSubCate/:categories_id", ProductController.getSubCate);
 route.put("/activeProduct/:id", ProductController.activeProduct);
 route.put("/inactiveProduct/:id", ProductController.inactiveProduct);
-// route.get("/productAPI", ProductController.product);
 route.post(
   "/storeProduct",
   uploadCloud.array("image"),
@@ -26,5 +25,6 @@ route.post(
 route.get("/getProductEdit/:id", ProductController.getProductEdit);
 route.put("/updateProduct/", cpUpload, ProductController.updateProduct);
 route.delete("/deleteProduct/", ProductController.deleteProduct);
-// route.get("/product/:id", ProductController.productById);
+// client
+route.get("/getProduct", ProductController.product);
 module.exports = route;
