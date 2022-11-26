@@ -78,8 +78,6 @@ const updateListPostCategory = ({ lpid, ...data }, fileData) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (fileData) {
-        console.log(data)
-        console.log(fileData)
         cloudinary.uploader.destroy(data.filename);
         data.post_image = fileData?.path;
         data.filename = fileData?.filename;

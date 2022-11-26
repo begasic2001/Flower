@@ -8,6 +8,7 @@ import routerCoupon from "./coupon.js";
 import routerBlog from "./blog.js";
 import routerClient from "./client.js";
 import routerCart from "./cart.js"
+import routerWishList from "./wishlist.js"
 const app = (app) => {
   app.use("/api/auth", routerUser);
   app.use("/api/cate", routerCategory);
@@ -18,6 +19,7 @@ const app = (app) => {
   app.use("/api/coup", routerCoupon);
   app.use("/api/blog", routerBlog);
   app.use("/api/cart", routerCart);
+  app.use("/api/wishlist", routerWishList);
   app.use("/", routerClient);
 };
 

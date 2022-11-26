@@ -3,8 +3,16 @@ import CartController from "../controller/CartController";
 import { verifyAccessToken } from "../services/jwt_service";
 const route = express.Router();
 route.get("/getCart", verifyAccessToken, CartController.getCart);
-route.post("/addToCart", verifyAccessToken, CartController.addToCart);
-route.delete("/removeCart", verifyAccessToken, CartController.removeElementCart);
-route.put("/updateCart", verifyAccessToken, CartController.updateCart);
+route.post("/addToCart/:productId", verifyAccessToken, CartController.addToCart);
+route.delete(
+  "/removeCart/:productId",
+  verifyAccessToken,
+  CartController.removeElementCart
+);
+route.put(
+  "/updateCart/:productId",
+  verifyAccessToken,
+  CartController.updateCart
+);
 route.delete("/deleteCart", verifyAccessToken, CartController.deleteCart);
 module.exports = route;

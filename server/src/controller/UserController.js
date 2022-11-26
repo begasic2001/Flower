@@ -44,21 +44,6 @@ const getUserEdit = async (req, res, next) => {
   }
 };
 
-const getLoginPage = async (req, res, next) => {
-  try {
-    res.render("layouts/signin", {});
-  } catch (error) {
-    next(error);
-  }
-};
-
-const getRegisterPage = async (req, res, next) => {
-  try {
-    res.render("layouts/signup", {});
-  } catch (error) {
-    next(error);
-  }
-};
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -197,10 +182,8 @@ module.exports = {
   getAllUser,
   user,
   login,
-  getLoginPage,
   refreshToken,
   register,
-  getRegisterPage,
   logout,
   getList,
   getUserEdit,

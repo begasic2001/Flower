@@ -217,9 +217,8 @@ const deleteProduct = async (req, res, next) => {
       req.query.pid,
       filenames
     );
-
     if (response) res.redirect("/api/product/product");
-  } catch (error) {
+  } catch (error) { 
     next(error);
   }
 };

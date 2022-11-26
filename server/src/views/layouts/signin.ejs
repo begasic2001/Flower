@@ -40,28 +40,51 @@
 <body>
 
     <div class="d-flex align-items-center justify-content-center bg-sl-primary ht-100v">
-
-        <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white">
-            <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">Đăng <span
-                    class="tx-info tx-normal">Nhập</span></div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Nhập email">
-            </div><!-- form-group -->
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Nhập password">
-                <a href="" class="tx-info tx-12 d-block mg-t-10">Quên mật khẩu ?</a>
-            </div><!-- form-group -->
-            <button type="submit" class="btn btn-info btn-block">Đăng nhập</button>
-
-            <div class="mg-t-60 tx-center">Bạn chưa có tài khoản ? <a href="page-signup.html" class="tx-info">Đăng ký</a>
-            </div>
-        </div><!-- login-wrapper -->
+        <form action="" method="">
+            <div class="login-wrapper wd-300 wd-xs-350 pd-25 pd-xs-40 bg-white">
+                <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">Đăng <span class="tx-info tx-normal">Nhập</span></div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nhập email" name="email">
+                </div><!-- form-group -->
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Nhập password" name="password">
+                    <a href="" class="tx-info tx-12 d-block mg-t-10">Quên mật khẩu ?</a>
+                </div><!-- form-group -->
+                <button type="submit" class="btn btn-info btn-block">Đăng nhập</button>
+        </form>
+                <div class="mg-t-60 tx-center">Bạn chưa có tài khoản ? <a href="/register" class="tx-info">Đăng ký</a>
+                </div>
+            </div><!-- login-wrapper -->
+       
+       
     </div><!-- d-flex -->
 
     <script src="/lib/jquery/jquery.js"></script>
     <script src="/lib/popper.js/popper.js"></script>
     <script src="/lib/bootstrap/bootstrap.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).on('click','button',function(e){
+            e.preventDefault();
+            const email = $('input[name="email"]').val()
+            const password = $('input[name="password"]').val()
+            $.ajax({
+                url: "http://localhost:9000/api/auth/login",
+                type: "POST",
+                data: {
+                    email: email,
+                    password: password,
+                }
+            }).then(data => {
+                    window.localStorage.setItem('accessToken',data.accessToken)
+                  swal(`Đăng nhập thành công`)
+                    .then(() => {
+                        window.location.replace('/');
+                    })
+            })
+        })
+        
+    </script>
 </body>
 
 </html>

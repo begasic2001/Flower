@@ -37,5 +37,5 @@ app.use((err, req, res, next) => {
 });
 app.use(cors());
 app.listen(port, () => {
-  console.log(`http://${hostname}:${port}/api`);
+  console.log(`http://${hostname}:${port}`);
 });

@@ -15,7 +15,7 @@ const getCart = async (req, res, next) => {
 
 const addToCart = async (req, res, next) => {
   try {
-    const productId = req.body.productId;
+    const productId = req.params.productId;
     const userId = req.payLoad.userId;
     const cart = await services.addToCart(userId, productId);
     res.json(cart);
@@ -26,7 +26,7 @@ const addToCart = async (req, res, next) => {
 
 const removeElementCart = async (req, res, next) => {
   try {
-    const productId = req.body.productId;
+    const productId = req.params.productId;
     const userId = req.payLoad.userId;
     const cart = await services.removeElementCart(userId, productId);
     console.log(cart);
@@ -37,7 +37,7 @@ const removeElementCart = async (req, res, next) => {
 
 const updateCart = async (req, res, next) => {
   try {
-    const productId = req.body.productId;
+    const productId = req.params.productId;
     const userId = req.payLoad.userId;
     const amount = +req.body.amount;
     const cart = await services.updateCart(userId, productId, amount);

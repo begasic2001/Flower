@@ -50,16 +50,6 @@ const getAny = ({ page, limit, order, name, available, price, ...query }) =>
       reject(error);
     }
   });
-  const getProductClientByStatus = async (categories_id) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      
-      
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
 
 const getSubCate = async (categories_id) => {
   return new Promise(async (resolve, reject) => {
@@ -81,7 +71,7 @@ const productById = async (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const product = await db.sequelize.query(`EXEC sp_ProductById :id`, {
-        replacements: {id : id},
+        replacements: { id: id },
       });
       resolve(product[0][0]);
     } catch (error) {
@@ -294,7 +284,6 @@ const updateProduct = (
 const deleteProduct = async (pid, filenames) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(pid);
       const response = await db.sequelize.query(
         `EXEC sp_DeleteProduct :idProduct`,
         {
@@ -303,7 +292,6 @@ const deleteProduct = async (pid, filenames) => {
           },
         }
       );
-      console.log(response);
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,
@@ -359,7 +347,6 @@ const inactiveProduct = async (id) => {
 module.exports = {
   getSubCate,
   getAny,
-  getProductClientByStatus,
   productById,
   product,
   storeProduct,

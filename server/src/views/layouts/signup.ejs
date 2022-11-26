@@ -29,7 +29,7 @@
     <meta name="description" content="Premium Quality and Responsive UI for Dashboard.">
     <meta name="author" content="ThemePixels">
 
-    <title>Starlight Responsive Bootstrap 4 Admin Template</title>
+    <title>Đăng ký thành viên</title>
 
     <!-- vendor css -->
     <link href="/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -46,22 +46,29 @@
     <div class="d-flex align-items-center justify-content-center bg-sl-primary ht-md-100v">
 
         <div class="login-wrapper wd-300 wd-xs-400 pd-25 pd-xs-40 bg-white">
-            <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">Đăng <span
-                    class="tx-info tx-normal">Ký</span></div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Nhập email">
-            </div><!-- form-group -->
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Nhập mật khẩu">
-            </div><!-- form-group -->
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Nhập họ và tên">
-            </div><!-- form-group -->
-            <div class="form-group tx-12">Bằng cách nhấp vào nút Đăng ký bên dưới, bạn đã đồng ý với chính sách bảo mật và điều khoản sử dụng trang web của chúng
-            tôi.</div>
-            <button type="submit" class="btn btn-info btn-block">Đăng ký</button>
+            <form action="" method="">
+                <div class="signin-logo tx-center tx-24 tx-bold tx-inverse">Đăng <span class="tx-info tx-normal">Ký</span></div>
+                
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nhập email" name="email">
+                </div><!-- form-group -->
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Nhập mật khẩu" name="password">
+                </div><!-- form-group -->
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nhập họ và tên" name="name">
+                </div><!-- form-group -->
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Nhập số điện thoại" name="phone">
+                </div><!-- form-group -->
+                <div class="form-group tx-12">Bằng cách nhấp vào nút Đăng ký bên dưới, bạn đã đồng ý với chính sách bảo mật và điều
+                    khoản sử dụng trang web của chúng
+                    tôi.</div>
+                <button type="submit" class="btn btn-info btn-block">Đăng ký</button>
+            </form>
+          
 
-            <div class="mg-t-40 tx-center">Bạn đẫ có tài khoản ? <a href="page-signin.html" class="tx-info">Đăng Nhập</a></div>
+            <div class="mg-t-40 tx-center">Bạn đẫ có tài khoản ? <a href="/login" class="tx-info">Đăng Nhập</a></div>
         </div><!-- login-wrapper -->
     </div><!-- d-flex -->
 
@@ -69,6 +76,32 @@
     <script src="/lib/popper.js/popper.js"></script>
     <script src="/lib/bootstrap/bootstrap.js"></script>
     <script src="/lib/select2/js/select2.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).on('click','button',function(e){
+            e.preventDefault();
+            const email = $('input[name="email"]').val()
+            const password = $('input[name="password"]').val()
+            const name = $('input[name="name"]').val()
+            const phone = $('input[name="phone"]').val()
+            $.ajax({
+                url: "http://localhost:9000/api/auth/register",
+                type: "POST",
+                data: {
+                    email: email,
+                    password: password,
+                    name:name,
+                    phone: phone,
+                }
+            }).then(data => {
+                swal(`Đăng ký thành công`)
+                .then(() => {
+                    window.location.replace('/login');
+                })
+            })
+        })
+        
+    </script>
     <script>
         $(function () {
             'use strict';

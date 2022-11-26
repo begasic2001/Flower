@@ -3,8 +3,6 @@ import UserController from "../controller/UserController";
 import { verifyAccessToken } from "../services/jwt_service";
 
 const route = express.Router();
-route.get("/login", UserController.getLoginPage);
-route.get("/register", UserController.getRegisterPage);
 //
 route.get("/getlist", verifyAccessToken, UserController.getList);
 route.get("/user", UserController.getAllUser);
