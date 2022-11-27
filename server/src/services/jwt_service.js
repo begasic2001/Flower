@@ -9,7 +9,7 @@ const signAccessToken = async (userId) => {
     };
     const secretKey = process.env.ACCESS_TOKEN;
     const options = {
-      expiresIn: "1m",
+      expiresIn: "30s",
     };
     jwt.sign(payLoad, secretKey, options, (err, token) => {
       if (err) reject(err);
@@ -39,7 +39,7 @@ const verifyAccessToken = (req, res, next) => {
       next();
     });
   } catch (error) {
-    if ((error.name === "TokenExpiredError")) {
+    if (error.name === "TokenExpiredError") {
       return res.status(200).json({
         code: 401,
         msg: error.message,

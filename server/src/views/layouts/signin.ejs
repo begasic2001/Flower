@@ -51,6 +51,7 @@
                     <a href="" class="tx-info tx-12 d-block mg-t-10">Quên mật khẩu ?</a>
                 </div><!-- form-group -->
                 <button type="submit" class="btn btn-info btn-block">Đăng nhập</button>
+                <button type="submit" class="btn btn-info btn-block" id="getList">Get List</button>
         </form>
                 <div class="mg-t-60 tx-center">Bạn chưa có tài khoản ? <a href="/register" class="tx-info">Đăng ký</a>
                 </div>
@@ -94,11 +95,11 @@
             });
 
             instance.interceptors.request.use(async function (config) {
-                // if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
-                //     return config
-                // }
+                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                    return config
+                }
                 const token = await instance.getLocalAccessToken()
-                config.headers['authorization'] = token
+                config.headers['authorization'] =  `Bearer ${token}` 
                 console.log(`Trước khi request:::::::`, token)
                 return config
             }, function (error) {
@@ -107,26 +108,26 @@
             });
 
             instance.interceptors.response.use(async function (response) {
-                console.log(`Sau khi request:::::::`)
-                // const config = response.config
-                // if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
-                //    return response
-                // }
-                const {code} = response.data
-                if(code && code===401){
-                    if(msg && msg==='jwt expired')
-                    console.log(`Trường hợp token hết hạn :::::::::::::::`)
+                console.log(`Sau khi request:::::::`,response.data)
+                const config = response.config
+                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                   return response
+                }
+                const {status,message} = response.data
+                if(status && status === 401){
+                    //if(message && message === 'jwt expired')
+                    console.log('Trường hợp token hết hạn :::::::::::::::', message)
                     //B1 get accessToken from refreshToken
-                    const refreshTok  = instance.getLocalRefreshToken()
-                    const {status,accessToken,refreshToken}  = await refreshToken(refreshTok)
-                    if(accessToken){
+                    const token  = await instance.getLocalRefreshToken()
+                    const newRefresh = await refreshToken(token)
+                    if(newRefresh){
                         console.log(`Đã lấy lại token thành công :::::::::`)
                         //B2 Đã lấy lại token
-                        config.headers['authorization'] = accessToken
-                        // B3
-                        await instance.setLocalAccessToken(accessToken)
-                        await instance.setLocalRefreshToken(refreshToken)
-                        return instance(config)
+                        config.headers['authorization'] = `Bearer ${newRefresh.accessToken}` 
+                        // // B3
+                         await instance.setLocalAccessToken(newRefresh.accessToken)
+                         await instance.setLocalRefreshToken(newRefresh.refreshToken)
+                         return instance(config)
                     }
                 }
 
@@ -140,7 +141,6 @@
                 btnLogin.addEventListener('click',async(e)=> {
                     e.preventDefault()
                    const {status,accessToken,refreshToken} = await login()
-                   console.log({ status, accessToken, refreshToken })
                    if(status == 'success'){
                     // set accessToken and refreshToken in cookies or localstorage
                     await instance.setLocalAccessToken(accessToken)
@@ -148,6 +148,15 @@
                    }
                 })
             }
+
+            const btnGetList = document.querySelector('#getList');
+                if (btnGetList) {
+                    btnGetList.addEventListener('click', async (e) => {
+                        e.preventDefault()
+                        const a = await getList()
+                        console.table(a)
+                    })
+                }
             
             async function login(){
                 const email = $('input[name="email"]').val()
@@ -168,6 +177,12 @@
                         return result.data
                     });
                 }
+
+                   async function getList() {
+                        return await instance.get('/api/auth/getlist').then((result) => {
+                           return result.data
+                       });
+                    }
             instance.setLocalAccessToken = async (token)=>{
                 window.localStorage.setItem('accessToken',token)
             }
