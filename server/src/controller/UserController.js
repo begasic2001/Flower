@@ -64,10 +64,11 @@ const login = async (req, res, next) => {
     }
 
     const accessToken = await signAccessToken(user.id);
-    const refeshToken = await signRefreshToken(user.id);
+    const refreshToken = await signRefreshToken(user.id);
     res.json({
+      status:"success",
       accessToken,
-      refeshToken,
+      refreshToken,
     });
   } catch (error) {
     next(error);
@@ -118,6 +119,7 @@ const refreshToken = async (req, res, next) => {
     const accessToken = await signAccessToken(userId);
     const newRefreshToken = await signRefreshToken(userId);
     res.json({
+      status:'success',
       accessToken,
       refreshToken: newRefreshToken,
     });

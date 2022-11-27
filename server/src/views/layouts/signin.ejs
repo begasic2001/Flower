@@ -62,28 +62,128 @@
     <script src="/lib/jquery/jquery.js"></script>
     <script src="/lib/popper.js/popper.js"></script>
     <script src="/lib/bootstrap/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(document).on('click','button',function(e){
-            e.preventDefault();
-            const email = $('input[name="email"]').val()
-            const password = $('input[name="password"]').val()
-            $.ajax({
-                url: "http://localhost:9000/api/auth/login",
-                type: "POST",
-                data: {
+        // $(document).on('click','button',function(e){
+        //     e.preventDefault();
+        //     const email = $('input[name="email"]').val()
+        //     const password = $('input[name="password"]').val()
+        //     $.ajax({
+        //         url: "http://localhost:9000/api/auth/login",
+        //         type: "POST",
+        //         data: {
+        //             email: email,
+        //             password: password,
+        //         }
+        //     }).then(data => {
+        //             window.localStorage.setItem('accessToken',data.accessToken)
+        //           swal(`Đăng nhập thành công`)
+        //             .then(() => {
+        //                 window.location.replace('/');
+        //             })
+        //     })
+        // })
+       
+        const instance = axios.create({
+                baseURL: 'http://localhost:9000',
+                timeout: 3 * 1000,
+                headers: {
+                    'Content-Type': 'Application/json'
+                }
+            });
+
+            instance.interceptors.request.use(async function (config) {
+                // if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                //     return config
+                // }
+                const token = await instance.getLocalAccessToken()
+                config.headers['authorization'] = token
+                console.log(`Trước khi request:::::::`, token)
+                return config
+            }, function (error) {
+                // Do something with request error
+                return Promise.reject(error);
+            });
+
+            instance.interceptors.response.use(async function (response) {
+                console.log(`Sau khi request:::::::`)
+                // const config = response.config
+                // if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                //    return response
+                // }
+                const {code} = response.data
+                if(code && code===401){
+                    if(msg && msg==='jwt expired')
+                    console.log(`Trường hợp token hết hạn :::::::::::::::`)
+                    //B1 get accessToken from refreshToken
+                    const refreshTok  = instance.getLocalRefreshToken()
+                    const {status,accessToken,refreshToken}  = await refreshToken(refreshTok)
+                    if(accessToken){
+                        console.log(`Đã lấy lại token thành công :::::::::`)
+                        //B2 Đã lấy lại token
+                        config.headers['authorization'] = accessToken
+                        // B3
+                        await instance.setLocalAccessToken(accessToken)
+                        await instance.setLocalRefreshToken(refreshToken)
+                        return instance(config)
+                    }
+                }
+
+                return response
+            }, function (error) {  
+                return Promise.reject(error);
+            });
+
+            const btnLogin = document.querySelector('button');
+            if(btnLogin){
+                btnLogin.addEventListener('click',async(e)=> {
+                    e.preventDefault()
+                   const {status,accessToken,refreshToken} = await login()
+                   console.log({ status, accessToken, refreshToken })
+                   if(status == 'success'){
+                    // set accessToken and refreshToken in cookies or localstorage
+                    await instance.setLocalAccessToken(accessToken)
+                    await instance.setLocalRefreshToken(refreshToken)
+                   }
+                })
+            }
+            
+            async function login(){
+                const email = $('input[name="email"]').val()
+                const password = $('input[name="password"]').val()
+                
+                return await instance.post('/api/auth/login', {
                     email: email,
                     password: password,
+                }).then((result) => {  
+                    return result.data
+                });
+            }
+
+               async function refreshToken(refreshToken) {
+                    return await instance.post('/api/auth/refresh-token', {
+                        refreshToken: refreshToken
+                    }).then((result) => {
+                        return result.data
+                    });
                 }
-            }).then(data => {
-                    window.localStorage.setItem('accessToken',data.accessToken)
-                  swal(`Đăng nhập thành công`)
-                    .then(() => {
-                        window.location.replace('/');
-                    })
-            })
-        })
-        
+            instance.setLocalAccessToken = async (token)=>{
+                window.localStorage.setItem('accessToken',token)
+            }
+
+             instance.setLocalRefreshToken = async (token) => {
+                    window.localStorage.setItem('refreshToken', token)
+                }
+
+            instance.getLocalAccessToken = async () => {
+                   return window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : null
+                  
+                }
+            instance.getLocalRefreshToken = async () => {
+                    return window.localStorage.getItem('refreshToken') ? window.localStorage.getItem('refreshToken') : null
+
+                }
     </script>
 </body>
 
