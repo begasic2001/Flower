@@ -131,7 +131,7 @@ const refreshToken = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.query;
     if (!refreshToken) throw createError.BadRequest();
 
     const { userId } = await verifyRefreshToken(refreshToken);

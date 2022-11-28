@@ -73,8 +73,19 @@ const getUserRegister = async (req, res, next) => {
     next(error);
   }
 };
+const getProfile = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    res.render("client/profile",{
+      category
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   clientView,
   getUserLogin,
   getUserRegister,
+  getProfile,
 };

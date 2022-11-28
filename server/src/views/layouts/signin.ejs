@@ -51,6 +51,7 @@
                     <a href="" class="tx-info tx-12 d-block mg-t-10">Quên mật khẩu ?</a>
                 </div><!-- form-group -->
                 <button type="submit" class="btn btn-info btn-block">Đăng nhập</button>
+                <!--<button type="submit" class="btn btn-info btn-block" id="getlist">Get list</button> -->
         </form>
                 <div class="mg-t-60 tx-center">Bạn chưa có tài khoản ? <a href="/register" class="tx-info">Đăng ký</a>
                 </div>
@@ -140,6 +141,15 @@
                 });
             }
 
+            // const btnGetList = document.querySelector('#getlist');
+            // if (btnGetList) {
+            //     btnGetList.addEventListener('click', async (e) => {
+            //         e.preventDefault()
+            //         const a = await getList()
+            //         console.log(a)
+            //     })
+            // }
+
                async function refreshToken(refreshToken) {
                     return await instance.post('/api/auth/refresh-token', {
                         refreshToken: refreshToken
@@ -148,11 +158,11 @@
                     });
                 }
 
-                   async function getList() {
-                        return await instance.get('/api/auth/getlist').then((result) => {
-                           return result.data
-                       });
-                    }
+                //    async function getList() {
+                //         return await instance.get('/api/auth/getlist').then((result) => {
+                //            return result.data
+                //        });
+                //     }
             instance.setLocalAccessToken = async (token)=>{
                 window.localStorage.setItem('accessToken',token)
             }

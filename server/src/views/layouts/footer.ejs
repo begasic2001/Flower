@@ -1,86 +1,4 @@
-<div class="brands">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="brands_slider_container">
 
-                    <!-- Brands Slider -->
-
-                    <div class="owl-carousel owl-theme brands_slider">
-
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_1.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_2.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_3.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_4.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_5.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_6.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_7.jpg" alt=""></div>
-                        </div>
-                        <div class="owl-item">
-                            <div class="brands_item d-flex flex-column justify-content-center"><img
-                                    src="images/brands_8.jpg" alt=""></div>
-                        </div>
-
-                    </div>
-
-                    <!-- Brands Slider Navigation -->
-                    <div class="brands_nav brands_prev"><i class="fas fa-chevron-left"></i></div>
-                    <div class="brands_nav brands_next"><i class="fas fa-chevron-right"></i></div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Newsletter -->
-
-<div class="newsletter">
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div
-                    class="newsletter_container d-flex flex-lg-row flex-column align-items-lg-center align-items-center justify-content-lg-start justify-content-center">
-                    <div class="newsletter_title_container">
-                        <div class="newsletter_icon"><img src="images/send.png" alt=""></div>
-                        <div class="newsletter_title">Sign up for Newsletter</div>
-                        <div class="newsletter_text">
-                            <p>...and receive %20 coupon for first shopping.</p>
-                        </div>
-                    </div>
-                    <div class="newsletter_content clearfix">
-                        <form action="#" class="newsletter_form">
-                            <input type="email" class="newsletter_input" required="required"
-                                placeholder="Enter your email address">
-                            <button class="newsletter_button">Subscribe</button>
-                        </form>
-                        <div class="newsletter_unsubscribe_link"><a href="#">unsubscribe</a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <footer class="footer">
     <div class="container">
         <div class="row">
@@ -284,6 +202,7 @@
                 }
             })
         }
+     
         async function login() {
             const email = $('input[name="email"]').val()
             const password = $('input[name="password"]').val()
@@ -302,6 +221,22 @@
                 return result.data
             });
         }
+     
+        //  const btnGetList = document.querySelector('#getlist');
+        //     if (btnGetList) {
+        //         btnGetList.addEventListener('click', async (e) => {
+        //             e.preventDefault()
+        //             const a = await getList()
+        //             console.log(a)
+        //         })
+        //     }
+
+            // async function getList() {
+            //             return await instance.get('/api/auth/getlist').then((result) => {
+            //                return result.data
+            //            });
+            //         }
+            
         instance.setLocalAccessToken = async (token) => {
             window.localStorage.setItem('accessToken', token)
         }
@@ -326,25 +261,79 @@
             return JSON.parse(window.localStorage.getItem('user')) ? JSON.parse(window.localStorage.getItem('user')) : null
         }
         
-        // hiển thị tên ng dùng sau khi đăng nhập
+        
        
-                let user = instance.getLocalInfoUser()
-                console.log(user)
-                let html = ''
-                if (user !== null) {
-                    $('.top_bar_user').append(`<div class='user-${user.id}'>${user.name}</div>
-                                                 <div><a href="/logout">Đăng Xuất</a></div>`)
-                } else {
-                    $('.top_bar_user').append(`<div class="user_icon"><img src="/client/images/user.svg" alt=""></div>
-                                                <div><a href="/login">Đăng nhập</a></div>
-                                                <div><a href="/register">Đăng ký</a></div>`)
-                }
           
     </script>
 <script>
-   
+    // hiển thị tên ng dùng sau khi đăng nhập
+         let user = instance.getLocalInfoUser()
+            let html = ''
+            if (user !== null) {
+                $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
+                                        <li>
+                                            <a href="/profile" id="profile">Hồ sơ<i class="fas fa-chevron-down"></i></a>
+                                            <ul>
+                                                <li><a href="#">Danh sách yêu thích</a></li>
+                                                <li><a href="#">Thanh toán</a></li>
+                                                <li><a href="#">Khác</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>`)
+            } else {
+                $('.top_bar_user').append(`<div class="user_icon"><img src="/client/images/user.svg" alt=""></div>
+                                                <div><a href="/login">Đăng nhập</a></div>
+                                                <div><a href="/register">Đăng ký</a></div>`)
+            }
+        
 </script>
+<script>
+            $('#userInfo').append(`<h5 class="cart-title text-center">${user.name}</h5>`)
+                $(document).on("click", "#logout",async function (e) {
+                        e.preventDefault();
+                        let id = await instance.getLocalRefreshToken()
+                        console.log(id)
+                        swal({
+                            title: `Bạn có muốn đăng xuất `,
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        }).then((willDelete) => {
+                            if (willDelete) {
+                                $.ajax({
+                                    url: `http://localhost:9000/api/auth/logout?refreshToken=${id}`,
+                                    type: "DELETE",
+                                }).then(() => {
+                                    swal(`Đăng xuất thành công`).then(() => {
+                                        window.localStorage.removeItem('accessToken')
+                                        window.localStorage.removeItem('refreshToken')
+                                        window.localStorage.removeItem('user')
+                                        window.location.replace('/');
+                                    })
+                                });
+                            } else {
+                                swal("Safe Data!");
+                            }
+                        });
+                    });
+</script>
+<script>
+    const productId = $('input[name="productId"]').val()
+     const btnAddToCart = document.querySelector('.product_cart_button');
+            if (btnAddToCart) {
+                btnAddToCart.addEventListener('click', async (e) => {
+                    e.preventDefault()
+                    const a = await addToCart()
+                    console.log(a)
+                })
+            }
 
+            async function addToCart() {
+                        return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
+                           return result.data
+                       });
+            }
+</script>
 </body>
 
 </html>
