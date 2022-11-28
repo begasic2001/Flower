@@ -9,7 +9,7 @@ const signAccessToken = async (userId) => {
     };
     const secretKey = process.env.ACCESS_TOKEN;
     const options = {
-      expiresIn: "30s",
+      expiresIn: "1h",
     };
     jwt.sign(payLoad, secretKey, options, (err, token) => {
       if (err) reject(err);

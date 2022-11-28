@@ -67,6 +67,7 @@ const login = async (req, res, next) => {
     const refreshToken = await signRefreshToken(user.id);
     res.json({
       status: "success",
+      user,
       accessToken,
       refreshToken,
     });
