@@ -7,7 +7,7 @@ const getCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     const cart = await services.getCart(userId);
-    console.log(cart);
+    res.json(cart)
   } catch (error) {
     next(error);
   }

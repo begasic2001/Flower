@@ -75,7 +75,7 @@
             });
 
             instance.interceptors.request.use(async function (config) {
-                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0 ){
                     return config
                 }
                 const token = await instance.getLocalAccessToken()
@@ -88,7 +88,7 @@
 
             instance.interceptors.response.use(async function (response) {
                 const config = response.config
-                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0){
+                if(config.url.indexOf('/api/auth/login') >=0 || config.url.indexOf('/api/auth/refresh-token') >= 0 ){
                    return response
                 }
                 const {status,message} = response.data
@@ -118,6 +118,8 @@
                 btnLogin.addEventListener('click',async(e)=> {
                     e.preventDefault()
                    const {status,accessToken,refreshToken,user} = await login()
+                    
+                    //instance.setLocalCart(count[0])
                    if(status == 'success'){
                     await instance.setLocalAccessToken(accessToken)
                     await instance.setLocalRefreshToken(refreshToken)
@@ -157,12 +159,11 @@
                         return result.data
                     });
                 }
-
-                //    async function getList() {
-                //         return await instance.get('/api/auth/getlist').then((result) => {
-                //            return result.data
-                //        });
-                //     }
+                  async function getCart() {
+                        return await instance.get(`/api/cart/getCart/`).then((result) => {
+                            return result.data
+                        });
+                    }
             instance.setLocalAccessToken = async (token)=>{
                 window.localStorage.setItem('accessToken',token)
             }
@@ -175,6 +176,10 @@
                     window.localStorage.setItem('user', JSON.stringify(user))
                 }
 
+            instance.setLocalCart = async (cart) => {
+                    window.localStorage.setItem('cart', JSON.stringify(cart))
+                }
+
             instance.getLocalAccessToken = async () => {
                    return window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : null
                   
@@ -185,6 +190,10 @@
                 }
              instance.getLocalInfoUser = async () => {
                     return JSON.parse(window.localStorage.getItem('user')) ? JSON.parse(window.localStorage.getItem('user')) : null
+                }
+
+            instance.getLocalCart = () => {
+                    return JSON.parse(window.localStorage.getItem('cart')) ? JSON.parse(window.localStorage.getItem('cart')) : null
                 }
     </script>
 </body>

@@ -1,6 +1,7 @@
 import * as services from "../services/product_service";
 import * as services1 from "../services/category_service";
 import * as services2 from "../services/subcate_service";
+import * as services3 from "../services/cart_service";
 const clientView = async (req, res, next) => {
   try {
     const getByStatus = await services.getAny({
@@ -32,6 +33,8 @@ const clientView = async (req, res, next) => {
       order: ["id", "DESC"],
       limit: 3,
     });
+    // const getAmountCart = await services3.getCart()
+    // console.log(getAmountCart)
     let productByStatus = getByStatus.productData.rows;
     let productByTrend = getByTrend.productData.rows;
     let productByBestRated = getByBestRated.productData.rows;
