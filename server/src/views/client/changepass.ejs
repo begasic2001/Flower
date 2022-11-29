@@ -1,0 +1,92 @@
+<%- include ('../layouts/headerClient'); -%>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Thay đổi mật khẩu</div>
+
+                <div class="card-body">
+                    <form method="POST" action="" aria-label="">
+                       
+
+
+                        <div class="form-group row">
+                            <label for="oldpass" class="col-md-4 col-form-label text-md-right">
+                                Mật khẩu cũ
+                            </label>
+
+                            <div class="col-md-6">
+                                <input id="oldpass" type="password"
+                                    class=""
+                                    name="oldpass" value="" required autofocus>
+
+                                <span class="invalid-feedback" role="alert">
+                                    <strong></strong>
+                                </span>
+                               
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password" class="col-md-4 col-form-label text-md-right">
+                                Mật khẩu mới
+                            </label>
+                              
+                            <div class="col-md-6">
+                                <input id="password" type="password"
+                                    class=""
+                                    name="password" required>
+
+                               
+                                <span class="invalid-feedback" role="alert">
+                                    <strong></strong>
+                                </span>
+                                
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">
+                                Nhập lại mật khẩu mới
+                            </label>
+
+                            <div class="col-md-6">
+                                <input id="password-confirm" type="password" class="form-control"
+                                    name="password_confirmation" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">Đồng ý</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="card">
+                <img src="" class="card-img-top"
+                    style="height: 90px; width: 90px; margin-left: 34%;">
+                <div class="card-body">
+                    <h5 class="card-title text-center"></h5>
+
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"> <a href="/changepass">Change Password</a> </li>
+                    <li class="list-group-item">line one </li>
+                    <li class="list-group-item">line one </li>
+                </ul>
+
+                <div class="card-body">
+                    <a href="" class="btn btn-danger btn-sm btn-block">Logout</a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+<%- include ('../layouts/footer'); -%>

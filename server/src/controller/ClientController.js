@@ -76,8 +76,19 @@ const getUserRegister = async (req, res, next) => {
 const getProfile = async (req, res, next) => {
   try {
     const category = await services1.category();
-    res.render("client/profile",{
-      category
+    res.render("client/profile", {
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getChangePass = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    res.render("client/changepass", {
+      category,
     });
   } catch (error) {
     next(error);
@@ -88,4 +99,5 @@ module.exports = {
   getUserLogin,
   getUserRegister,
   getProfile,
+  getChangePass,
 };
