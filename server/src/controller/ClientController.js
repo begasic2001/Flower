@@ -33,8 +33,7 @@ const clientView = async (req, res, next) => {
       order: ["id", "DESC"],
       limit: 3,
     });
-    // const getAmountCart = await services3.getCart()
-    // console.log(getAmountCart)
+
     let productByStatus = getByStatus.productData.rows;
     let productByTrend = getByTrend.productData.rows;
     let productByBestRated = getByBestRated.productData.rows;

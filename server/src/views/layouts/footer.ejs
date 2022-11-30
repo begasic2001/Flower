@@ -120,6 +120,7 @@
 <script src="/client/js/custom.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script>
     $(document).on('click','.product_fav',function(e){
         e.preventDefault()
@@ -310,62 +311,82 @@
                     });
 </script>
 <script>
-    const productId = $('input[name="productId"]').val()
+    
+    
     let countNumberCart = $('.cart_count')
     let totalCart = $('.cart_price')
-
     if(user){
             document.addEventListener('DOMContentLoaded', async () => {
             await getCart()
 
                 .then(async data => {
-                    console.log(data)
-                    return await instance.setLocalCart(data[0])
+                        return await instance.setLocalCart(data)
+                  
                 })
                 .then(async () => {
                     const cart = await instance.getLocalCart()
-                    if (cart !== null) {
-                        countNumberCart.html(`<span>${cart.amount}</span>`)
-                        totalCart.html(cart.total)
-                    } 
+                    let amount = 0;
+                    let total = 0;
+                    $.each(cart,async function(key,value){
+                        if (value !== undefined) {
+                        amount += value.amount;
+                        total += value.total
+                        }
+                    })
+                     const numberFormat = new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                    });
+                    countNumberCart.html(`<span>${amount}</span>`)
+                    totalCart.html(numberFormat.format(total))    
+                  
                 })
         })
-    } else {
+    }else {
         countNumberCart.html(`<span>0</span>`)
         totalCart.html(0)
     }
 
     // Thêm giỏ hàng
-     const btnAddToCart = document.querySelector('.product_cart_button');
-            if (btnAddToCart) {
-                btnAddToCart.addEventListener('click', async (e) => {
-                    e.preventDefault()
-                    const a = await addToCart()
-                    const count = await getCart()
-                    Promise.all([a,count])
-                    .then(async data =>{
-                        return await instance.setLocalCart(data[1])
-                    })
-                    .then(async data =>{
-                        const cart = await instance.getLocalCart()
-                        if(cart !== null){
-                              $.each(cart, async function (key, value) {
-                                const amount = value.amount
-                                const total = value.total
-                                if (amount && total) {
-                                    countNumberCart.html(`<span>${amount}</span>`)
-                                    totalCart.html(total)
-                                }
-                            })
-                        }
-                    })
-                })
-            }
+     const btnAddToCart = document.querySelectorAll('.addCart');
+     
+     for(let i =0 ; i < btnAddToCart.length; i++){
+        btnAddToCart[i].addEventListener('click', async (e) => {
+             e.preventDefault()
+             const attrNames = btnAddToCart[i].getAttributeNames().map(name => btnAddToCart[i].getAttribute(name));
+             const productId = attrNames[1];
+             const a = await addToCart(productId)
+             const b = await getCart()
+             Promise.all([a, b])
+                 .then(async data => {
+                    console.log(data[1])
+                    return await instance.setLocalCart(data[1])
+                 })
+                 .then(async data => {
+                     const cart = await instance.getLocalCart()
+                     let amount = 0;
+                     let total = 0;
+                     if (cart !== null) {
+                         $.each(cart, async function (key, value) {
+                             if (value !== undefined) {
+                                 amount += value.amount;
+                                 total += value.total
+                             }
+                             countNumberCart.html(`<span>${amount}</span>`)
+                             totalCart.html(total)
+                         })
+                     }
+                 })
+         })
+     }
+            
 
-            async function addToCart() {
+            
+
+            async function addToCart(productId) {
                         return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
                            return result.data
-                       });
+                       }).catch(err => console.log(err))
             }
 
             async function getCart() {

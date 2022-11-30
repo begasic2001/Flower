@@ -63,7 +63,7 @@ const productValidate = (data) => {
     pro_color: Joi.string().required(),
     pro_size: Joi.string().required(),
     selling_price: Joi.string().required(),
-    discount_price: Joi.string(),
+    discount_price: Joi.string().optional().allow(''),
     // video_link: Joi.string(),
     best_rated: Joi.string(),
     best_rated: Joi.string(),
