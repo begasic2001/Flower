@@ -17,7 +17,7 @@ POST {{host}}/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"luongminhthanh912@gmail.com",
+    "email":"luongminhthanh91@gmail.com",
     "password":"123456"
 }
 ###
@@ -123,7 +123,10 @@ DELETE  {{host}}/cart/deleteCart HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2NjkyMjE2MDAsImV4cCI6MTY2OTIyNTIwMH0.p0MCKbyBraSFmPAbhpz-Bq97yafdcfqL8YmfZ3jH5BQ
 
-
+###
+POST {{host}}/wishlist/addToWishList/2f51854e-9d9d-4250-9ba7-db678d3fac8d HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3NWQ0YzlhNS05NjdiLTQzNDMtOGJjZS1mODY3NDZiNzhjNDQiLCJpYXQiOjE2Njk4MjExNTQsImV4cCI6MTY2OTgyNDc1NH0.INzI6oUK6wlsTvUM7ipwRVVTyrU4oYiiB8pJCegepMQ
 
 
 

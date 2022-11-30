@@ -4,7 +4,7 @@ const cloudinary = require("cloudinary").v2;
 const getWishlist = (userId, productId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const Wishlist = await db.sequelize.query(`EXEC sp_getWishlist :CUS `, {
+      const Wishlist = await db.sequelize.query(`EXEC sp_getWishList :CUS `, {
         replacements: {
           CUS: userId,
         },
@@ -18,19 +18,18 @@ const getWishlist = (userId, productId) => {
 const addToWishlist = (userId, productId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(userId)
-      console.log(productId)
-      // const Wishlist = await db.sequelize.query(
-      //   `EXEC sp_AddToWishlist :CUS , :ITEM , :AMOUNT`,
-      //   {
-      //     replacements: {
-      //       CUS: userId,
-      //       ITEM: productId,
-      //       AMOUNT: 1,
-      //     },
-      //   }
-      // );
-      // resolve(Wishlist[0]);
+      const Wishlist = await db.sequelize.query(
+        `EXEC sp_AddToWishList :id ,:CUS , :ITEM `,
+        {
+          replacements: {
+            id: genarateId(),
+            CUS: userId,
+            ITEM: productId,
+          },
+        })
+
+        
+      resolve(Wishlist[0]);
     } catch (error) {
       reject(error);
     }
@@ -59,40 +58,18 @@ const removeElementWishlist = (userId, productId) => {
   });
 };
 
-const updateWishlist = (userId, productId, amount) => {
+
+const destroyWishlist = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
       const response = await db.sequelize.query(
-        `EXEC sp_updateWishlist :CUS , :ITEM , :AMOUNT`,
+        `EXEC sp_destroyWishlist :CUS  `,
         {
           replacements: {
             CUS: userId,
-            ITEM: productId,
-            AMOUNT: amount,
           },
         }
       );
-      resolve({
-        err: response[0] > 0 ? 0 : 1,
-        mes:
-          response[0] > 0
-            ? `${response[0]} Wishlist updated`
-            : "Cannot update new Wishlist/ Wishlist ID not found",
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-const destroyWishlist = (userId, productId) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const response = await db.sequelize.query(`EXEC sp_destroyWishlist :CUS  `, {
-        replacements: {
-          CUS: userId,
-        },
-      });
       resolve({
         err: response > 0 ? 0 : 1,
         mes: `${response} deleted`,
@@ -107,5 +84,4 @@ module.exports = {
   addToWishlist,
   removeElementWishlist,
   destroyWishlist,
-  updateWishlist,
 };
