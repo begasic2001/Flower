@@ -7,7 +7,11 @@ const getCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     const cart = await services.getCart(userId);
-    res.json(cart)
+
+    const carts = req.app.db.get("Cart");
+
+    res.send(carts);
+    // res.json(cart)
   } catch (error) {
     next(error);
   }

@@ -1,0 +1,20 @@
+{
+    "Cart":[
+        {
+            "id":"1",
+            "pro_name":"Hoa Bầu Trời",
+            "amount":4,
+            "selling_price":"200000",
+            "total":"800000"
+        },
+         {
+            "id":"2",
+            "pro_name":"Hoa Linh Lan",
+            "amount":2,
+            "selling_price":"100000",
+            "total":"200000"
+        }
+    ]
+
+
+}
