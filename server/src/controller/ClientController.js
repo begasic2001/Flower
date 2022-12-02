@@ -96,10 +96,57 @@ const getChangePass = async (req, res, next) => {
     next(error);
   }
 };
+
+const getPayment  = async (req, res, next) => {
+  try {
+    res.render('client/payment')
+  } catch (error) {
+    next(error);
+  }
+};
+
+const cancle = async (req, res, next) => {
+  try {
+    res.render('client/cancle')
+  } catch (error) {
+    next(error);
+  }
+};
+
+const postPayment  = async (req, res, next) => {
+  try {
+    const paypal = services3.paypalApi()
+    res.json(paypal)
+  } catch (error) {
+    next(error);
+  }
+};
+
+const success = async (req, res, next) => {
+  try {
+    const success = services3.success()
+    res.json(success)
+  } catch (error) {
+    next(error);
+  }
+};
+
+const cancel = async (req, res, next) => {
+  try {
+    res.send('Cancelled')
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   clientView,
   getUserLogin,
   getUserRegister,
   getProfile,
   getChangePass,
+  getPayment,
+  postPayment,
+  cancle,
+  success,
+  cancel
 };

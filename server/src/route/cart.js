@@ -5,6 +5,7 @@ const route = express.Router();
 /**
  * @swagger
  *  components:
+ *    
  *    schemas:
  *      Cart:
  *        type: object
@@ -31,7 +32,7 @@ const route = express.Router();
  *            type: integer
  *            description: The total of the product of the user
  *        example:
- *             id: 1
+ *             id: "luonggegsvksaagi"
  *             pro_name: Hoa Bầu Trời
  *             amount: 4
  *             selling_price : 200000
@@ -39,26 +40,26 @@ const route = express.Router();
  */
 
 /**
- * @swagger
- *  components:
- *     securitySchemes:
- *       bearerAuth:
- *         type: http
- *        scheme: bearer
- *        bearerFormat: JWT
- *   security:
- *        - bearerAuth: []
- */
+  * @swagger
+  * tags:
+  *   name: Carts
+  *   description: The cart managing API 
+  */
 
 /**
  *  @swagger
  * /api/cart/getCart:
  *
  *   get:
- *     summary: Retrieve a list of json cart
- *     description: Returns all cart from the system that the user has access to
- *     security:
- *        - bearerAuth: []
+ *     summary: Retrieve a list of json cart 
+ *     tags: [Carts]
+ *     parameters:
+ *       - in: headers
+ *         name: Token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The token when user login
  *     responses:
  *        '200':
  *          description: A list of carts.
@@ -74,6 +75,30 @@ const route = express.Router();
  *
  */
 route.get("/getCart", verifyAccessToken, CartController.getCart);
+/**
+ * @swagger
+ * /addToCart/{productId}:
+ *   post:
+ *     summary: User want to add the cart by click 
+ *     tags: [Carts]
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The product id
+ * 
+ *     responses:
+ *       200:
+ *         description: Add successfully
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Cart'
+ *       401:
+ *         description: Unauthorized
+ */
 route.post(
   "/addToCart/:productId",
   verifyAccessToken,

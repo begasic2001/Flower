@@ -45,12 +45,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 // call morgan
-app.use(morgan("combined"));
+app.use(morgan("dev"));
 app.locals.moment = moment;
 // call swagger
 app.db = db;
 // connect sql server trash
-connect_mssql();
+//connect_mssql();
 // import router in folder route
 route(app);
 
