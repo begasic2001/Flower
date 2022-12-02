@@ -50,7 +50,7 @@ app.locals.moment = moment;
 // call swagger
 app.db = db;
 // connect sql server trash
-//connect_mssql();
+connect_mssql();
 // import router in folder route
 route(app);
 

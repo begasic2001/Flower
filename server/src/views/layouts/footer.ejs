@@ -386,7 +386,7 @@
             async function addToCart(productId) {
                         return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
                            return result.data
-                       }).catch(err => console.log(err))
+                       })
             }
 
             async function getCart() {

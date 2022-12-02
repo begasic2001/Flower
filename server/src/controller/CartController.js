@@ -7,11 +7,7 @@ const getCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     const cart = await services.getCart(userId);
-
-    const carts = req.app.db.get("Cart");
-
-    res.send(carts);
-    // res.json(cart)
+    res.json(cart);
   } catch (error) {
     next(error);
   }
@@ -33,7 +29,7 @@ const removeElementCart = async (req, res, next) => {
     const productId = req.params.productId;
     const userId = req.payLoad.userId;
     const cart = await services.removeElementCart(userId, productId);
-    console.log(cart);
+    res.json(cart);
   } catch (error) {
     next(error);
   }
@@ -45,7 +41,7 @@ const updateCart = async (req, res, next) => {
     const userId = req.payLoad.userId;
     const amount = +req.body.amount;
     const cart = await services.updateCart(userId, productId, amount);
-    console.log(cart);
+    res.json(cart);
   } catch (error) {
     next(error);
   }
@@ -55,7 +51,7 @@ const deleteCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     const cart = await services.destroyCart(userId);
-    console.log(cart);
+    res.json(cart);
   } catch (error) {
     next(error);
   }

@@ -14,6 +14,47 @@
             "selling_price":"100000",
             "total":"200000"
         }
+    ],
+    "Product":[
+        {
+            "id":"1",
+            "categories_id":"1",
+            "subcat_id":"1",
+            "brand_id":"1",
+            "pro_name":"Hoa Bầu Trời",
+            "pro_code":"123456",
+            "pro_quantity":"20",
+            "pro_details":"ok",
+            "pro_color":"đỏ,xanh",
+            "pro_size":"s,m",
+            "selling_price":"100000",
+            "discount_price":"0",
+            "video_link":"",
+            "main_slider":"0",
+            "hot_new":"0",
+            "buyone_getone":"0",
+            "trend":"0",
+            "img_one":"",
+            "img_two":"",
+            "img_three":"",
+            "status":"1",
+            "createdAt":"",
+            "updatedAt":"",
+            "filename_one":"",
+            "filename_two":"",
+            "filename_three":"",
+            "best_rated":""
+        }
+    ],
+    "User":[
+        {
+            "id":"1",
+            "email":"luongminhthanh91@gmail.com",
+            "password":"123456",
+            "name":"Lương Minh Thành",
+            "phone":"0704543052",
+            "avatar":""
+        }
     ]
 
 
