@@ -121,27 +121,7 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script>
-    $(document).on('click','.product_fav',function(e){
-        e.preventDefault()
-        const accessToken = window.localStorage.getItem('accessToken')
-        const id = $('input[name = "productId"]').val()
-        $.ajax({
-            url: `http://localhost:9000/api/wishlist/addToWishList/${id}`,
-            type: "POST",
-            headers:{ 'Authorization': `Bearer ${accessToken}` }
-        }).then(data => {
-            if(!window.localStorage.getItem('accessToken')){
-                swal(`Bạn cần đăng nhập`).then(()=>{
-                     window.location.reload();
-                })
-            }
-            swal(`Lưu thành công`).then(() => {
-                window.location.reload();
-            })
-        })
-    })
-</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const instance = axios.create({
             baseURL: 'http://localhost:9000',
@@ -150,41 +130,61 @@
                 'Content-Type': 'Application/json'
             }
         });
-
+        
         instance.interceptors.request.use(async function (config) {
             if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
                 return config
             }
             const token = await instance.getLocalAccessToken()
-            config.headers['authorization'] = `Bearer ${token}`
-            return config
+                config.headers['authorization'] = `Bearer ${token}`
+                return config
+          
+            
         }, function (error) {
             // Do something with request error
             return Promise.reject(error);
         });
-
+        
         instance.interceptors.response.use(async function (response) {
             const config = response.config
             if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
                 return response
             }
             const { status, message } = response.data
-            if (status && status === 401) {
-                //B1 get accessToken from refreshToken
-                const token = await instance.getLocalRefreshToken()
-
-                const newRefresh = await refreshToken(token)
-                if (newRefresh) {
-                    console.log(`Đã lấy lại token thành công :::::::::`)
-                    //B2 Đã lấy lại token
-                    config.headers['authorization'] = `Bearer ${newRefresh.accessToken}`
-                    // // B3
-                    await instance.setLocalAccessToken(newRefresh.accessToken)
-                    await instance.setLocalRefreshToken(newRefresh.refreshToken)
-                    return instance(config)
+          
+                  if (status && status === 401) {
+                    //B1 get accessToken from refreshToken
+                    const token = await instance.getLocalRefreshToken()
+                    const newRefresh = await refreshToken(token)
+                    if (newRefresh === null) {
+                        //B2 Đã lấy lại token
+                        config.headers['authorization'] = `Bearer ${newRefresh.accessToken}`
+                        // // B3
+                        await instance.setLocalAccessToken(newRefresh.accessToken)
+                        await instance.setLocalRefreshToken(newRefresh.refreshToken)
+                        return instance(config)
+                    }else{
+                      const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                             Toast.fire({
+                                icon: 'error',
+                                title: 'you should login to the site !!!'
+                            })
+                       
+                    }
                 }
-            }
 
+           
+          
             return response
         }, function (error) {
             return Promise.reject(error);
@@ -261,6 +261,7 @@
     </script>
 <script>
     // hiển thị tên ng dùng sau khi đăng nhập
+   
          let user = instance.getLocalInfoUser()
             if (user !== null) {
                 $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
@@ -285,7 +286,7 @@
                 $(document).on("click", "#logout",async function (e) {
                         e.preventDefault();
                         let id = await instance.getLocalRefreshToken()
-                        swal({
+                        Swal.fire({
                             title: `Bạn có muốn đăng xuất `,
                             icon: "warning",
                             buttons: true,
@@ -296,7 +297,7 @@
                                     url: `http://localhost:9000/api/auth/logout?refreshToken=${id}`,
                                     type: "DELETE",
                                 }).then(() => {
-                                    swal(`Đăng xuất thành công`).then(() => {
+                                    Swal.fire(`Đăng xuất thành công`).then(() => {
                                         window.localStorage.removeItem('accessToken')
                                         window.localStorage.removeItem('refreshToken')
                                         window.localStorage.removeItem('user')
@@ -311,8 +312,6 @@
                     });
 </script>
 <script>
-    
-    
     let countNumberCart = $('.cart_count')
     let totalCart = $('.cart_price')
     if(user){
@@ -321,9 +320,10 @@
 
                 .then(async data => {
                         return await instance.setLocalCart(data)
-                  
+
                 })
                 .then(async () => {
+                  
                     const cart = await instance.getLocalCart()
                     let amount = 0;
                     let total = 0;
@@ -359,7 +359,6 @@
              const b = await getCart()
              Promise.all([a, b])
                  .then(async data => {
-                    console.log(data[1])
                     return await instance.setLocalCart(data[1])
                  })
                  .then(async data => {
@@ -379,9 +378,6 @@
                  })
          })
      }
-            
-
-            
 
             async function addToCart(productId) {
                         return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
@@ -396,7 +392,61 @@
                 }
 </script>
 <script>
-    
+    // WISHLIST
+
+    async function addToWishList(productId) {
+            return await instance.post(`/api/wishlist/addToWishList/${productId}`).then((result) => {
+                return result.data
+            });
+        }
+
+      $(document).ready(function () {
+            $('.addWishList').on('click',async function (e) {
+                e.preventDefault();
+                const id = $(this).data('id');
+                if (id) {
+                    await addToWishList(id)
+                    .then((data)=>{
+                        //  const Toast = Swal.mixin({
+                        //     toast: true,
+                        //     position: 'top-end',
+                        //     showConfirmButton: false,
+                        //     timer: 3000,
+                        //     timerProgressBar: true,
+                        //     didOpen: (toast) => {
+                        //         toast.addEventListener('mouseenter', Swal.stopTimer)
+                        //         toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        //     }
+                        // })
+                        // if($.isEmptyObject(data.msg)){
+                        //      Toast.fire({
+                        //         icon: 'success',
+                        //         title: 'Signed in successfully'
+                        //     })
+                        // }else{
+
+                        // }
+                        console.log(data)
+                    })
+                   
+
+                   
+                         
+                            // if ($.isEmptyObject(data.error)) {
+
+                               
+                            //} else {
+                                // Toast.fire({
+                                //     icon: 'error',
+                                //     title: data.error
+                                // })
+                            //}
+                } else {
+                    alert('danger');
+                }
+            });
+
+        });
 
 </script>
 </body>

@@ -17,10 +17,13 @@ const addToWishList = async (req, res, next) => {
     const Wishlist = await services.addToWishlist(userId, productId);
     if (Array.isArray(Wishlist) && !Wishlist.length) {
       res.json({
+        status: 0,
         msg: "Đã tồn tại trong danh sách yêu thích",
       });
     }
-    return res.json({ msg: "Thêm thành công vào danh sách" });
+    return res.json({ 
+      status:1,
+      msg: "Thêm thành công vào danh sách" });
   } catch (error) {
     next(error);
   }

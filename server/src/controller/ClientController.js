@@ -2,6 +2,21 @@ import * as services from "../services/product_service";
 import * as services1 from "../services/category_service";
 import * as services2 from "../services/subcate_service";
 import * as services3 from "../services/cart_service";
+import fs from "fs";
+import paypal from "paypal-rest-sdk";
+require("dotenv").config();
+paypal.configure({
+  mode: "sandbox",
+  client_id: process.env.CLIENT_ID_PAYPAL,
+  client_secret: process.env.CLIENT_SECRECT_PAYPAL,
+});
+
+var items = JSON.parse(fs.readFileSync("db.json"));
+items = items.Item;
+var total = 0;
+for (let i = 0; i < items.length; i++) {
+  total += parseFloat(items[i].price) * items[i].quantity;
+}
 const clientView = async (req, res, next) => {
   try {
     const getByStatus = await services.getAny({
@@ -97,9 +112,9 @@ const getChangePass = async (req, res, next) => {
   }
 };
 
-const getPayment  = async (req, res, next) => {
+const getPayment = async (req, res, next) => {
   try {
-    res.render('client/payment')
+    res.render("client/payment");
   } catch (error) {
     next(error);
   }
@@ -107,16 +122,47 @@ const getPayment  = async (req, res, next) => {
 
 const cancle = async (req, res, next) => {
   try {
-    res.render('client/cancle')
+    res.render("client/cancle");
   } catch (error) {
     next(error);
   }
 };
 
-const postPayment  = async (req, res, next) => {
+const postPayment = async (req, res, next) => {
   try {
-    const paypal = services3.paypalApi()
-    res.json(paypal)
+    const create_payment_json = {
+      intent: "sale",
+      payer: {
+        payment_method: "paypal",
+      },
+      redirect_urls: {
+        return_url: "http://localhost:9000/success",
+        cancel_url: "http://localhost:9000/cancel",
+      },
+      transactions: [
+        {
+          item_list: {
+            items: items
+          },
+          amount: {
+            currency: "USD",
+            total: total.toString(),
+          },
+          description: "Hat for the best team ever",
+        }
+      ]
+    };
+    paypal.payment.create(create_payment_json, function (error, payment) {
+      if (error) {
+        res.render("client/cancle");
+      } else {
+        for (let i = 0; i < payment.links.length; i++) {
+          if (payment.links[i].rel === "approval_url") {
+            res.redirect(payment.links[i].href);
+          }
+        }
+      }
+    });
   } catch (error) {
     next(error);
   }
@@ -124,8 +170,33 @@ const postPayment  = async (req, res, next) => {
 
 const success = async (req, res, next) => {
   try {
-    const success = services3.success()
-    res.json(success)
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+      payer_id: payerId,
+      transactions: [
+        {
+          amount: {
+            currency: "USD",
+            total: total.toString(),
+          },
+        },
+      ],
+    };
+
+    paypal.payment.execute(
+      paymentId,
+      execute_payment_json,
+      function (error, payment) {
+        if (error) {
+          res.render("client/cancle");
+        } else {
+          console.log(JSON.stringify(payment));
+          res.render("client/success");
+        }
+      }
+    );
   } catch (error) {
     next(error);
   }
@@ -133,7 +204,7 @@ const success = async (req, res, next) => {
 
 const cancel = async (req, res, next) => {
   try {
-    res.send('Cancelled')
+    res.send("Cancelled");
   } catch (error) {
     next(error);
   }
@@ -148,5 +219,5 @@ module.exports = {
   postPayment,
   cancle,
   success,
-  cancel
+  cancel,
 };

@@ -55,6 +55,33 @@
             "phone":"0704543052",
             "avatar":""
         }
+    ],
+
+     "Item":[
+        {
+            "name": "Red Sox Hat",
+            "price": "1.0",
+            "currency": "USD",
+            "quantity": 15
+        },
+        {
+        "name": "Blue Sox Hat",
+        "price": "1.5",
+        "currency": "USD",
+        "quantity": 1
+        },
+        {
+            "name": "Blue Sox Hat",
+            "price": "1.5",
+            "currency": "USD",
+            "quantity": 1
+        },
+        {
+            "name": "Blue Sox Hat",
+            "price": "1.5",
+            "currency": "USD",
+            "quantity": 1
+        }
     ]
 
 

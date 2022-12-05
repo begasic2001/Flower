@@ -1,21 +1,7 @@
 import db from "../models/index";
-import paypal from "paypal-rest-sdk";
-import fs from "fs";
 import { v4 as genarateId } from "uuid";
-import { resolve } from "path";
 const cloudinary = require("cloudinary").v2;
-require("dotenv").config();
-paypal.configure({
-  mode: "sandbox",
-  client_id: process.env.CLIENT_ID_PAYPAL,
-  client_secret: process.env.CLIENT_SECRECT_PAYPAL,
-});
 
-var items = JSON.parse(fs.readFileSync("db.json"));
-var total = 0;
-for (let i = 0; i < items.Cart.length; i++) {
-  total += parseFloat(items.Cart[i].selling_price) * items.Cart[i].amount;
-}
 
 const getCart = (userId, productId) => {
   return new Promise(async (resolve, reject) => {
@@ -120,39 +106,7 @@ const destroyCart = (userId, productId) => {
 const paypalApi = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const create_payment_json = {
-        intent: "sale",
-        payer: {
-          payment_method: "paypal",
-        },
-        redirect_urls: {
-          return_url: "http://localhost:9000/success",
-          cancel_url: "http://localhost:9000/cancel",
-        },
-        transactions: [
-          {
-            item_list: {
-              items: items,
-            },
-            amount: {
-              currency: "USD",
-              total: total.toString(),
-            },
-            description: "Hat for the best team ever",
-          },
-        ],
-      };
-      paypal.payment.create(create_payment_json, function (error, payment) {
-        if (error) {
-          res.render("client/cancle");
-        } else {
-          for (let i = 0; i < payment.links.length; i++) {
-            if (payment.links[i].rel === "approval_url") {
-              res.redirect(payment.links[i].href);
-            }
-          }
-        }
-      });
+      
     } catch (error) {
       reject(error);
     }
@@ -162,33 +116,7 @@ const paypalApi = () => {
 const success = async () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const payerId = req.query.PayerID;
-      const paymentId = req.query.paymentId;
 
-      const execute_payment_json = {
-        payer_id: payerId,
-        transactions: [
-          {
-            amount: {
-              currency: "USD",
-              total: total.toString(),
-            },
-          },
-        ],
-      };
-
-      paypal.payment.execute(
-        paymentId,
-        execute_payment_json,
-        function (error, payment) {
-          if (error) {
-            res.render("client/cancle");
-          } else {
-            console.log(JSON.stringify(payment));
-            res.render("client/success");
-          }
-        },
-      );
     } catch (error) {
       reject(error);
     }

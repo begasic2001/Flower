@@ -179,7 +179,9 @@
                                                     <button class="product_cart_button addCart" data-id="<%= p.id %>">Add to Cart</button>
                                                 </div>
                                             </div>
-                                            <div class="product_fav"><i class="fa-solid fa-heart"></i></div>
+                                            <button class="addWishList" data-id="<%= p.id %>">
+                                                <div class="product_fav"><i class="fa-solid fa-heart"></i></div>
+                                            </button>
                                             <ul class="product_marks">
                                                 <input type="hidden" class="form-control" name="productId" value="<%= p.id %>">
                                             </ul>
