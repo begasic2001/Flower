@@ -14,16 +14,32 @@ const addToWishList = async (req, res, next) => {
   try {
     const productId = req.params.productId;
     const userId = req.payLoad.userId;
-    const Wishlist = await services.addToWishlist(userId, productId);
-    if (Array.isArray(Wishlist) && !Wishlist.length) {
-      res.json({
-        status: 0,
-        msg: "Đã tồn tại trong danh sách yêu thích",
+    const check = await services.Check(userId,productId);
+    if (check.length !== 0) {
+      
+      for (let i = 0; i < check.length; i++) {
+        if (check[i].product_id === productId) {
+          return res.json({
+            status: 0,
+            msg: "Đã tồn tại trong danh sách",
+          });
+        } else {
+          await services.addToWishlist(userId, productId).then(() => {
+            return res.json({
+              status: 1,
+              msg: "Thêm thành công vào danh sách",
+            });
+          });
+        }
+      }
+    } else {
+      await services.addToWishlist(userId, productId).then(() => {
+        return res.json({
+          status: 1,
+          msg: "Thêm thành công vào danh sách",
+        });
       });
     }
-    return res.json({ 
-      status:1,
-      msg: "Thêm thành công vào danh sách" });
   } catch (error) {
     next(error);
   }
@@ -39,8 +55,6 @@ const removeElementWishList = async (req, res, next) => {
     next(error);
   }
 };
-
-
 
 const deleteWishList = async (req, res, next) => {
   try {

@@ -156,7 +156,9 @@
                     //B1 get accessToken from refreshToken
                     const token = await instance.getLocalRefreshToken()
                     const newRefresh = await refreshToken(token)
-                    if (newRefresh === null) {
+                    console.log(newRefresh)
+                    if (newRefresh.status === 'success') {
+                        console.log('da lay thanh cong token moi');
                         //B2 Đã lấy lại token
                         config.headers['authorization'] = `Bearer ${newRefresh.accessToken}`
                         // // B3
@@ -164,7 +166,7 @@
                         await instance.setLocalRefreshToken(newRefresh.refreshToken)
                         return instance(config)
                     }else{
-                      const Toast = Swal.mixin({
+                            const Toast = Swal.mixin({
                             toast: true,
                             position: 'top-end',
                             showConfirmButton: false,
@@ -175,16 +177,14 @@
                                 toast.addEventListener('mouseleave', Swal.resumeTimer)
                             }
                         })
-                             Toast.fire({
-                                icon: 'error',
-                                title: 'you should login to the site !!!'
-                            })
                        
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'You must login first !!!'
+                            })
+                            return instance(config)
                     }
-                }
-
-           
-          
+                } 
             return response
         }, function (error) {
             return Promise.reject(error);
@@ -306,7 +306,7 @@
                                     })
                                 });
                             } else {
-                                swal("Safe Data!");
+                                Swal.fire("Safe Data!");
                             }
                         });
                     });
@@ -314,6 +314,7 @@
 <script>
     let countNumberCart = $('.cart_count')
     let totalCart = $('.cart_price')
+    let countNumberWishList = $('.wishlist_count')
     if(user){
             document.addEventListener('DOMContentLoaded', async () => {
             await getCart()
@@ -325,6 +326,7 @@
                 .then(async () => {
                   
                     const cart = await instance.getLocalCart()
+                    const countWishList = await getWishList()
                     let amount = 0;
                     let total = 0;
                     $.each(cart,async function(key,value){
@@ -339,12 +341,13 @@
                     });
                     countNumberCart.html(`<span>${amount}</span>`)
                     totalCart.html(numberFormat.format(total))    
-                  
+                    countNumberWishList.html(countWishList.length)
                 })
         })
     }else {
         countNumberCart.html(`<span>0</span>`)
         totalCart.html(0)
+        countNumberWishList.html(0)
     }
 
     // Thêm giỏ hàng
@@ -400,47 +403,45 @@
             });
         }
 
+     async function getWishList() {
+            return await instance.get(`/api/wishlist/getWishList/`).then((result) => {
+                return result.data
+            });
+        }
+
       $(document).ready(function () {
             $('.addWishList').on('click',async function (e) {
                 e.preventDefault();
                 const id = $(this).data('id');
                 if (id) {
                     await addToWishList(id)
-                    .then((data)=>{
-                        //  const Toast = Swal.mixin({
-                        //     toast: true,
-                        //     position: 'top-end',
-                        //     showConfirmButton: false,
-                        //     timer: 3000,
-                        //     timerProgressBar: true,
-                        //     didOpen: (toast) => {
-                        //         toast.addEventListener('mouseenter', Swal.stopTimer)
-                        //         toast.addEventListener('mouseleave', Swal.resumeTimer)
-                        //     }
-                        // })
-                        // if($.isEmptyObject(data.msg)){
-                        //      Toast.fire({
-                        //         icon: 'success',
-                        //         title: 'Signed in successfully'
-                        //     })
-                        // }else{
-
-                        // }
-                        console.log(data)
+                    .then(async (data)=>{
+                        const count = await getWishList()
+                        countNumberWishList.html(count.length)
+                         const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                        })
+                        if($.isEmptyObject(data.status === 0)){
+                             Toast.fire({
+                                icon: 'error',
+                                title: data.msg
+                            })
+                        }else{
+                             Toast.fire({
+                                icon: 'success',
+                                title: data.msg
+                            })
+                        }
+                        
                     })
-                   
-
-                   
-                         
-                            // if ($.isEmptyObject(data.error)) {
-
-                               
-                            //} else {
-                                // Toast.fire({
-                                //     icon: 'error',
-                                //     title: data.error
-                                // })
-                            //}
                 } else {
                     alert('danger');
                 }

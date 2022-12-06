@@ -26,9 +26,24 @@ const addToWishlist = (userId, productId) => {
             CUS: userId,
             ITEM: productId,
           },
-        })
+        }
+      );
+      resolve(Wishlist[0]);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 
-        
+const Check = (userId, productId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const Wishlist = await db.sequelize.query(`EXEC sp_Check :CUS , :ITEM `, {
+        replacements: {
+          CUS: userId,
+          ITEM: productId,
+        },
+      });
       resolve(Wishlist[0]);
     } catch (error) {
       reject(error);
@@ -58,7 +73,6 @@ const removeElementWishlist = (userId, productId) => {
   });
 };
 
-
 const destroyWishlist = (userId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -81,6 +95,7 @@ const destroyWishlist = (userId) => {
 };
 module.exports = {
   getWishlist,
+  Check,
   addToWishlist,
   removeElementWishlist,
   destroyWishlist,
