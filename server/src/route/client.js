@@ -12,5 +12,6 @@ route.get("/register", ClientController.getUserRegister);
 route.get("/login", ClientController.getUserLogin);
 route.get("/payment", ClientController.getPayment);
 route.post("/payment", ClientController.postPayment)
+route.get("/details/:productId",ClientController.getDetail)
 route.get("/", ClientController.clientView);
 module.exports = route;

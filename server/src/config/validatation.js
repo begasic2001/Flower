@@ -108,6 +108,7 @@ const uid = Joi.string().required();
 const newid = Joi.string().required();
 const pcid = Joi.string().required();
 const lpid = Joi.string().required();
+
 module.exports = {
   userValidate,
   categoriesValidate,

@@ -52,6 +52,7 @@ app.db = db;
 // connect sql server trash
 connect_mssql();
 // import router in folder route
+app.use(cors());
 route(app);
 
 //using ejs template
@@ -70,7 +71,7 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
-app.use(cors());
+
 app.listen(port, () => {
   console.log(`http://${hostname}:${port}`);
 });

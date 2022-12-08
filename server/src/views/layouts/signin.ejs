@@ -111,7 +111,7 @@
                 }
 
                 return response
-            }, function (error) {  
+            }, function (error) { 
                 return Promise.reject(error);
             });
 
@@ -119,21 +119,40 @@
             if(btnLogin){
                 btnLogin.addEventListener('click',async(e)=> {
                     e.preventDefault()
-                   const {status,accessToken,refreshToken,user} = await login()
-                    
-                    //instance.setLocalCart(count[0])
-                   if(status == 'success'){
-                       Swal.fire({
-                           icon: 'success',
-                           title: 'Login successfully'
-                       }).then(async()=>{
-                            await instance.setLocalAccessToken(accessToken)
-                            await instance.setLocalRefreshToken(refreshToken)
-                            await instance.setLocalInfoUser(user)
-                            window.location.replace("/")
-                       })
+                    await login()
+                    .then(result => {
+                        console.log(result);
+                        const { status, accessToken, refreshToken, user } = result.data
+                           if (status == 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Login successfully'
+                            }).then(async () => {
+                                await instance.setLocalAccessToken(accessToken)
+                                await instance.setLocalRefreshToken(refreshToken)
+                                await instance.setLocalInfoUser(user)
+                                window.location.replace("/")
+                            })
+
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        if(err.code === "ERR_BAD_RESPONSE"){
+                              Swal.fire({
+                                icon: 'error',
+                                title: err.response.data
+                            })
+                        }
+                          if (err.response.status === 404) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: err.response.data.message
+                            })
+                        }
+                    })
                    
-                   }
+                
                 })
             }
 
@@ -146,19 +165,10 @@
                 return await instance.post('/api/auth/login', {
                     email: email,
                     password: password,
-                }).then((result) => {  
-                    return result.data
-                });
+                })
             }
 
-            // const btnGetList = document.querySelector('#getlist');
-            // if (btnGetList) {
-            //     btnGetList.addEventListener('click', async (e) => {
-            //         e.preventDefault()
-            //         const a = await getList()
-            //         console.log(a)
-            //     })
-            // }
+           
 
                async function refreshToken(refreshToken) {
                     return await instance.post('/api/auth/refresh-token', {
@@ -167,11 +177,6 @@
                         return result.data
                     });
                 }
-                  async function getCart() {
-                        return await instance.get(`/api/cart/getCart/`).then((result) => {
-                            return result.data
-                        });
-                    }
             instance.setLocalAccessToken = async (token)=>{
                 window.localStorage.setItem('accessToken',token)
             }

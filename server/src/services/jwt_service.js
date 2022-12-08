@@ -91,6 +91,12 @@ const verifyRefreshToken = async (refreshToken) => {
     });
   });
 };
+
+// const checklogin = async (req,res,next) => {
+//   return new Promise((resolve, reject) => {
+//     next()
+//   });
+// };
 module.exports = {
   signAccessToken,
   signRefreshToken,

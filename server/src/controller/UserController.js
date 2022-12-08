@@ -49,18 +49,19 @@ const login = async (req, res, next) => {
     const { email, password } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      res.render(createError(error.details[0].message));
+      return res.status(500).json(error.details[0].message);
+      //throw createError(error.details[0].message);
     }
 
     const user = await db.User.findOne({ where: { email } });
     if (!user) {
-      res.render(createError.NotFound("User not register"));
+      return res.status(404).json({ message: "User not register" });
     }
 
     const isValid = await user.comparePassword(password);
 
     if (!isValid) {
-      throw createError.Unauthorized();
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     const accessToken = await signAccessToken(user.id);
@@ -81,11 +82,11 @@ const register = async (req, res, next) => {
     const { email, password, name, phone, avatar } = req.body;
     const { error } = userValidate(req.body);
     if (error) {
-      throw createError(error.details[0].message);
+      return res.status(500).json(error.details[0].message);
     }
     const isExistEmail = await db.User.findOne({ where: { email } });
     if (isExistEmail) {
-      throw createError.Conflict(`${email} is has already`);
+      return res.status(409).json({ message: `${email} is has already` });
     }
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);

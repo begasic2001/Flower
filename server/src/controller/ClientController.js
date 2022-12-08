@@ -112,6 +112,33 @@ const getChangePass = async (req, res, next) => {
   }
 };
 
+const getDetail = async (req, res, next) => {
+  try {
+     const numberFormat = new Intl.NumberFormat("vi-VN", {
+       style: "currency",
+       currency: "VND",
+     });
+    const productId = req.params.productId;
+    const category = await services1.category();
+    let getDetailProduct = await services.getAny({
+      id: productId,
+    });
+    let color = getDetailProduct.productData.rows[0].pro_color;
+    let size = getDetailProduct.productData.rows[0].pro_size;
+    getDetailProduct = getDetailProduct.productData.rows[0];
+    let product_color = color.split(",");
+    let product_size = size.split(",");
+    res.render("client/detail", {
+      category,
+      getDetailProduct,
+      product_color,
+      product_size,
+      numberFormat,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 const getPayment = async (req, res, next) => {
   try {
     res.render("client/payment");
@@ -142,15 +169,15 @@ const postPayment = async (req, res, next) => {
       transactions: [
         {
           item_list: {
-            items: items
+            items: items,
           },
           amount: {
             currency: "USD",
             total: total.toString(),
           },
           description: "Hat for the best team ever",
-        }
-      ]
+        },
+      ],
     };
     paypal.payment.create(create_payment_json, function (error, payment) {
       if (error) {
@@ -220,4 +247,5 @@ module.exports = {
   cancle,
   success,
   cancel,
+  getDetail,
 };
