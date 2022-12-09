@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const userValidate = (data) => {
   const userSchema = Joi.object({
-    id:Joi.string(),
+    id: Joi.string(),
     email: Joi.string()
       .email({
         minDomainSegments: 2,
@@ -11,7 +11,7 @@ const userValidate = (data) => {
       .lowercase()
       .required(),
     password: Joi.string()
-      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .pattern(new RegExp("^[a-zA-Z0-9@#%&*./]{3,30}$"))
       .required(),
     name: Joi.string(),
     phone: Joi.string(),
@@ -63,7 +63,7 @@ const productValidate = (data) => {
     pro_color: Joi.string().required(),
     pro_size: Joi.string().required(),
     selling_price: Joi.string().required(),
-    discount_price: Joi.string().optional().allow(''),
+    discount_price: Joi.string(),
     // video_link: Joi.string(),
     best_rated: Joi.string(),
     best_rated: Joi.string(),
