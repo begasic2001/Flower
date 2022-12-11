@@ -1,36 +1,77 @@
 <%- include ('../layouts/headerClient'); -%>
-<link rel="stylesheet" type="text/css" href="/client/styles/cart_styles.css">
-<link rel="stylesheet" type="text/css" href="/client/styles/cart_responsive.css">
-<!-- Cart -->
-<div class="cart_section">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-10 offset-lg-1">
-                <div class="cart_container">
-                    <div class="cart_title">Giỏ Hàng</div>
-                    <div class="cart_items">
-                        <ul class="cart_list">
-                            
-                           
-                            
-                        </ul>
-                    </div>
+    <link rel="stylesheet" type="text/css" href="/client/styles/cart_styles.css">
+    <link rel="stylesheet" type="text/css" href="/client/styles/cart_responsive.css">
+    <!-- Cart -->
+    <div class="cart_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="cart_container">
+                        <div class="cart_title">Giỏ Hàng</div>
+                        <div class="cart_items">
+                            <ul class="cart_list">
 
-                    <!-- Order Total -->
-                    <div class="order_total">
-                        <div class="order_total_content text-md-right">
-                            <div class="order_total_title">Thành Tiền:</div>
-                            <div class="order_total_amount"></div>
+
+
+                            </ul>
                         </div>
-                    </div>
 
-                    <div class="cart_buttons">
-                        <button type="button" class="button cart_button_clear">Xóa toàn bộ</button>
-                        <button type="button" class="button cart_button_checkout">Thanh Toán</button>
+
+                        <div class="order_total_content" style="padding: 15px;">
+                            <h5 style="margin-left: 20px;"> Apply Coupon </h5>
+                            <form method="post" action="">
+
+                                <div class="form group col-lg-4">
+                                    <input type="text" name="coupon" class="form-control" required=""
+                                        placeholder="Enter Your Coupon">
+                                </div><br>
+                                <button type="submit" class="btn btn-danger ml-2">Submit
+                                </button>
+                            </form>
+
+
+                        </div>
+
+                        <ul class="list-group col-lg-4" style="float: right;">
+
+                            <li class="list-group-item">Subtotal : <span style="float: right;">
+                                </span> </li>
+                            <li class="list-group-item">Coupon :
+                                <a href="{{ route('coupon.remove') }}" class="btn btn-danger btn-sm">X</a>
+                                <span style="float: right;"> </span>
+                            </li>
+
+                            <li class="list-group-item">Subtotal : <span style="float: right;">
+                                </span> </li>
+
+
+
+
+                            <li class="list-group-item">Shiping Charge : <span style="float: right;"> </span> </li>
+                            <li class="list-group-item">Vat : <span style="float: right;"> </span> </li>
+
+                            <li class="list-group-item">Total : <span style="float: right;"> </span> </li>
+
+                            <li class="list-group-item">Total : <span style="float: right;"> </span>
+                            </li>
+
+
+
+                        </ul>
                     </div>
                 </div>
             </div>
+            <!-- Order Total -->
+            <div class="order_total">
+
+            </div>
+
+            <div class="cart_buttons">
+
+            </div>
         </div>
     </div>
-</div>
-<%- include ('../layouts/footer'); -%>
+    </div>
+    </div>
+    </div>
+    <%- include ('../layouts/footer'); -%>

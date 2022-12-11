@@ -11,6 +11,7 @@ route.get("/profile", ClientController.getProfile);
 route.get("/register", ClientController.getUserRegister);
 route.get("/login", ClientController.getUserLogin);
 route.get("/payment", ClientController.getPayment);
+route.get("/wishlist",ClientController.getWishList)
 route.get("/cart", ClientController.getCart);
 route.post("/payment", ClientController.postPayment)
 route.get("/details/:productId",ClientController.getDetail)

@@ -156,6 +156,17 @@ const getCart = async (req, res, next) => {
   }
 };
 
+const getWishList = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    res.render("client/wishlist", {
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getPayment = async (req, res, next) => {
   try {
     res.render("client/payment");
@@ -266,4 +277,5 @@ module.exports = {
   cancel,
   getDetail,
   getCart,
+  getWishList,
 };

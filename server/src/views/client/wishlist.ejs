@@ -1,3 +1,35 @@
+<%- include ('../layouts/headerClient'); -%>
+    <link rel="stylesheet" type="text/css" href="/client/styles/cart_styles.css">
+    <link rel="stylesheet" type="text/css" href="/client/styles/cart_responsive.css">
+    <!-- Cart -->
+    <div class="cart_section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="cart_container">
+                        <div class="cart_title">Danh sách yêu thích</div>
+                        <div class="cart_items">
+                            <ul class="cart_list">
+
+
+
+                            </ul>
+                        </div>
+            <!-- Order Total -->
+            <div class="order_total">
+
+            </div>
+
+            <div class="cart_buttons">
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+
 
 <footer class="footer">
     <div class="container">
@@ -123,116 +155,116 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.0/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const instance = axios.create({
-            baseURL: 'http://localhost:9000',
-            timeout: 3 * 1000,
-            headers: {
-                'Content-Type': 'Application/json'
-            }
-        });
-        
-        instance.interceptors.request.use(async function (config) {
-            if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
-                return config
-            }
-            const token = await instance.getLocalAccessToken()
-                config.headers['authorization'] = `Bearer ${token}`
-                return config
-          
-            
-        }, function (error) {
-            // Do something with request error
-            return Promise.reject(error);
-        });
-        
-        instance.interceptors.response.use(async function (response) {
-            const config = response.config
-            if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
-                return response
-            }
-            const { status, message } = response.data
-          
-                  if (status && status === 401) {
-                    //B1 get accessToken from refreshToken
-                    const token = await instance.getLocalRefreshToken()
-                    const newRefresh = await refreshToken(token)
-                    console.log(newRefresh)
-                    if(newRefresh.status === 'Bad Request'){
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Bạn nên đăng nhập vào hệ thống !!!!'
-                        })
-                    }
-                    if (newRefresh.status === 'success') {
-                        console.log('da lay thanh cong token moi');
-                        //B2 Đã lấy lại token
-                        config.headers['authorization'] = `Bearer ${newRefresh.accessToken}`
-                        // // B3
-                        await instance.setLocalAccessToken(newRefresh.accessToken)
-                        await instance.setLocalRefreshToken(newRefresh.refreshToken)
-                        return instance(config)
-                    }
-                } 
+<script>
+    const instance = axios.create({
+        baseURL: 'http://localhost:9000',
+        timeout: 3 * 1000,
+        headers: {
+            'Content-Type': 'Application/json'
+        }
+    });
+
+    instance.interceptors.request.use(async function (config) {
+        if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
+            return config
+        }
+        const token = await instance.getLocalAccessToken()
+        config.headers['authorization'] = `Bearer ${token}`
+        return config
+
+
+    }, function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+    });
+
+    instance.interceptors.response.use(async function (response) {
+        const config = response.config
+        if (config.url.indexOf('/api/auth/login') >= 0 || config.url.indexOf('/api/auth/refresh-token') >= 0) {
             return response
-        }, function (error) {
-            console.log(error);
-            return Promise.reject(error);
+        }
+        const { status, message } = response.data
+
+        if (status && status === 401) {
+            //B1 get accessToken from refreshToken
+            const token = await instance.getLocalRefreshToken()
+            const newRefresh = await refreshToken(token)
+            console.log(newRefresh)
+            if (newRefresh.status === 'Bad Request') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Bạn nên đăng nhập vào hệ thống !!!!'
+                })
+            }
+            if (newRefresh.status === 'success') {
+                console.log('da lay thanh cong token moi');
+                //B2 Đã lấy lại token
+                config.headers['authorization'] = `Bearer ${newRefresh.accessToken}`
+                // // B3
+                await instance.setLocalAccessToken(newRefresh.accessToken)
+                await instance.setLocalRefreshToken(newRefresh.refreshToken)
+                return instance(config)
+            }
+        }
+        return response
+    }, function (error) {
+        console.log(error);
+        return Promise.reject(error);
+    });
+
+
+
+
+    async function refreshToken(refreshToken) {
+        return await instance.post('/api/auth/refresh-token', {
+            refreshToken: refreshToken
+        }).then((result) => {
+            return result.data
         });
+    }
 
-   
-     
-       
-        async function refreshToken(refreshToken) {
-            return await instance.post('/api/auth/refresh-token', {
-                refreshToken: refreshToken
-            }).then((result) => {
-                return result.data
-            });
-        }
-            
-        instance.setLocalAccessToken = async (token) => {
-            window.localStorage.setItem('accessToken', token)
-        }
+    instance.setLocalAccessToken = async (token) => {
+        window.localStorage.setItem('accessToken', token)
+    }
 
-        instance.setLocalRefreshToken = async (token) => {
-            window.localStorage.setItem('refreshToken', token)
-        }
+    instance.setLocalRefreshToken = async (token) => {
+        window.localStorage.setItem('refreshToken', token)
+    }
 
-        instance.setLocalInfoUser = async (user) => {
-            window.localStorage.setItem('user', JSON.stringify(user))
-        }
+    instance.setLocalInfoUser = async (user) => {
+        window.localStorage.setItem('user', JSON.stringify(user))
+    }
 
-        instance.setLocalCart = async (cart) => {
-            window.localStorage.setItem('cart', JSON.stringify(cart))
-        }
+    instance.setLocalCart = async (cart) => {
+        window.localStorage.setItem('cart', JSON.stringify(cart))
+    }
 
-        instance.getLocalAccessToken = async () => {
-            return window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : null
+    instance.getLocalAccessToken = async () => {
+        return window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : null
 
-        }
-        instance.getLocalRefreshToken = async () => {
-            return window.localStorage.getItem('refreshToken') ? window.localStorage.getItem('refreshToken') : null
+    }
+    instance.getLocalRefreshToken = async () => {
+        return window.localStorage.getItem('refreshToken') ? window.localStorage.getItem('refreshToken') : null
 
-        }
-        instance.getLocalInfoUser = () => {
-            return JSON.parse(window.localStorage.getItem('user')) ? JSON.parse(window.localStorage.getItem('user')) : null
-        }
+    }
+    instance.getLocalInfoUser = () => {
+        return JSON.parse(window.localStorage.getItem('user')) ? JSON.parse(window.localStorage.getItem('user')) : null
+    }
 
-        instance.getLocalCart = async () => {
-            return JSON.parse(window.localStorage.getItem('cart')) ? JSON.parse(window.localStorage.getItem('cart')) : null
-        }
-        
-        
-       
-          
-    </script>
+    instance.getLocalCart = async () => {
+        return JSON.parse(window.localStorage.getItem('cart')) ? JSON.parse(window.localStorage.getItem('cart')) : null
+    }
+
+
+
+
+</script>
 <script>
     // hiển thị tên ng dùng sau khi đăng nhập
-   
-         let user = instance.getLocalInfoUser()
-            if (user !== null) {
-                $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
+
+    let user = instance.getLocalInfoUser()
+    if (user !== null) {
+        $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
                                         <li>
                                             <a href="/profile" id="profile">Hồ sơ<i class="fas fa-chevron-down"></i></a>
                                             <ul>
@@ -242,171 +274,171 @@
                                             </ul>
                                         </li>
                                     </ul>`)
-                $('.cart_text').append(`<a href="/cart">Cart</a>`)
-                $('.wishlist_text').append(`<a href="/wishlist">Wishlist</a>`)
-            } else {
-                $('.top_bar_user').append(`<div class="user_icon"><img src="/client/images/user.svg" alt=""></div>
+        $('.cart_text').append(`<a href="/cart">Cart</a>`)
+        $('.wishlist_text').append(`<a href="/wishlist">Wishlist</a>`)
+    } else {
+        $('.top_bar_user').append(`<div class="user_icon"><img src="/client/images/user.svg" alt=""></div>
                                                 <div><a href="/login">Đăng nhập</a></div>
                                                 <div><a href="/register">Đăng ký</a></div>`)
-                $('.cart_text').append(`<a href="#">Cart</a>`)
-                $('.wishlist_text').append(`<a href="#">Wishlist</a>`)
-            }
-        
+        $('.cart_text').append(`<a href="#">Cart</a>`)
+        $('.wishlist_text').append(`<a href="#">Wishlist</a>`)
+    }
+
 </script>
 <script>
-            $('#userInfo').append(`<h5 class="cart-title text-center">${user.name}</h5>`)
-                $(document).on("click", "#logout",async function (e) {
-                        e.preventDefault();
-                        let id = await instance.getLocalRefreshToken()
-                        Swal.fire({
-                            title: `Bạn có muốn đăng xuất `,
-                            icon: "warning",
-                            buttons: true,
-                            dangerMode: true,
-                        }).then((willDelete) => {
-                            if (willDelete) {
-                                $.ajax({
-                                    url: `http://localhost:9000/api/auth/logout?refreshToken=${id}`,
-                                    type: "DELETE",
-                                }).then(() => {
-                                    Swal.fire(`Đăng xuất thành công`).then(() => {
-                                        window.localStorage.removeItem('accessToken')
-                                        window.localStorage.removeItem('refreshToken')
-                                        window.localStorage.removeItem('user')
-                                        window.localStorage.removeItem('cart')
-                                        window.location.replace('/');
-                                    })
-                                });
-                            } else {
-                                Swal.fire("Safe Data!");
-                            }
-                        });
-                    });
+    $('#userInfo').append(`<h5 class="cart-title text-center">${user.name}</h5>`)
+    $(document).on("click", "#logout", async function (e) {
+        e.preventDefault();
+        let id = await instance.getLocalRefreshToken()
+        Swal.fire({
+            title: `Bạn có muốn đăng xuất `,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: `http://localhost:9000/api/auth/logout?refreshToken=${id}`,
+                    type: "DELETE",
+                }).then(() => {
+                    Swal.fire(`Đăng xuất thành công`).then(() => {
+                        window.localStorage.removeItem('accessToken')
+                        window.localStorage.removeItem('refreshToken')
+                        window.localStorage.removeItem('user')
+                        window.localStorage.removeItem('cart')
+                        window.location.replace('/');
+                    })
+                });
+            } else {
+                Swal.fire("Safe Data!");
+            }
+        });
+    });
 </script>
 <script>
     let countNumberCart = $('.cart_count')
     let totalCart = $('.cart_price')
     let countNumberWishList = $('.wishlist_count')
-    if(user){
-            document.addEventListener('DOMContentLoaded', async () => {
+    if (user) {
+        document.addEventListener('DOMContentLoaded', async () => {
             await getCart()
 
                 .then(async data => {
-                        return await instance.setLocalCart(data)
+                    return await instance.setLocalCart(data)
 
                 })
                 .then(async () => {
-                  
+
                     const cart = await instance.getLocalCart()
                     const countWishList = await getWishList()
                     let amount = 0;
                     let total = 0;
-                    $.each(cart,async function(key,value){
+                    $.each(cart, async function (key, value) {
                         if (value !== undefined) {
-                        amount += value.amount;
-                        total += value.total
+                            amount += value.amount;
+                            total += value.total
                         }
                     })
-                     const numberFormat = new Intl.NumberFormat("vi-VN", {
+                    const numberFormat = new Intl.NumberFormat("vi-VN", {
                         style: "currency",
                         currency: "VND",
                     });
                     countNumberCart.html(`<span>${amount}</span>`)
-                    totalCart.html(numberFormat.format(total))    
+                    totalCart.html(numberFormat.format(total))
                     countNumberWishList.html(countWishList.length)
                 })
         })
-    }else {
+    } else {
         countNumberCart.html(`<span>0</span>`)
         totalCart.html(0)
         countNumberWishList.html(0)
     }
 
     // Thêm giỏ hàng
-     const btnAddToCart = document.querySelectorAll('.addCart');
-     
-     for(let i =0 ; i < btnAddToCart.length; i++){
+    const btnAddToCart = document.querySelectorAll('.addCart');
+
+    for (let i = 0; i < btnAddToCart.length; i++) {
         btnAddToCart[i].addEventListener('click', async (e) => {
-             e.preventDefault()
-             const attrNames = btnAddToCart[i].getAttributeNames().map(name => btnAddToCart[i].getAttribute(name));
-             const productId = attrNames[1];
-             const a = await addToCart(productId)
-             const b = await getCart()
-             Promise.all([a, b])
-                 .then(async data => {
-                    if(data[0].status === 401 && data[1].status === 401){
+            e.preventDefault()
+            const attrNames = btnAddToCart[i].getAttributeNames().map(name => btnAddToCart[i].getAttribute(name));
+            const productId = attrNames[1];
+            const a = await addToCart(productId)
+            const b = await getCart()
+            Promise.all([a, b])
+                .then(async data => {
+                    if (data[0].status === 401 && data[1].status === 401) {
                         Swal.fire({
                             icon: 'error',
                             title: 'Vui lòng đăng nhập giúp em'
                         })
-                    }else{
+                    } else {
                         return await instance.setLocalCart(data[1])
                     }
-                 })
-                 .then(async data => {
-                     const cart = await instance.getLocalCart()
-                     let amount = 0;
-                     let total = 0;
-                     if (cart !== null) {
-                         $.each(cart, async function (key, value) {
-                             if (value !== undefined) {
-                                 amount += value.amount;
-                                 total += value.total
-                             }
-                             countNumberCart.html(`<span>${amount}</span>`)
-                             totalCart.html(total)
-                         })
-                     }
+                })
+                .then(async data => {
+                    const cart = await instance.getLocalCart()
+                    let amount = 0;
+                    let total = 0;
+                    if (cart !== null) {
+                        $.each(cart, async function (key, value) {
+                            if (value !== undefined) {
+                                amount += value.amount;
+                                total += value.total
+                            }
+                            countNumberCart.html(`<span>${amount}</span>`)
+                            totalCart.html(total)
+                        })
+                    }
                     Swal.fire({
-                         icon: 'success',
-                         title: 'Thêm giỏ hàng thành công'
-                     })
-                 })
-         })
-     }
+                        icon: 'success',
+                        title: 'Thêm giỏ hàng thành công'
+                    })
+                })
+        })
+    }
 
-            async function addToCart(productId) {
-                        return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
-                           return result.data
-                       })
-            }
+    async function addToCart(productId) {
+        return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
+            return result.data
+        })
+    }
 
-            async function getCart() {
-                    return await instance.get(`/api/cart/getCart/`).then((result) => {
-                        return result.data
-                    });
-                }
+    async function getCart() {
+        return await instance.get(`/api/cart/getCart/`).then((result) => {
+            return result.data
+        });
+    }
 </script>
 <script>
     // WISHLIST
 
     async function addToWishList(productId) {
-            return await instance.post(`/api/wishlist/addToWishList/${productId}`).then((result) => {
-                return result.data
-            })
-        }
+        return await instance.post(`/api/wishlist/addToWishList/${productId}`).then((result) => {
+            return result.data
+        })
+    }
 
-     async function getWishList() {
-            return await instance.get(`/api/wishlist/getWishList/`).then((result) => {
-                
-                return result.data
-            })
-        }
+    async function getWishList() {
+        return await instance.get(`/api/wishlist/getWishList/`).then((result) => {
 
-      $(document).ready(function () {
-            $('.addWishList').on('click',async function (e) {
-                e.preventDefault();
-                const id = $(this).data('id');
-                if (id) {
-                    await addToWishList(id)
-                    .then(async (data)=>{
-                        const {status,message} = data
-                        if(status === 401 && message === "Unauthorized"){
+            return result.data
+        })
+    }
+
+    $(document).ready(function () {
+        $('.addWishList').on('click', async function (e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            if (id) {
+                await addToWishList(id)
+                    .then(async (data) => {
+                        const { status, message } = data
+                        if (status === 401 && message === "Unauthorized") {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Vui lòng đăng nhập giúp em'
                             })
-                        }else{
+                        } else {
                             const count = await getWishList()
                             countNumberWishList.html(count.length)
                             const Toast = Swal.mixin({
@@ -420,7 +452,7 @@
                                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                                 }
                             })
-                            if (data.status === 0) {
+                            if ($.isEmptyObject(data.status === 0)) {
                                 Toast.fire({
                                     icon: 'error',
                                     title: data.msg
@@ -433,26 +465,26 @@
                             }
                         }
 
-                        
-                    })
-                }
-            });
 
+                    })
+            }
         });
+
+    });
 
 </script>
 <script>
     // details page
-    async function updateCart(productId){
+    async function updateCart(productId) {
         const amount = $('input[name="qty"]').val()
-        return await instance.post(`/api/cart/updateCart/${productId}`,{
-            amount:amount
+        return await instance.post(`/api/cart/updateCart/${productId}`, {
+            amount: amount
         }).then(result => {
             return result.data
         })
     }
-    $(document).ready(function(){
-        $('.cart_button').on('click',async function(e){
+    $(document).ready(function () {
+        $('.cart_button').on('click', async function (e) {
             e.preventDefault()
             const id = $(this).data('id');
             const a = await updateCart(id)
@@ -464,10 +496,10 @@
                             icon: 'error',
                             title: 'Vui lòng đăng nhập giúp em'
                         })
-                       
+
                     } else {
                         await instance.setLocalCart(data[1])
-                         .then(async () => {
+                            .then(async () => {
                                 const cart = await instance.getLocalCart()
                                 let amount = 0;
                                 let total = 0;
@@ -488,12 +520,10 @@
                             })
                     }
                 })
-               
+
         })
     })
 </script>
-<script src="/js/cart.js"></script>
-
+<script src="/js/wishlist.js"></script>
 </body>
-
 </html>
