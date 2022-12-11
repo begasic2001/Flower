@@ -6,7 +6,8 @@ const cloudinary = require("cloudinary").v2;
 const getCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
-    const cart = await services.getCart(userId);
+    let cart = await services.getCart(userId);
+    // cart = cart.filter((item) => item.total !== 0);
     res.json(cart);
   } catch (error) {
     next(error);
@@ -47,6 +48,18 @@ const updateCart = async (req, res, next) => {
   }
 };
 
+const updateCart2 = async (req, res, next) => {
+  try {
+    const productId = req.params.productId;
+    const userId = req.payLoad.userId;
+    const amount = +req.body.amount;
+    const cart = await services.updateCart2(userId, productId, amount);
+    res.json(cart);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const deleteCart = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
@@ -61,5 +74,6 @@ module.exports = {
   addToCart,
   removeElementCart,
   updateCart,
+  updateCart2,
   deleteCart,
 };

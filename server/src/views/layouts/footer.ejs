@@ -242,10 +242,12 @@
                                             </ul>
                                         </li>
                                     </ul>`)
+                $('.cart_text').append(`<a href="/cart">Cart</a>`)
             } else {
                 $('.top_bar_user').append(`<div class="user_icon"><img src="/client/images/user.svg" alt=""></div>
                                                 <div><a href="/login">Đăng nhập</a></div>
                                                 <div><a href="/register">Đăng ký</a></div>`)
+                $('.cart_text').append(`<a href="#">Cart</a>`)
             }
         
 </script>
@@ -353,6 +355,10 @@
                              totalCart.html(total)
                          })
                      }
+                    Swal.fire({
+                         icon: 'success',
+                         title: 'Thêm giỏ hàng thành công'
+                     })
                  })
          })
      }
@@ -433,6 +439,58 @@
         });
 
 </script>
+<script>
+    // details page
+    async function updateCart(productId){
+        const amount = $('input[name="qty"]').val()
+        return await instance.post(`/api/cart/updateCart/${productId}`,{
+            amount:amount
+        }).then(result => {
+            return result.data
+        })
+    }
+    $(document).ready(function(){
+        $('.cart_button').on('click',async function(e){
+            e.preventDefault()
+            const id = $(this).data('id');
+            const a = await updateCart(id)
+            const b = await getCart()
+            Promise.all([a, b])
+                .then(async data => {
+                    if (data[0].status === 401 && data[1].status === 401) {
+                        return Swal.fire({
+                            icon: 'error',
+                            title: 'Vui lòng đăng nhập giúp em'
+                        })
+                       
+                    } else {
+                        await instance.setLocalCart(data[1])
+                         .then(async () => {
+                                const cart = await instance.getLocalCart()
+                                let amount = 0;
+                                let total = 0;
+                                if (cart !== null) {
+                                    $.each(cart, async function (key, value) {
+                                        if (value !== undefined) {
+                                            amount += value.amount;
+                                            total += value.total
+                                        }
+                                        countNumberCart.html(`<span>${amount}</span>`)
+                                        totalCart.html(total)
+                                    })
+                                }
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thêm giỏ hàng thành công'
+                                })
+                            })
+                    }
+                })
+               
+        })
+    })
+</script>
+<script src="/js/cart.js"></script>
 </body>
 
 </html>

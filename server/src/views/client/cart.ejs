@@ -1,0 +1,36 @@
+<%- include ('../layouts/headerClient'); -%>
+<link rel="stylesheet" type="text/css" href="/client/styles/cart_styles.css">
+<link rel="stylesheet" type="text/css" href="/client/styles/cart_responsive.css">
+<!-- Cart -->
+<div class="cart_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="cart_container">
+                    <div class="cart_title">Giỏ Hàng</div>
+                    <div class="cart_items">
+                        <ul class="cart_list">
+                            
+                           
+                            
+                        </ul>
+                    </div>
+
+                    <!-- Order Total -->
+                    <div class="order_total">
+                        <div class="order_total_content text-md-right">
+                            <div class="order_total_title">Thành Tiền:</div>
+                            <div class="order_total_amount"></div>
+                        </div>
+                    </div>
+
+                    <div class="cart_buttons">
+                        <button type="button" class="button cart_button_clear">Xóa toàn bộ</button>
+                        <button type="button" class="button cart_button_checkout">Thanh Toán</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include ('../layouts/footer'); -%>

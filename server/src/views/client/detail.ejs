@@ -29,39 +29,8 @@
                       <%- getDetailProduct.pro_details  %>
                     </div>
                     <div class="order_info d-flex flex-row">
-                        <form action="#">
-                                     
-                                        
-                                        <div class="row">
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlSelect1">Màu Sắc</label>
-                                                    <select class="form-control input-lg" id="exampleFormControlSelect1" name="color">
-                                                        <% product_color.map(a => { %>
-                                                            <option value="<%= a %>"><%= a %></option>
-                                                        <% }) %>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        
-                                        
-                                            <div class="col-lg-4">
-                                                <div class="form-group">
-                                                    <label for="exampleFormControlSelect1">Kích Thước</label>
-                                                    <select class="form-control input-lg" id="exampleFormControlSelect1" name="size">
-                                                        <% product_size.map(a => { %>
-                                                            <option value="<%= a %>">
-                                                                <%= a %>
-                                                            </option>
-                                                        <% }) %>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        
-                                           
-                                        
-                                        
-                                            <div class="col-lg-4">
+                        <form action="">
+                                            <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <label for="exampleFormControlSelect1">Số Lượng</label>
                                                     <input class="form-control" type="number" value="1" pattern="[0-9]" name="qty">
@@ -78,7 +47,7 @@
 
                             <div class="product_price"><%= numberFormat.format(getDetailProduct.selling_price) %></div>
                             <div class="button_container">
-                                <button type="submit" class="button cart_button">Thêm Vào Giỏ</button>
+                                <button type="submit" class="button cart_button" data-id="<%= getDetailProduct.id %>">Thêm Vào Giỏ</button>
                                 <div class="product_fav"><i class="fas fa-heart"></i></div>
                             </div>
 

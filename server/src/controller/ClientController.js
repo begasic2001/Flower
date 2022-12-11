@@ -139,6 +139,23 @@ const getDetail = async (req, res, next) => {
     next(error);
   }
 };
+
+const getCart = async (req, res, next) => {
+  try {
+     const numberFormat = new Intl.NumberFormat("vi-VN", {
+       style: "currency",
+       currency: "VND",
+     });
+     const category = await services1.category();
+    res.render("client/cart", {
+      numberFormat,
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getPayment = async (req, res, next) => {
   try {
     res.render("client/payment");
@@ -248,4 +265,5 @@ module.exports = {
   success,
   cancel,
   getDetail,
+  getCart,
 };
