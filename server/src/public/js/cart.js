@@ -5,12 +5,12 @@ $(document).ready(async function () {
   });
   const cart = await instance.getLocalCart();
   const filtered = cart.filter((item) => item.total !== 0);
- 
+
   let total = 0;
-  if (filtered.length !== 0){
+  if (filtered.length !== 0) {
     filtered.map((item) => {
       total += item.total;
-      
+
       $(".cart_list").append(`<li class="cart_item clearfix elm_cart">
                                 <div class="cart_item_image"><img src="${
                                   item.img_one
@@ -56,21 +56,19 @@ $(document).ready(async function () {
                             <hr>
                             
         `);
-
-     
     });
 
-       $(".order_total").append(`<div class="order_total_content text-md-right">
+    $(".order_total").append(`<div class="order_total_content text-md-right">
                             <div class="order_total_title">Thành Tiền:</div>
                             <div class="order_total_amount"></div>
                         </div>`);
 
-       $(".cart_buttons").append(`
+    $(".cart_buttons").append(`
             <button type="button" class="button cart_button_clear clearAllCart">Xóa toàn bộ</button>
             <button type="button" class="button cart_button_checkout thanhtoan">Thanh Toán</button>
         `);
-       const totalAmount = $(".order_total_amount");
-       totalAmount.html(numberFormat.format(total));
+    const totalAmount = $(".order_total_amount");
+    totalAmount.html(numberFormat.format(total));
   }
   async function updateCart2(productId, amount) {
     return await instance
@@ -188,82 +186,76 @@ $(document).ready(async function () {
   let deleteAllCart = document.querySelector(".clearAllCart");
   if (deleteAllCart) {
     deleteAllCart.addEventListener("click", async function (e) {
-      e.preventDefault()
+      e.preventDefault();
       await getCart()
-      .then((data)=>{
-        let arrId = []
-        for(let item of data){
-          const {id} = item;
-          arrId.push(id)
-        }
-        return arrId
-      })
-      .then(async (arrId) => {
-        // duyệt qua từng id cho vào hàm xóa
-        for (let i = 0; i < arrId.length; i++) {
-          // console.log(arrId[i]);
-             const a = await deleteCart(arrId[i]);
-             const b = await getCart();
-             Promise.all([a, b]).then(async (data) => {
-               if (data[0].status === 401 && data[1].status === 401) {
-                 return Swal.fire({
-                   icon: "error",
-                   title: "Vui lòng đăng nhập giúp em",
-                 });
-               } else {
-                 await instance
-                   .setLocalCart(data[1])
-                   .then(async () => {
-                     const cart = await instance.getLocalCart();
-                     const filtered = cart.filter(
-                       (item) => item.id !== arrId[i]
-                     );
-                     return await instance.setLocalCart(filtered);
-                   })
-                  
-               }
-             });
-        }
-           Swal.fire({
-             icon: "success",
-             title: "Xóa giỏ hàng thành công !!!!",
-           }).then(() => {
-             window.location.reload();
-           });
-      })
-
+        .then((data) => {
+          let arrId = [];
+          for (let item of data) {
+            const { id } = item;
+            arrId.push(id);
+          }
+          return arrId;
+        })
+        .then(async (arrId) => {
+          // duyệt qua từng id cho vào hàm xóa
+          for (let i = 0; i < arrId.length; i++) {
+            // console.log(arrId[i]);
+            const a = await deleteCart(arrId[i]);
+            const b = await getCart();
+            Promise.all([a, b]).then(async (data) => {
+              if (data[0].status === 401 && data[1].status === 401) {
+                return Swal.fire({
+                  icon: "error",
+                  title: "Vui lòng đăng nhập giúp em",
+                });
+              } else {
+                await instance.setLocalCart(data[1]).then(async () => {
+                  const cart = await instance.getLocalCart();
+                  const filtered = cart.filter((item) => item.id !== arrId[i]);
+                  return await instance.setLocalCart(filtered);
+                });
+              }
+            });
+          }
+          Swal.fire({
+            icon: "success",
+            title: "Xóa giỏ hàng thành công !!!!",
+          }).then(() => {
+            window.location.reload();
+          });
+        });
     });
   }
 
   // thanh toán
-  async function checkout(items){
-       return await instance
-         .post(`/payment`,{
-          items
-         })
-         .then((result) => {
-           return result.data;
-         });
+  async function checkout(items) {
+    return await instance
+      .post(`/payment`, {
+        items,
+      })
+      .then((result) => {
+        return result.data;
+      });
   }
 
-
-  let btnCheckOut = document.querySelector('.thanhtoan')
+  let btnCheckOut = document.querySelector(".thanhtoan");
   if (btnCheckOut) {
     btnCheckOut.addEventListener("click", async function (e) {
       e.preventDefault();
-      
-      let items = filtered.map(item => {
+
+      var items = filtered.map((item) => {
         // console.log(item);
-        let dola = (+item.selling_price)/24000
+        let dola = (+item.selling_price / 24000).toFixed(2);
         return {
           name: item.pro_name,
           price: dola,
           currency: "USD",
           quantity: item.amount,
         };
-      })
-      console.log(items);
-      // await checkout(filtered);
+      });
+      await checkout(items).then((data) => {
+        console.log(data);
+      });
     });
   }
 });

@@ -10,13 +10,13 @@ paypal.configure({
   client_id: process.env.CLIENT_ID_PAYPAL,
   client_secret: process.env.CLIENT_SECRECT_PAYPAL,
 });
-
-var items = JSON.parse(fs.readFileSync("db.json"));
-items = items.Item;
-var total = 0;
-for (let i = 0; i < items.length; i++) {
-  total += parseFloat(items[i].price) * items[i].quantity;
-}
+//var items = []
+// var items = JSON.parse(fs.readFileSync("db.json"));
+// items = items.Item;
+// var total = 0;
+// for (let i = 0; i < items.length; i++) {
+//   total += parseFloat(items[i].price) * items[i].quantity;
+// }
 const clientView = async (req, res, next) => {
   try {
     const getByStatus = await services.getAny({
@@ -185,6 +185,7 @@ const cancle = async (req, res, next) => {
 
 const postPayment = async (req, res, next) => {
   try {
+    console.log(req.body.items);
     const create_payment_json = {
       intent: "sale",
       payer: {
