@@ -494,20 +494,25 @@
 </script>
 <script src="/js/cart.js"></script>
 <script>
-    instance.setLocalShipping = async (shipping) => {
-        window.cookie.setItem('ship', JSON.stringify(shipping))
-    }
-    instance.getLocalShipping = async () => {
-        return JSON.parse(window.cookie.getItem('ship')) ? JSON.parse(window.cookie.getItem('ship')) : null
-    }
+    // instance.setLocalShipping = async (shipping) => {
+    //     window.cookie.setItem('ship', JSON.stringify(shipping))
+    // }
+    // instance.getLocalShipping = async () => {
+    //     return JSON.parse(window.cookie.getItem('ship')) ? JSON.parse(window.cookie.getItem('ship')) : null
+    // }
     let gotoPayPal = document.querySelector('.gotoPayPal')
     if (gotoPayPal) {
+       
+       
         gotoPayPal.addEventListener('click', async function (e) {
-            const ship_name = $('input[name = "ship_name"]').val()
+            e.preventDefault()
+             const ship_name = $('input[name = "ship_name"]').val()
             const ship_phone = $('input[name = "ship_phone"]').val()
             const ship_email = $('input[name = "ship_email"]').val()
             const ship_address = $('input[name = "ship_address"]').val()
             const ship_city = $('input[name = "ship_city"]').val()
+             const cart = await instance.getLocalCart();
+            const filtered = cart.filter((item) => item.total !== 0);
             let ship = [
                 {
                     ship_name,
@@ -517,23 +522,26 @@
                     ship_city
                 }
             ]
-            await instance.setLocalShipping(ship).then(async () => {
-                // let items = filtered.map((item) => {
-                //     let dola = (+item.selling_price / 24000).toFixed(2);
-                //     return {
-                //         name: item.pro_name,
-                //         price: dola,
-                //         currency: "USD",
-                //         quantity: item.amount,
-                //     };
-                // });
+            
+                let items = filtered.map((item) => {
+                    let dola = (+item.selling_price / 24000).toFixed(2);
+                    return {
+                        name: item.pro_name,
+                        price: dola,
+                        currency: "USD",
+                        quantity: item.amount,
+                    };
+                });
 
-                // await instance.post(`/payment`, {
-                //     items: items,
-                // }).then((result) => {
-                //     window.location = result.data.forwardLink;
-                // })
-            })
+                await instance.post(`/payment`, {
+                    items: items,
+                    ship:ship
+                }).then((result) => {
+                    window.location = result.data.forwardLink;
+                }).catch(err =>{
+                    console.log(err);
+                })
+           
 
         })
     }

@@ -3,6 +3,7 @@ import * as services1 from "../services/category_service";
 import * as services2 from "../services/subcate_service";
 import * as services3 from "../services/cart_service";
 import fs from "fs";
+import { v4 as genarateId } from "uuid";
 import paypal from "paypal-rest-sdk";
 import db from "../models/index";
 require("dotenv").config();
@@ -199,7 +200,9 @@ const postPayment = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     res.cookie("authId", userId);
-    res.cookie("ship",ship)
+    const ship = req.body.ship;
+    console.log(ship);
+    res.cookie("ship", JSON.stringify(ship));
     items = req.body.items;
     for (let i = 0; i < items.length; i++) {
       total += parseFloat(items[i].price) * items[i].quantity;
@@ -233,6 +236,7 @@ const postPayment = async (req, res, next) => {
         for (let i = 0; i < payment.links.length; i++) {
           if (payment.links[i].rel === "approval_url") {
             // res.redirect(payment.links[i].href);
+            console.log(payment);
             res.json({ forwardLink: payment.links[i].href });
           }
         }
@@ -248,7 +252,8 @@ const success = async (req, res, next) => {
     const authId = req.cookies.authId;
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
-
+    const ship = JSON.parse(req.cookies.ship);
+    console.log(`SHIP::::::::::::`, ship[0]);
     const execute_payment_json = {
       payer_id: payerId,
       transactions: [
@@ -268,38 +273,44 @@ const success = async (req, res, next) => {
         if (error) {
           res.render("client/cancle");
         } else {
-          const response = await db.sequelize.query(
-            `EXEC sp_storeShipping :ship_name , :ship_email , : ship_phone , :ship_address , :ship_city `,
-            {
-              replacements: {
-                ship_name,
-                ship_email,
-                ship_phone,
-                ship_address,
-                ship_city,
-              },
-            }
-          );
-          const response1 = await db.sequelize.query(
-            `EXEC sp_PURCHASE_CART :CUS`,
-            {
-              replacements: { CUS: authId },
-            }
-          );
+          const response = await db.sequelize
+            .query(
+              `EXEC sp_storeShipping :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city `,
+              {
+                replacements: {
+                  id: genarateId(),
+                  ship_name: ship[0].ship_name,
+                  ship_email: ship[0].ship_email,
+                  ship_phone: ship[0].ship_phone,
+                  ship_address: ship[0].ship_address,
+                  ship_city: ship[0].ship_city,
+                },
+              }
+            )
+            .then(async () => {
+              const response1 = await db.sequelize.query(
+                `EXEC sp_PURCHASE_CART :CUS`,
+                {
+                  replacements: { CUS: authId },
+                }
+              );
 
-          const response2 = await db.sequelize.query(
-            `EXEC sp_PAYMENTID_PAYPAL :PAYPAL_ID , :USER_ID`,
-            {
-              replacements: {
-                PAYPAL_ID: paymentId,
-                USER_ID: authId,
-              },
-            }
-          );
+              // const response2 = await db.sequelize.query(
+              //   `EXEC sp_PAYMENTID_PAYPAL :PAYPAL_ID , :USER_ID`,
+              //   {
+              //     replacements: {
+              //       PAYPAL_ID: paymentId,
+              //       USER_ID: authId,
+              //     },
+              //   }
+              // );
 
-          Promise.all([response, response1, response2]).then(() => {
-            res.render("client/success");
-          });
+              Promise.all([response, response1]).then(() => {
+                res.clearCookie("ship");
+                res.clearCookie("authId");
+                res.render("client/success");
+              });
+            });
         }
       }
     );
