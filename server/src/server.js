@@ -1,6 +1,7 @@
 import express from "express";
 import createError from "http-errors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import low from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import swaggerJSDoc from "swagger-jsdoc";
@@ -43,6 +44,7 @@ const app = express();
 app.use(methodOverride("_method"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 // call morgan
 app.use(morgan("dev"));

@@ -4,16 +4,17 @@ import * as services2 from "../services/subcate_service";
 import * as services3 from "../services/cart_service";
 import fs from "fs";
 import paypal from "paypal-rest-sdk";
+import db from "../models/index";
 require("dotenv").config();
 paypal.configure({
   mode: "sandbox",
   client_id: process.env.CLIENT_ID_PAYPAL,
   client_secret: process.env.CLIENT_SECRECT_PAYPAL,
 });
-//var items = []
+let items;
 // var items = JSON.parse(fs.readFileSync("db.json"));
 // items = items.Item;
-// var total = 0;
+var total = 0;
 // for (let i = 0; i < items.length; i++) {
 //   total += parseFloat(items[i].price) * items[i].quantity;
 // }
@@ -114,10 +115,10 @@ const getChangePass = async (req, res, next) => {
 
 const getDetail = async (req, res, next) => {
   try {
-     const numberFormat = new Intl.NumberFormat("vi-VN", {
-       style: "currency",
-       currency: "VND",
-     });
+    const numberFormat = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
     const productId = req.params.productId;
     const category = await services1.category();
     let getDetailProduct = await services.getAny({
@@ -142,11 +143,11 @@ const getDetail = async (req, res, next) => {
 
 const getCart = async (req, res, next) => {
   try {
-     const numberFormat = new Intl.NumberFormat("vi-VN", {
-       style: "currency",
-       currency: "VND",
-     });
-     const category = await services1.category();
+    const numberFormat = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    const category = await services1.category();
     res.render("client/cart", {
       numberFormat,
       category,
@@ -160,6 +161,17 @@ const getWishList = async (req, res, next) => {
   try {
     const category = await services1.category();
     res.render("client/wishlist", {
+      category,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getShipping = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    res.render("client/shipping", {
       category,
     });
   } catch (error) {
@@ -185,7 +197,13 @@ const cancle = async (req, res, next) => {
 
 const postPayment = async (req, res, next) => {
   try {
-    console.log(req.body.items);
+    const userId = req.payLoad.userId;
+    res.cookie("authId", userId);
+    res.cookie("ship",ship)
+    items = req.body.items;
+    for (let i = 0; i < items.length; i++) {
+      total += parseFloat(items[i].price) * items[i].quantity;
+    }
     const create_payment_json = {
       intent: "sale",
       payer: {
@@ -214,7 +232,8 @@ const postPayment = async (req, res, next) => {
       } else {
         for (let i = 0; i < payment.links.length; i++) {
           if (payment.links[i].rel === "approval_url") {
-            res.redirect(payment.links[i].href);
+            // res.redirect(payment.links[i].href);
+            res.json({ forwardLink: payment.links[i].href });
           }
         }
       }
@@ -226,6 +245,7 @@ const postPayment = async (req, res, next) => {
 
 const success = async (req, res, next) => {
   try {
+    const authId = req.cookies.authId;
     const payerId = req.query.PayerID;
     const paymentId = req.query.paymentId;
 
@@ -244,12 +264,42 @@ const success = async (req, res, next) => {
     paypal.payment.execute(
       paymentId,
       execute_payment_json,
-      function (error, payment) {
+      async function (error, payment) {
         if (error) {
           res.render("client/cancle");
         } else {
-          console.log(JSON.stringify(payment));
-          res.render("client/success");
+          const response = await db.sequelize.query(
+            `EXEC sp_storeShipping :ship_name , :ship_email , : ship_phone , :ship_address , :ship_city `,
+            {
+              replacements: {
+                ship_name,
+                ship_email,
+                ship_phone,
+                ship_address,
+                ship_city,
+              },
+            }
+          );
+          const response1 = await db.sequelize.query(
+            `EXEC sp_PURCHASE_CART :CUS`,
+            {
+              replacements: { CUS: authId },
+            }
+          );
+
+          const response2 = await db.sequelize.query(
+            `EXEC sp_PAYMENTID_PAYPAL :PAYPAL_ID , :USER_ID`,
+            {
+              replacements: {
+                PAYPAL_ID: paymentId,
+                USER_ID: authId,
+              },
+            }
+          );
+
+          Promise.all([response, response1, response2]).then(() => {
+            res.render("client/success");
+          });
         }
       }
     );
@@ -279,4 +329,5 @@ module.exports = {
   getDetail,
   getCart,
   getWishList,
+  getShipping,
 };

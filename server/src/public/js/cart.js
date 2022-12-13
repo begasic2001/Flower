@@ -5,7 +5,6 @@ $(document).ready(async function () {
   });
   const cart = await instance.getLocalCart();
   const filtered = cart.filter((item) => item.total !== 0);
-
   let total = 0;
   if (filtered.length !== 0) {
     filtered.map((item) => {
@@ -65,7 +64,7 @@ $(document).ready(async function () {
 
     $(".cart_buttons").append(`
             <button type="button" class="button cart_button_clear clearAllCart">Xóa toàn bộ</button>
-            <button type="button" class="button cart_button_checkout thanhtoan">Thanh Toán</button>
+            <button type="button" class="button cart_button_checkout thanhtoan">Tiếp Theo</button>
         `);
     const totalAmount = $(".order_total_amount");
     totalAmount.html(numberFormat.format(total));
@@ -228,34 +227,30 @@ $(document).ready(async function () {
   }
 
   // thanh toán
-  async function checkout(items) {
-    return await instance
-      .post(`/payment`, {
-        items,
-      })
-      .then((result) => {
-        return result.data;
-      });
-  }
 
   let btnCheckOut = document.querySelector(".thanhtoan");
   if (btnCheckOut) {
     btnCheckOut.addEventListener("click", async function (e) {
-      e.preventDefault();
-
-      var items = filtered.map((item) => {
-        // console.log(item);
-        let dola = (+item.selling_price / 24000).toFixed(2);
-        return {
-          name: item.pro_name,
-          price: dola,
-          currency: "USD",
-          quantity: item.amount,
-        };
-      });
-      await checkout(items).then((data) => {
-        console.log(data);
-      });
+      window.location.href = "/shipping";
     });
   }
+  // if (btnCheckOut) {
+  //   btnCheckOut.addEventListener("click", async function (e) {
+  //     let items = filtered.map((item) => {
+  //       let dola = (+item.selling_price / 24000).toFixed(2);
+  //       return {
+  //         name: item.pro_name,
+  //         price: dola,
+  //         currency: "USD",
+  //         quantity: item.amount,
+  //       };
+  //     });
+
+  // await instance.post(`/payment`, {
+  //   items: items,
+  // }).then((result)=>{
+  //  window.location = result.data.forwardLink;
+  // })
+  //   })
+  // }
 });
