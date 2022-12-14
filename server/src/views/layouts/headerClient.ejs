@@ -92,7 +92,7 @@
                                                     <ul class="custom_list clc">
                                                         <li><a class="clc" href="#">Danh mục</a></li>
                                                         <% category.map(function(c){ %>
-                                                            <li><a class="clc" href="#"><%= c.cat_name %></a></li>
+                                                            <li><a class="clc" href="<%= c.id %>"><%= c.cat_name %></a></li>
                                                         <% }) %>
                                                     </ul>
                                                 </div>

@@ -13,12 +13,7 @@ paypal.configure({
   client_secret: process.env.CLIENT_SECRECT_PAYPAL,
 });
 let items;
-// var items = JSON.parse(fs.readFileSync("db.json"));
-// items = items.Item;
 var total = 0;
-// for (let i = 0; i < items.length; i++) {
-//   total += parseFloat(items[i].price) * items[i].quantity;
-// }
 const clientView = async (req, res, next) => {
   try {
     const getByStatus = await services.getAny({
@@ -26,18 +21,18 @@ const clientView = async (req, res, next) => {
       order: ["id", "DESC"],
       limit: 12,
     });
-    const getByTrend = await services.getAny({
-      status: 1,
-      trend: 1,
-      order: ["id", "DESC"],
-      limit: 8,
-    });
-    const getByBestRated = await services.getAny({
-      status: 1,
-      best_rated: 1,
-      order: ["id", "DESC"],
-      limit: 8,
-    });
+    // const getByTrend = await services.getAny({
+    //   status: 1,
+    //   trend: 1,
+    //   order: ["id", "DESC"],
+    //   limit: 8,
+    // });
+    // const getByBestRated = await services.getAny({
+    //   status: 1,
+    //   best_rated: 1,
+    //   order: ["id", "DESC"],
+    //   limit: 8,
+    // });
     const getByHot = await services.getAny({
       status: 1,
       hot_new: 1,
@@ -52,8 +47,8 @@ const clientView = async (req, res, next) => {
     });
 
     let productByStatus = getByStatus.productData.rows;
-    let productByTrend = getByTrend.productData.rows;
-    let productByBestRated = getByBestRated.productData.rows;
+    // let productByTrend = getByTrend.productData.rows;
+    // let productByBestRated = getByBestRated.productData.rows;
     let productByHot = getByHot.productData.rows;
     let productByBanner = getBanner.productData.rows;
     const category = await services1.category();
@@ -66,11 +61,9 @@ const clientView = async (req, res, next) => {
       category,
       subCategory,
       productByStatus,
-      productByTrend,
-      productByBestRated,
+      numberFormat,
       productByHot,
       productByBanner,
-      numberFormat,
     });
   } catch (error) {
     next(error);
@@ -179,7 +172,41 @@ const getShipping = async (req, res, next) => {
     next(error);
   }
 };
+const getProductById = async (req, res, next) => {
+  try {
+    const productId = req.params.productId;
+    const getProductBySubCategory = await services.getAny({
+      status: 1,
+      subcat_id: productId,
+    });
+    const product = getProductBySubCategory.productData.rows;
+    const getBrandGroupByBrandId = await db.sequelize.query(
+      `EXEC sp_brandBySubcategories :subcat_id  `,
+      {
+        replacements: {
+          subcat_id: productId,
+        },
+      }
+    );
 
+    const brand_id = getBrandGroupByBrandId[0];
+
+    let brand = await db.sequelize.query(`EXEC sp_listBrandById :id  `, {
+      replacements: {
+        id: brand_id[0].brand_id,
+      },
+    });
+    brand = brand[0];
+    const category = await services1.category();
+    res.render("client/detailProductCategory", {
+      category,
+      product,
+      brand,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 const getPayment = async (req, res, next) => {
   try {
     res.render("client/payment");
@@ -199,49 +226,72 @@ const cancle = async (req, res, next) => {
 const postPayment = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
-    res.cookie("authId", userId);
     const ship = req.body.ship;
-    console.log(ship);
-    res.cookie("ship", JSON.stringify(ship));
-    items = req.body.items;
-    for (let i = 0; i < items.length; i++) {
-      total += parseFloat(items[i].price) * items[i].quantity;
-    }
-    const create_payment_json = {
-      intent: "sale",
-      payer: {
-        payment_method: "paypal",
-      },
-      redirect_urls: {
-        return_url: "http://localhost:9000/success",
-        cancel_url: "http://localhost:9000/cancel",
-      },
-      transactions: [
-        {
-          item_list: {
-            items: items,
-          },
-          amount: {
-            currency: "USD",
-            total: total.toString(),
-          },
-          description: "Hat for the best team ever",
+    const response = await db.sequelize.query(
+      `EXEC sp_storeShipping2 :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city`,
+      {
+        replacements: {
+          id: genarateId(),
+          ship_name: ship[0].ship_name,
+          ship_email: ship[0].ship_email,
+          ship_phone: ship[0].ship_phone,
+          ship_address: ship[0].ship_address,
+          ship_city: ship[0].ship_city,
         },
-      ],
-    };
-    paypal.payment.create(create_payment_json, function (error, payment) {
-      if (error) {
-        res.render("client/cancle");
-      } else {
-        for (let i = 0; i < payment.links.length; i++) {
-          if (payment.links[i].rel === "approval_url") {
-            // res.redirect(payment.links[i].href);
-            console.log(payment);
-            res.json({ forwardLink: payment.links[i].href });
-          }
-        }
       }
+    );
+    const response1 = await db.sequelize.query(`EXEC sp_PURCHASE_CART :CUS`, {
+      replacements: { CUS: userId },
     });
+    Promise.all([response, response1])
+      .then(() => {
+        res.json({
+          status: 1,
+          msg: `Thanh toán thành công`,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // items = req.body.items;
+    // for (let i = 0; i < items.length; i++) {
+    //   total += parseFloat(items[i].price) * items[i].quantity;
+    // }
+    // const create_payment_json = {
+    //   intent: "sale",
+    //   payer: {
+    //     payment_method: "paypal",
+    //   },
+    //   redirect_urls: {
+    //     return_url: "http://localhost:9000/success",
+    //     cancel_url: "http://localhost:9000/cancel",
+    //   },
+    //   transactions: [
+    //     {
+    //       item_list: {
+    //         items: items,
+    //       },
+    //       amount: {
+    //         currency: "USD",
+    //         total: total.toString(),
+    //       },
+    //       description: "Hat for the best team ever",
+    //     },
+    //   ],
+    // };
+    // paypal.payment.create(create_payment_json, function (error, payment) {
+    //   if (error) {
+    //     res.render("client/cancle");
+    //   } else {
+    //     for (let i = 0; i < payment.links.length; i++) {
+    //       if (payment.links[i].rel === "approval_url") {
+    //         // res.redirect(payment.links[i].href);
+    //         console.log(payment);
+    //         res.json({ forwardLink: payment.links[i].href });
+    //       }
+    //     }
+    //   }
+    // });
   } catch (error) {
     next(error);
   }
@@ -273,44 +323,33 @@ const success = async (req, res, next) => {
         if (error) {
           res.render("client/cancle");
         } else {
-          const response = await db.sequelize
-            .query(
-              `EXEC sp_storeShipping :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city `,
-              {
-                replacements: {
-                  id: genarateId(),
-                  ship_name: ship[0].ship_name,
-                  ship_email: ship[0].ship_email,
-                  ship_phone: ship[0].ship_phone,
-                  ship_address: ship[0].ship_address,
-                  ship_city: ship[0].ship_city,
-                },
-              }
-            )
-            .then(async () => {
-              const response1 = await db.sequelize.query(
-                `EXEC sp_PURCHASE_CART :CUS`,
-                {
-                  replacements: { CUS: authId },
-                }
-              );
-
-              // const response2 = await db.sequelize.query(
-              //   `EXEC sp_PAYMENTID_PAYPAL :PAYPAL_ID , :USER_ID`,
-              //   {
-              //     replacements: {
-              //       PAYPAL_ID: paymentId,
-              //       USER_ID: authId,
-              //     },
-              //   }
-              // );
-
-              Promise.all([response, response1]).then(() => {
-                res.clearCookie("ship");
-                res.clearCookie("authId");
-                res.render("client/success");
-              });
-            });
+          // const response = await db.sequelize
+          //   .query(
+          //     `EXEC sp_storeShipping :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city `,
+          //     {
+          //       replacements: {
+          //         id: genarateId(),
+          //         ship_name: ship[0].ship_name,
+          //         ship_email: ship[0].ship_email,
+          //         ship_phone: ship[0].ship_phone,
+          //         ship_address: ship[0].ship_address,
+          //         ship_city: ship[0].ship_city,
+          //       },
+          //     }
+          //   )
+          //   .then(async () => {
+          //     const response1 = await db.sequelize.query(
+          //       `EXEC sp_PURCHASE_CART :CUS`,
+          //       {
+          //         replacements: { CUS: authId },
+          //       }
+          //     );
+          //     Promise.all([response, response1]).then(() => {
+          //       res.clearCookie("ship");
+          //       res.clearCookie("authId");
+          //       res.render("client/success");
+          //     });
+          //   });
         }
       }
     );
@@ -341,4 +380,5 @@ module.exports = {
   getCart,
   getWishList,
   getShipping,
+  getProductById,
 };

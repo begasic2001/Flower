@@ -34,12 +34,12 @@
                 <tr>
                   <td><%= index + 1 %></td>
                   <td><%= c.order_id %></td>
-                  <td><%= c.product_name %></td>
-                  <td><%= c.color %></td>
-                  <td><%= c.size %></td>
+                  <td><%= c.pro_name %></td>
+                  <td><%= c.pro_color %></td>
+                  <td><%= c.pro_size %></td>
                   <td><%= c.quantity %></td>
                   <td><%= c.single_price %></td>
-                  <td><%= c.total_price %></td>
+                  <td><%= c.quantity * c.single_price  %></td>
                 </tr>
                 <% }); %> 
               </tbody>

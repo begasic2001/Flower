@@ -537,7 +537,8 @@
                     items: items,
                     ship:ship
                 }).then((result) => {
-                    window.location = result.data.forwardLink;
+                    
+                    window.location.replace('/')
                 }).catch(err =>{
                     console.log(err);
                 })

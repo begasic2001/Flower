@@ -15,6 +15,7 @@ route.get("/wishlist",ClientController.getWishList)
 route.get("/cart", ClientController.getCart);
 route.post("/payment",verifyAccessToken , ClientController.postPayment)
 route.get("/shipping", ClientController.getShipping);
+route.get("/product/:productId", ClientController.getProductById);
 route.get("/details/:productId",ClientController.getDetail)
 route.get("/", ClientController.clientView);
 module.exports = route;

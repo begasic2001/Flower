@@ -20,30 +20,21 @@
               <thead>
                 <tr>
                   <th class="wd-5p">STT</th>
-                  <th class="wd-15p">Tên Khách Hàng</th>
-                  <th class="wd-15p">Loại Thanh Toán</th>
-                  <th class="wd-5p">Số Lượng</th>
-                  <th class="wd-25p">Thành Giá</th>
-                  <th class="wd-25p">Thuế</th>
-                  <th class="wd-25p">Tổng Tiền</th>
-                  <th class="wd-25p">Trạng Thái</th>
-                  <th class="wd-25p">Hủy Hàng</th>
-                  <th class="wd-25p">Ngày Đặt</th>
-                  <th class="wd-25p">Xem Chi Tiết</th>
+                  <th class="wd-15p">Tên Khách Đặt</th>
+                  <th class="wd-15p">SDT Khách Đặt</th>
+                  <th class="wd-5p">Tên Khách Nhận</th>
+                  <th class="wd-5p">SDT Khách Nhận</th>
+                  <th class="wd-25p">Ngày đặt</th>
                 </tr>
               </thead>
               <tbody>
                 <% order.map(function(c, index){%> 
                 <tr>
                   <td><%= index + 1 %></td>
-                  <td><%= c.User.name%></td>
-                  <td><%= c.payment_type %></td>
-                  <td><%= c.amount %></td>
-                  <td><%= c.subtotal %></td>
-                  <td><%= c.vat %></td>
-                  <td><%= c.total %></td>
-                  <td><%= c.status %></td>
-                  <td><%= c.return_order %></td>
+                  <td><%= c.name%></td>
+                  <td><%= c.phone %></td>
+                  <td><%= c.ship_name %></td>
+                  <td><%= c.ship_phone %></td>
                   <td><%= c.date_order %></td>
                   <td><a href="/api/order/orderdetail/<%= c.id %>">Xem</a></td>
                 </tr>
