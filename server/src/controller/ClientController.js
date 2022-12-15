@@ -2,6 +2,7 @@ import * as services from "../services/product_service";
 import * as services1 from "../services/category_service";
 import * as services2 from "../services/subcate_service";
 import * as services3 from "../services/cart_service";
+import * as services4 from "../services/order_service";
 import fs from "fs";
 import { v4 as genarateId } from "uuid";
 import paypal from "paypal-rest-sdk";
@@ -365,6 +366,31 @@ const cancel = async (req, res, next) => {
     next(error);
   }
 };
+
+const getOrderForUser = async (req, res, next) => {
+  try {
+    const userId = req.payLoad.userId;
+    const response = await services4.orderUserId(userId);
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOrderDetailForUser = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    const id = req.params.id;
+    const orderDetail = await services4.orderDetail(id);
+    console.log(orderDetail);
+    res.render("client/order", {
+      category,
+      orderDetail,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   clientView,
   getUserLogin,
@@ -381,4 +407,6 @@ module.exports = {
   getWishList,
   getShipping,
   getProductById,
+  getOrderForUser,
+  getOrderDetailForUser,
 };

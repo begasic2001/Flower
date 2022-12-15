@@ -207,6 +207,10 @@
             window.localStorage.setItem('cart', JSON.stringify(cart))
         }
 
+        instance.setHistory = async (order) => {
+                window.localStorage.setItem('history', JSON.stringify(order))
+            }
+
         instance.getLocalAccessToken = async () => {
             return window.localStorage.getItem('accessToken') ? window.localStorage.getItem('accessToken') : null
 
@@ -222,6 +226,10 @@
         instance.getLocalCart = async () => {
             return JSON.parse(window.localStorage.getItem('cart')) ? JSON.parse(window.localStorage.getItem('cart')) : null
         }
+
+        instance.getHistory = async () => {
+                return JSON.parse(window.localStorage.getItem('history')) ? JSON.parse(window.localStorage.getItem('history')) : null
+            }
         
         
        
@@ -229,7 +237,7 @@
     </script>
 <script>
     // hiển thị tên ng dùng sau khi đăng nhập
-   
+      
          let user = instance.getLocalInfoUser()
             if (user !== null) {
                 $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
@@ -274,6 +282,7 @@
                                         window.localStorage.removeItem('refreshToken')
                                         window.localStorage.removeItem('user')
                                         window.localStorage.removeItem('cart')
+                                        window.localStorage.removeItem('history')
                                         window.location.replace('/');
                                     })
                                 });
@@ -287,16 +296,28 @@
     let countNumberCart = $('.cart_count')
     let totalCart = $('.cart_price')
     let countNumberWishList = $('.wishlist_count')
+      async function orderUserById(id) {
+            return instance.get('/order').then(result => {
+                return result.data
+            })
+        }
+    async function orderDetailUserById(id){
+          return instance.get('/orderDetail').then(result => {
+            return result.data
+        })
+    }
     if(user){
             document.addEventListener('DOMContentLoaded', async () => {
-            await getCart()
-
+            const a = await getCart()
+            const b = await orderUserById(user.id)
+            Promise.all([a,b])
                 .then(async data => {
-                        return await instance.setLocalCart(data)
+                        await instance.setHistory(data[1])
+                        return await instance.setLocalCart(data[0])
 
                 })
                 .then(async () => {
-                  
+                    
                     const cart = await instance.getLocalCart()
                     const countWishList = await getWishList()
                     let amount = 0;
@@ -547,6 +568,25 @@
         })
     }
 
+</script>
+<script>
+    $(document).ready(async function(){
+        const history = await instance.getHistory()
+        for(let i = 0 ;i< history.length;i++){
+             $('.orderUser').append(`
+                            <tr>
+                            <td scope="col">${history[i].name}</td>
+                            <td scope="col">${history[i].phone}</td>
+                            <td scope="col">${history[i].ship_name}</td>
+                            <td scope="col">${history[i].ship_phone}</td>
+                            <td scope="col">${history[i].ship_address}</td>
+                            <td scope="col">${history[i].date_order}</td>
+                            <td scope="col"><a href='/orderDetail/${history[i].id}' class='btn btn-sm btn-info'>Xem chi tiết</a></td>
+                            <tr>
+        `)
+        }
+       
+    })
 </script>
 </body>
 

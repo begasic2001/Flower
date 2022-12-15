@@ -42,8 +42,27 @@ const shipping = () => {
     }
   });
 };
+
+const orderUserId = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.sequelize.query(
+        `EXEC sp_getOrderUserById :CUS`,
+        {
+          replacements: {
+            CUS: id,
+          },
+        }
+      );
+      resolve(response[0])
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
 module.exports = {
   order,
   orderDetail,
   shipping,
+  orderUserId,
 };

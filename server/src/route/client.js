@@ -17,5 +17,7 @@ route.post("/payment",verifyAccessToken , ClientController.postPayment)
 route.get("/shipping", ClientController.getShipping);
 route.get("/product/:productId", ClientController.getProductById);
 route.get("/details/:productId",ClientController.getDetail)
+route.get("/order",verifyAccessToken,ClientController.getOrderForUser);
+route.get("/orderDetail/:id", ClientController.getOrderDetailForUser);
 route.get("/", ClientController.clientView);
 module.exports = route;

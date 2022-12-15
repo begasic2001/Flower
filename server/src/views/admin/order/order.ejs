@@ -24,6 +24,7 @@
                   <th class="wd-15p">SDT Khách Đặt</th>
                   <th class="wd-5p">Tên Khách Nhận</th>
                   <th class="wd-5p">SDT Khách Nhận</th>
+                  <th class="wd-5p">Địa chỉ</th>
                   <th class="wd-25p">Ngày đặt</th>
                 </tr>
               </thead>
@@ -35,6 +36,9 @@
                   <td><%= c.phone %></td>
                   <td><%= c.ship_name %></td>
                   <td><%= c.ship_phone %></td>
+                  <td>
+                    <%= c.ship_address %>
+                  </td>
                   <td><%= c.date_order %></td>
                   <td><a href="/api/order/orderdetail/<%= c.id %>">Xem</a></td>
                 </tr>

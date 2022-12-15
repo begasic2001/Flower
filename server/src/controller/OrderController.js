@@ -5,7 +5,6 @@ import joi from "joi";
 const orderView = async (req, res, next) => {
   try {
     const order = await services.order();
-    console.log(order);
     res.render("admin/order/order", {
       order,
     });

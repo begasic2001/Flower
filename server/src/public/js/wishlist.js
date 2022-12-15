@@ -31,7 +31,7 @@ $(document).ready(async function () {
                                           <a href="" class="btn btn-sm btn-danger deleteWishList" data-id="${
                                             item.product_id
                                           }">x</a>
-                                           <a href="" class="btn btn-sm btn-danger deleteWishList" data-id="${
+                                           <a href="" class="btn btn-sm btn-danger cart_button2" data-id="${
                                              item.product_id
                                            }">Thêm vào giỏ</a>
                                       </div>
@@ -104,5 +104,43 @@ $(document).ready(async function () {
              }
        })
       });
+    }
+
+    let btnCartButton = document.querySelector('.cart_button2')
+    if(btnCartButton){
+        $(".cart_button2").on("click", async function (e) {
+          e.preventDefault();
+          const id = $(this).data("id");
+          const a = await addToCart(id);
+          const b = await getCart();
+          Promise.all([a, b]).then(async (data) => {
+            if (data[0].status === 401 && data[1].status === 401) {
+              return Swal.fire({
+                icon: "error",
+                title: "Vui lòng đăng nhập giúp em",
+              });
+            } else {
+              await instance.setLocalCart(data[1]).then(async () => {
+                const cart = await instance.getLocalCart();
+                let amount = 0;
+                let total = 0;
+                if (cart !== null) {
+                  $.each(cart, async function (key, value) {
+                    if (value !== undefined) {
+                      amount += value.amount;
+                      total += value.total;
+                    }
+                    countNumberCart.html(`<span>${amount}</span>`);
+                    totalCart.html(total);
+                  });
+                }
+                Swal.fire({
+                  icon: "success",
+                  title: "Thêm giỏ hàng thành công",
+                });
+              });
+            }
+          });
+        });
     }
 });

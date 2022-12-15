@@ -6,17 +6,27 @@
                 <table class="table table-response">
                     <thead>
                         <tr>
-                            <th scope="col">Tên khách đặt</th>
-                            <th scope="col">SĐT khách đặt</th>
-                            <th scope="col">Tên khách nhận</th>
-                            <th scope="col">SĐT khách nhận</th>
-                            <th scope="col">Địa chỉ</th>
-                            <th scope="col">Ngày đặt</th>
-                            <th scope="col">Hành động</th>
+                            <th scope="col">Mã hóa đơn</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Màu sắc</th>
+                            <th scope="col">Kích thước</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col">Đơn giá</th>
+                            <th scope="col">Thành tiền</th>
                         </tr>
                     </thead>
-                    <tbody class="orderUser">
-                      
+                    <tbody class="orderUser2">
+                        <% orderDetail.map(od=>{ %>
+                            <tr>
+                                <td><%= od.order_id %></td>
+                                <td><%= od.pro_name %></td>
+                                <td><%= od.pro_color %></td>
+                                <td><%= od.pro_size %></td>
+                                <td><%= od.quantity %></td>
+                                <td><%= od.single_price %></td>
+                                <td><%= od.quantity * od.single_price %></td>
+                            </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </div>
@@ -24,7 +34,7 @@
                 <div class="card">
                     <!-- <img src="" class="cart-img-top" style="height: 90px; width: 90px; margin-left:34%"> -->
                     <div class="cart-body" id="userInfo">
-                        
+
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item"><a href="/changepass">Đổi mật khẩu</a></li>
