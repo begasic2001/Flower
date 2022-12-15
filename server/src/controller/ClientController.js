@@ -3,6 +3,7 @@ import * as services1 from "../services/category_service";
 import * as services2 from "../services/subcate_service";
 import * as services3 from "../services/cart_service";
 import * as services4 from "../services/order_service";
+import * as services5 from "../services/brand_service";
 import fs from "fs";
 import { v4 as genarateId } from "uuid";
 import paypal from "paypal-rest-sdk";
@@ -46,14 +47,22 @@ const clientView = async (req, res, next) => {
       order: ["id", "DESC"],
       limit: 3,
     });
-
+    const getMainSlider = await services.getAny({
+      status:1,
+      main_slider:1,
+      order: ["id", "DESC"],
+    })
     let productByStatus = getByStatus.productData.rows;
     // let productByTrend = getByTrend.productData.rows;
     // let productByBestRated = getByBestRated.productData.rows;
     let productByHot = getByHot.productData.rows;
     let productByBanner = getBanner.productData.rows;
+    let productSlider = getMainSlider.productData.rows;
+    productSlider = productSlider[0]
     const category = await services1.category();
+    console.log(category);
     const subCategory = await services2.subCategory();
+    console.log(subCategory);
     const numberFormat = new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
@@ -65,6 +74,7 @@ const clientView = async (req, res, next) => {
       numberFormat,
       productByHot,
       productByBanner,
+      productSlider,
     });
   } catch (error) {
     next(error);
@@ -180,7 +190,9 @@ const getProductById = async (req, res, next) => {
       status: 1,
       subcat_id: productId,
     });
+    console.log(getProductBySubCategory);
     const product = getProductBySubCategory.productData.rows;
+    const count = getProductBySubCategory.productData.count;
     const getBrandGroupByBrandId = await db.sequelize.query(
       `EXEC sp_brandBySubcategories :subcat_id  `,
       {
@@ -203,11 +215,35 @@ const getProductById = async (req, res, next) => {
       category,
       product,
       brand,
+      count,
     });
   } catch (error) {
     next(error);
   }
 };
+
+const getAllCategoryById = async (req, res, next) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const getProductByCategory = await services.getAny({
+      status: 1,
+      categories_id: categoryId,
+    });
+    const product = getProductByCategory.productData.rows;
+    const count = getProductByCategory.productData.count;
+    const category = await services1.category();
+    const brand = await services5.brand()
+    res.render("client/allCategory", {
+      category,
+      brand,
+      product,
+      count,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getPayment = async (req, res, next) => {
   try {
     res.render("client/payment");
@@ -409,4 +445,5 @@ module.exports = {
   getProductById,
   getOrderForUser,
   getOrderDetailForUser,
+  getAllCategoryById,
 };

@@ -1,55 +1,66 @@
 <%- include ('../../layouts/header'); -%>
-<%- include ('../../layouts/sidebar'); -%>
+  <%- include ('../../layouts/sidebar'); -%>
 
-<!-- ########## START: MAIN PANEL ########## -->
-<div class="sl-mainpanel">
-    <nav class="breadcrumb sl-breadcrumb">
-      <a class="breadcrumb-item" href="index.html">Starlight</a>
-      <span class="breadcrumb-item active">Data Table</span>
-    </nav>
+    <!-- ########## START: MAIN PANEL ########## -->
+    <div class="sl-mainpanel">
+      <nav class="breadcrumb sl-breadcrumb">
+        <a class="breadcrumb-item" href="index.html">Starlight</a>
+        <span class="breadcrumb-item active">Data Table</span>
+      </nav>
 
-    <div class="sl-pagebody">
-      <div class="sl-page-title">
-        <h5>Danh sách đơn đặt</h5>
-      </div><!-- sl-page-title -->
+      <div class="sl-pagebody">
+        <div class="sl-page-title">
+          <h5>Danh sách đơn đặt</h5>
+        </div><!-- sl-page-title -->
 
-      <div class="card pd-20 pd-sm-40">
-        <h6 class="card-body-title">Danh sách đơn đặt</h6>
-        <div class="table-wrapper">
+        <div class="card pd-20 pd-sm-40">
+          <h6 class="card-body-title">Danh sách đơn đặt</h6>
+          <div class="table-wrapper">
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-5p">STT</th>
-                  <th class="wd-15p">Tên Khách Đặt</th>
-                  <th class="wd-15p">SDT Khách Đặt</th>
-                  <th class="wd-5p">Tên Khách Nhận</th>
-                  <th class="wd-5p">SDT Khách Nhận</th>
-                  <th class="wd-5p">Địa chỉ</th>
-                  <th class="wd-25p">Ngày đặt</th>
+                  <th class="wd-10p">Tên Khách Đặt</th>
+                  <th class="wd-5p">SĐT Khách Đặt</th>
+                  <th class="wd-10p">Tên Khách Nhận</th>
+                  <th class="wd-5p">SĐT Khách Nhận</th>
+                  <th class="wd-10p">Địa chỉ</th>
+                  <th class="wd-10p">Ngày Đặt</th>
+                  <th class="wd-10p">Hành Động</th>
                 </tr>
               </thead>
               <tbody>
-                <% order.map(function(c, index){%> 
-                <tr>
-                  <td><%= index + 1 %></td>
-                  <td><%= c.name%></td>
-                  <td><%= c.phone %></td>
-                  <td><%= c.ship_name %></td>
-                  <td><%= c.ship_phone %></td>
-                  <td>
-                    <%= c.ship_address %>
-                  </td>
-                  <td><%= c.date_order %></td>
-                  <td><a href="/api/order/orderdetail/<%= c.id %>">Xem</a></td>
-                </tr>
-                <% }); %> 
+                <% order.map(function(c, index){%>
+                  <tr>
+                    <td>
+                      <%= c.name %>
+                    </td>
+                    <td>
+                      <%= c.phone %>
+                    </td>
+                    <td>
+                      <%= c.ship_name %>
+                    </td>
+                    <td>
+                      <%= c.ship_phone %>
+                    </td>
+                    <td>
+                      <%= c.ship_address %>
+                    </td>
+                    <td>
+                      <%= c.date_order %>
+                    </td>
+                      <td>
+                        <a href="/api/order/orderdetail/<%= c.id %>">Xem</a>
+                      </td>
+                  </tr>
+                  <% }); %>
               </tbody>
             </table>
-        </div><!-- table-wrapper -->
-      </div><!-- card -->
-    </div><!-- sl-pagebody -->
-  </div><!-- sl-mainpanel -->
-  <script src="/lib/jquery/jquery.js"></script>
+          </div><!-- table-wrapper -->
+        </div><!-- card -->
+      </div><!-- sl-pagebody -->
+    </div><!-- sl-mainpanel -->
+    <script src="/lib/jquery/jquery.js"></script>
     <script src="/lib/popper.js/popper.js"></script>
     <script src="/lib/bootstrap/bootstrap.js"></script>
     <script src="/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
@@ -60,6 +71,8 @@
 
     <script src="/js/starlight.js"></script>
     <script>
+      $(function () {
+        'use strict';
 
         $('#datatable1').DataTable({
           responsive: true,
@@ -69,6 +82,18 @@
             lengthMenu: '_MENU_ items/page',
           }
         });
+
+        $('#datatable2').DataTable({
+          bLengthChange: false,
+          searching: false,
+          responsive: true
+        });
+
+        // Select2
+        $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+      });
     </script>
     </body>
-</html>
+
+    </html>

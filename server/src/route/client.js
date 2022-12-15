@@ -16,6 +16,7 @@ route.get("/cart", ClientController.getCart);
 route.post("/payment",verifyAccessToken , ClientController.postPayment)
 route.get("/shipping", ClientController.getShipping);
 route.get("/product/:productId", ClientController.getProductById);
+route.get("/allcategory/:categoryId", ClientController.getAllCategoryById);
 route.get("/details/:productId",ClientController.getDetail)
 route.get("/order",verifyAccessToken,ClientController.getOrderForUser);
 route.get("/orderDetail/:id", ClientController.getOrderDetailForUser);
