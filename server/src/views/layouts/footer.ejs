@@ -465,7 +465,7 @@
 <script>
     // details page
     async function updateCart(productId){
-        const amount = $('input[name="qty"]').val()
+        const amount = $('input[name="qtyForDetails"]').val()
         return await instance.post(`/api/cart/updateCart/${productId}`,{
             amount:amount
         }).then(result => {

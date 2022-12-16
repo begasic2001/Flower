@@ -20,7 +20,7 @@
                 <!-- Shop Sidebar -->
                 <div class="shop_sidebar">
                     <div class="sidebar_section">
-                        <div class="sidebar_title">Categories</div>
+                        <div class="sidebar_title">Danh mục</div>
                         <ul class="sidebar_categories">
                             <% category.map(function(c){ %>
                             <li><a href="/allcategory/<%= c.id %>"><%= c.cat_name %></a></li>
@@ -28,18 +28,18 @@
                         </ul>
                     </div>
                     <div class="sidebar_section filter_by_section">
-                        <div class="sidebar_title">Filter By</div>
-                        <div class="sidebar_subtitle">Price</div>
+                        <div class="sidebar_title">Sắp Xếp Theo</div>
+                        <div class="sidebar_subtitle">Giá</div>
                         <div class="filter_price">
                             <div id="slider-range" class="slider_range"></div>
-                            <p>Range: </p>
+                            <p>Khoảng: </p>
                             <p><input type="text" id="amount" class="amount" readonly
                                     style="border:0; font-weight:bold;"></p>
                         </div>
                     </div>
 
                     <div class="sidebar_section">
-                        <div class="sidebar_subtitle brands_subtitle">Brands</div>
+                        <div class="sidebar_subtitle brands_subtitle">Nhà cung cấp</div>
                         <ul class="brands_list">
                             <% brand.map(function(b){ %>
                             <li class="brand"><a href="#"><%= b.brand_name %></a></li>
@@ -96,7 +96,9 @@
                                             tabindex="0"><%= p.pro_name %></a></div>
                                 </div>
                             </div>
-                            <div class="product_fav"><i class="fas fa-heart"></i></div>
+                            <button class="addWishList" data-id="<%= p.id %>">
+                                <div class="product_fav "><i class="fas fa-heart"></i></div>
+                            </button>
                         </div>
                        <% })%>
 
