@@ -3,6 +3,7 @@ import CategoryController from "../controller/CategoryController";
 const route = express.Router();
 
 // Admin Category
+route.get("/revenue", CategoryController.revenue);
 route.get("/category", CategoryController.categoryView);
 route.get("/dashboard", CategoryController.dashboard);
 // API

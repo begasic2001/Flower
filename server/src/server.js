@@ -47,7 +47,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 // call morgan
-app.use(morgan("dev"));
+app.use(morgan("combined"));
 app.locals.moment = moment;
 // call swagger
 app.db = db;
