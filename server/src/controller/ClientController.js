@@ -447,6 +447,51 @@ const search  = async (req, res, next) => {
     next(error);
   }
 };
+
+const searchname = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    const brand = await services5.brand();
+     const getProduct = await services.getAny({
+       status: 1,
+       order: ["pro_name", "DESC"],
+     });
+     
+    let product = getProduct.productData.rows
+    let count = getProduct.productData.count;
+    
+    res.render("client/searchByNameDESC", {
+      category,
+      brand,
+      product,
+      count,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const searchprice = async (req, res, next) => {
+  try {
+    const category = await services1.category();
+    const brand = await services5.brand();
+    const getProduct = await services.getAny({
+      status: 1,
+      order: ["selling_price", "DESC"],
+    });
+
+    let product = getProduct.productData.rows;
+    let count = getProduct.productData.count;
+      res.render("client/searchByPriceDESC", {
+        category,
+        brand,
+        product,
+        count,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   clientView,
   getUserLogin,
@@ -467,4 +512,6 @@ module.exports = {
   getOrderDetailForUser,
   getAllCategoryById,
   search,
+  searchname,
+  searchprice,
 };
