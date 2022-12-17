@@ -4,6 +4,7 @@ import { verifyAccessToken } from "../services/jwt_service";
 import uploadCloud from "../config/cloudinary";
 const route = express.Router();
 
+route.get("/search", ClientController.search);
 route.get("/cancel", ClientController.cancel);
 route.get("/success", ClientController.success);
 route.get("/changepass", ClientController.getChangePass);

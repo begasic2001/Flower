@@ -17,11 +17,6 @@
     <link rel="stylesheet" type="text/css" href="/client/styles/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
-    <style>
-        .centerFooter{
-            justify-content: center;
-        }
-    </style>
 </head>
 
 <body>
@@ -39,10 +34,10 @@
                     <div class="row">
                         <div class="col d-flex flex-row">
                             <div class="top_bar_contact_item">
-                                <div class="top_bar_icon"><img src="images/phone.png" alt=""></div>0704543052
+                                <div class="top_bar_icon"><img src="/client/images/phone.png" alt=""></div>0704543052
                             </div>
                             <div class="top_bar_contact_item">
-                                <div class="top_bar_icon"><img src="images/mail.png" alt=""></div><a
+                                <div class="top_bar_icon"><img src="/client/images/mail.png" alt=""></div><a
                                     href="mailto:fastsales@gmail.com">luongminhthanh91@gmail.com</a>
                             </div>
                             <div class="top_bar_content ml-auto">
@@ -78,10 +73,22 @@
                             <div class="header_search">
                                 <div class="header_search_content">
                                     <div class="header_search_form_container">
-                                        <form action="#" class="header_search_form clearfix">
+                                        <form action="/search" class="header_search_form clearfix">
                                             <input type="search" required="required" class="header_search_input"
-                                                placeholder="Search for products...">
-                                            <button type="submit" class="header_search_button "
+                                                placeholder="Search for products..." name="search">
+                                            <div class="custom_dropdown">
+                                                <div class="custom_dropdown_list">
+                                                    <span class="custom_dropdown_placeholder clc">Danh mục</span>
+                                                    <i class="fas fa-chevron-down"></i>
+                                                    <ul class="custom_list clc">
+                                                        <li><a class="clc" href="#">Danh mục</a></li>
+                                                        <% category.map(function(c){ %>
+                                                            <li><a class="clc" href="<%= c.id %>"><%= c.cat_name %></a></li>
+                                                        <% }) %>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="header_search_button trans_300"
                                                 value="Submit"><img src="/client/images/search.png" alt=""></button>
                                         </form>
                                     </div>

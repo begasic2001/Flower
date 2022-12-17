@@ -60,9 +60,9 @@ const clientView = async (req, res, next) => {
     let productSlider = getMainSlider.productData.rows;
     productSlider = productSlider[0]
     const category = await services1.category();
-    console.log(category);
+    
     const subCategory = await services2.subCategory();
-    console.log(subCategory);
+    
     const numberFormat = new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
@@ -190,7 +190,6 @@ const getProductById = async (req, res, next) => {
       status: 1,
       subcat_id: productId,
     });
-    console.log(getProductBySubCategory);
     const product = getProductBySubCategory.productData.rows;
     const count = getProductBySubCategory.productData.count;
     const getBrandGroupByBrandId = await db.sequelize.query(
@@ -418,11 +417,32 @@ const getOrderDetailForUser = async (req, res, next) => {
     const category = await services1.category();
     const id = req.params.id;
     const orderDetail = await services4.orderDetail(id);
-    console.log(orderDetail);
     res.render("client/order", {
       category,
       orderDetail,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const search  = async (req, res, next) => {
+  try {
+    const name = req.query.search
+      const getSearch = await services.getAny({
+        status:1,
+       name:name
+      });
+      const count = getSearch.productData.count
+      const product = getSearch.productData.rows;
+     const category = await services1.category();
+     const brand = await services5.brand();
+      res.render('client/search',{
+        count,
+        category,
+        brand,
+        product
+      })
   } catch (error) {
     next(error);
   }
@@ -446,4 +466,5 @@ module.exports = {
   getOrderForUser,
   getOrderDetailForUser,
   getAllCategoryById,
+  search,
 };

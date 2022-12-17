@@ -4,6 +4,28 @@ import createError from "http-errors";
 import joi from "joi";
 import db from "../models/index";
 
+const search = async (req, res, next) => {
+  try {
+    const name = req.query.search;
+    const getSearch = await services.getAny({
+      status: 1,
+      name: name,
+    });
+    const count = getSearch.productData.count;
+    const product = getSearch.productData.rows;
+    const category = await services1.category();
+    const brand = await services5.brand();
+    res.render("client/search", {
+      count,
+      category,
+      brand,
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const revenue = async (req,res,next)=>{
   try {
     let year = new Date().getFullYear();
@@ -177,4 +199,5 @@ module.exports = {
   updateCategory,
   deleteCategory,
   revenue,
+  search,
 };
