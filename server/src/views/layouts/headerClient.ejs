@@ -17,6 +17,11 @@
     <link rel="stylesheet" type="text/css" href="/client/styles/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
     <link rel="stylesheet" href="sweetalert2.min.css">
+    <style>
+        .centerFooter{
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -76,19 +81,7 @@
                                         <form action="#" class="header_search_form clearfix">
                                             <input type="search" required="required" class="header_search_input"
                                                 placeholder="Search for products...">
-                                            <div class="custom_dropdown">
-                                                <div class="custom_dropdown_list">
-                                                    <span class="custom_dropdown_placeholder clc">Danh mục</span>
-                                                    <i class="fas fa-chevron-down"></i>
-                                                    <ul class="custom_list clc">
-                                                        <li><a class="clc" href="#">Danh mục</a></li>
-                                                        <% category.map(function(c){ %>
-                                                            <li><a class="clc" href="<%= c.id %>"><%= c.cat_name %></a></li>
-                                                        <% }) %>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="header_search_button trans_300"
+                                            <button type="submit" class="header_search_button "
                                                 value="Submit"><img src="/client/images/search.png" alt=""></button>
                                         </form>
                                     </div>
