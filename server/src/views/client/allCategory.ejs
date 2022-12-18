@@ -29,19 +29,8 @@
                                 <% }) %>
                             </ul>
                         </div>
-                        <div class="sidebar_section filter_by_section">
-                            <div class="sidebar_title">Filter By</div>
-                            <div class="sidebar_subtitle">Price</div>
-                            <div class="filter_price">
-                                <div id="slider-range" class="slider_range"></div>
-                                <p>Range: </p>
-                                <p><input type="text" id="amount" class="amount" readonly
-                                        style="border:0; font-weight:bold;"></p>
-                            </div>
-                        </div>
-
                         <div class="sidebar_section">
-                            <div class="sidebar_subtitle brands_subtitle">Brands</div>
+                            <div class="sidebar_subtitle brands_subtitle">Nhà Cung Cấp</div>
                             <ul class="brands_list">
                                 <% brand.map(function(b){ %>
                                     <li class="brand"><a href="#">
@@ -62,7 +51,7 @@
                         <div class="shop_bar clearfix">
                             <div class="shop_product_count"><span><%= count %></span> Sản Phẩm Tìm Thấy</div>
                             <div class="shop_sorting">
-                                <span>Sắp Xếp:</span>
+                                <!-- <span>Sắp Xếp:</span>
                                 <ul>
                                     <li>
                                         <span class="sorting_text">Tên<i
@@ -86,7 +75,7 @@
                                             
                                         </ul>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
 
@@ -105,7 +94,7 @@
 
 
                                         <div class="product_price discount">
-                                            <%= p.selling_price%>
+                                            <%= numberFormat.format(p.selling_price)%>
                                         </div>
 
 
@@ -115,7 +104,7 @@
                                                 </a></div>
                                         </div>
                                     </div>
-                                    <button class="addWishList" data-id="<%= p.id %>">
+                                    <button class="addWishList displayBTNaddWishList" data-id="<%= p.id %>">
                                         <div class="product_fav "><i class="fas fa-heart"></i></div>
                                     </button>
                                 </div>

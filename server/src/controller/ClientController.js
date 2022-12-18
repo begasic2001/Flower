@@ -48,21 +48,21 @@ const clientView = async (req, res, next) => {
       limit: 3,
     });
     const getMainSlider = await services.getAny({
-      status:1,
-      main_slider:1,
+      status: 1,
+      main_slider: 1,
       order: ["id", "DESC"],
-    })
+    });
     let productByStatus = getByStatus.productData.rows;
     // let productByTrend = getByTrend.productData.rows;
     // let productByBestRated = getByBestRated.productData.rows;
     let productByHot = getByHot.productData.rows;
     let productByBanner = getBanner.productData.rows;
     let productSlider = getMainSlider.productData.rows;
-    productSlider = productSlider[0]
+    productSlider = productSlider[0];
     const category = await services1.category();
-    
+
     const subCategory = await services2.subCategory();
-    
+
     const numberFormat = new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
@@ -185,6 +185,10 @@ const getShipping = async (req, res, next) => {
 };
 const getProductById = async (req, res, next) => {
   try {
+    const numberFormat = new Intl.NumberFormat("vi-VN", {
+       style: "currency",
+       currency: "VND",
+     });
     const productId = req.params.productId;
     const getProductBySubCategory = await services.getAny({
       status: 1,
@@ -215,6 +219,7 @@ const getProductById = async (req, res, next) => {
       product,
       brand,
       count,
+      numberFormat,
     });
   } catch (error) {
     next(error);
@@ -223,6 +228,10 @@ const getProductById = async (req, res, next) => {
 
 const getAllCategoryById = async (req, res, next) => {
   try {
+     const numberFormat = new Intl.NumberFormat("vi-VN", {
+       style: "currency",
+       currency: "VND",
+     });
     const categoryId = req.params.categoryId;
     const getProductByCategory = await services.getAny({
       status: 1,
@@ -231,12 +240,13 @@ const getAllCategoryById = async (req, res, next) => {
     const product = getProductByCategory.productData.rows;
     const count = getProductByCategory.productData.count;
     const category = await services1.category();
-    const brand = await services5.brand()
+    const brand = await services5.brand();
     res.render("client/allCategory", {
       category,
       brand,
       product,
       count,
+      numberFormat,
     });
   } catch (error) {
     next(error);
@@ -263,23 +273,25 @@ const postPayment = async (req, res, next) => {
   try {
     const userId = req.payLoad.userId;
     const ship = req.body.ship;
-    const response = await db.sequelize.query(
-      `EXEC sp_storeShipping2 :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city`,
-      {
-        replacements: {
-          id: genarateId(),
-          ship_name: ship[0].ship_name,
-          ship_email: ship[0].ship_email,
-          ship_phone: ship[0].ship_phone,
-          ship_address: ship[0].ship_address,
-          ship_city: ship[0].ship_city,
-        },
-      }
-    );
-    const response1 = await db.sequelize.query(`EXEC sp_PURCHASE_CART :CUS`, {
-      replacements: { CUS: userId },
-    });
-    Promise.all([response, response1])
+    await db.sequelize
+      .query(
+        `EXEC sp_storeShipping2 :id , :ship_name , :ship_email , :ship_phone , :ship_address , :ship_city`,
+        {
+          replacements: {
+            id: genarateId(),
+            ship_name: ship[0].ship_name,
+            ship_email: ship[0].ship_email,
+            ship_phone: ship[0].ship_phone,
+            ship_address: ship[0].ship_address,
+            ship_city: ship[0].ship_city,
+          },
+        }
+      )
+      .then(async () => {
+        return await db.sequelize.query(`EXEC sp_PURCHASE_CART :CUS`, {
+          replacements: { CUS: userId },
+        });
+      })
       .then(() => {
         res.json({
           status: 1,
@@ -426,23 +438,23 @@ const getOrderDetailForUser = async (req, res, next) => {
   }
 };
 
-const search  = async (req, res, next) => {
+const search = async (req, res, next) => {
   try {
-    const name = req.query.search
-      const getSearch = await services.getAny({
-        status:1,
-       name:name
-      });
-      const count = getSearch.productData.count
-      const product = getSearch.productData.rows;
-     const category = await services1.category();
-     const brand = await services5.brand();
-      res.render('client/search',{
-        count,
-        category,
-        brand,
-        product
-      })
+    const name = req.query.search;
+    const getSearch = await services.getAny({
+      status: 1,
+      name: name,
+    });
+    const count = getSearch.productData.count;
+    const product = getSearch.productData.rows;
+    const category = await services1.category();
+    const brand = await services5.brand();
+    res.render("client/search", {
+      count,
+      category,
+      brand,
+      product,
+    });
   } catch (error) {
     next(error);
   }
@@ -452,14 +464,14 @@ const searchname = async (req, res, next) => {
   try {
     const category = await services1.category();
     const brand = await services5.brand();
-     const getProduct = await services.getAny({
-       status: 1,
-       order: ["pro_name", "DESC"],
-     });
-     
-    let product = getProduct.productData.rows
+    const getProduct = await services.getAny({
+      status: 1,
+      order: ["pro_name", "DESC"],
+    });
+
+    let product = getProduct.productData.rows;
     let count = getProduct.productData.count;
-    
+
     res.render("client/searchByNameDESC", {
       category,
       brand,
@@ -482,12 +494,12 @@ const searchprice = async (req, res, next) => {
 
     let product = getProduct.productData.rows;
     let count = getProduct.productData.count;
-      res.render("client/searchByPriceDESC", {
-        category,
-        brand,
-        product,
-        count,
-      });
+    res.render("client/searchByPriceDESC", {
+      category,
+      brand,
+      product,
+      count,
+    });
   } catch (error) {
     next(error);
   }

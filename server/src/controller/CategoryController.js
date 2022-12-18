@@ -45,13 +45,12 @@ const revenue = async (req,res,next)=>{
           let ttKhachHang = tongTienKhachHangMua[0]; // nhớ duyệt mảng
           let tinhtienSanPham = await db.sequelize.query(`EXEC sp_getRevenue`);
           tinhtienSanPham = tinhtienSanPham[0];
-          let minProduct = tinhtienSanPham[0].minProduct;
-          let avgProduct = tinhtienSanPham[1].avgProduct;
-          let totalOrder = tinhtienSanPham[2].ToTalOrder;
+          console.log(tinhtienSanPham);
+          let totalOrder = tinhtienSanPham[0].ToTalOrder;
           var totalBillPrice = 0;
           let analyticRevenueByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           const currentYear = new Date().getFullYear();
-          for (let i = 3; i < tinhtienSanPham.length; i++) {
+          for (let i = 1; i < tinhtienSanPham.length; i++) {
             const yearOfBill = new Date(
               tinhtienSanPham[i].date_order
             ).getFullYear();
@@ -64,15 +63,13 @@ const revenue = async (req,res,next)=>{
             }
           }
 
-          // //
-          for (let i = 3; i < tinhtienSanPham.length; i++) {
+          // 
+          for (let i = 1; i < tinhtienSanPham.length; i++) {
             totalBillPrice += tinhtienSanPham[i].TongHoaDon;
           }
           res.json({
             dtName,
             ttKhachHang,
-            minProduct,
-            avgProduct,
             totalBillPrice,
             totalOrder,
             result: {

@@ -310,32 +310,34 @@
              Promise.all([a, b])
                  .then(async data => {
                     if(data[0].status === 401 && data[1].status === 401){
-                        Swal.fire({
+                        return Swal.fire({
                             icon: 'error',
                             title: 'Vui lòng đăng nhập giúp em'
                         })
                     }else{
-                        return await instance.setLocalCart(data[1])
+                        await instance.setLocalCart(data[1])
+                         const numberFormat = new Intl.NumberFormat("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                        });
+                        const cart = await instance.getLocalCart()
+                        let amount = 0;
+                        let total = 0;
+                        if (cart !== null) {
+                            $.each(cart, async function (key, value) {
+                                if (value !== undefined) {
+                                    amount += value.amount;
+                                    total += value.total
+                                }
+                                countNumberCart.html(`<span>${amount}</span>`)
+                                totalCart.html(numberFormat.format(total))
+                            })
+                        }
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thêm giỏ hàng thành công'
+                        })
                     }
-                 })
-                 .then(async data => {
-                     const cart = await instance.getLocalCart()
-                     let amount = 0;
-                     let total = 0;
-                     if (cart !== null) {
-                         $.each(cart, async function (key, value) {
-                             if (value !== undefined) {
-                                 amount += value.amount;
-                                 total += value.total
-                             }
-                             countNumberCart.html(`<span>${amount}</span>`)
-                             totalCart.html(total)
-                         })
-                     }
-                    Swal.fire({
-                         icon: 'success',
-                         title: 'Thêm giỏ hàng thành công'
-                     })
                  })
          })
      }
@@ -443,6 +445,10 @@
                     } else {
                         await instance.setLocalCart(data[1])
                          .then(async () => {
+                            const numberFormat = new Intl.NumberFormat("vi-VN", {
+                                 style: "currency",
+                                 currency: "VND",
+                             });
                                 const cart = await instance.getLocalCart()
                                 let amount = 0;
                                 let total = 0;
@@ -453,7 +459,7 @@
                                             total += value.total
                                         }
                                         countNumberCart.html(`<span>${amount}</span>`)
-                                        totalCart.html(total)
+                                        totalCart.html(numberFormat.format(total))
                                     })
                                 }
                                 Swal.fire({

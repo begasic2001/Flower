@@ -355,47 +355,47 @@
     }
 
     // Thêm giỏ hàng
-    const btnAddToCart = document.querySelectorAll('.addCart');
+    // const btnAddToCart = document.querySelectorAll('.addCart');
 
-    for (let i = 0; i < btnAddToCart.length; i++) {
-        btnAddToCart[i].addEventListener('click', async (e) => {
-            e.preventDefault()
-            const attrNames = btnAddToCart[i].getAttributeNames().map(name => btnAddToCart[i].getAttribute(name));
-            const productId = attrNames[1];
-            const a = await addToCart(productId)
-            const b = await getCart()
-            Promise.all([a, b])
-                .then(async data => {
-                    if (data[0].status === 401 && data[1].status === 401) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Vui lòng đăng nhập giúp em'
-                        })
-                    } else {
-                        return await instance.setLocalCart(data[1])
-                    }
-                })
-                .then(async data => {
-                    const cart = await instance.getLocalCart()
-                    let amount = 0;
-                    let total = 0;
-                    if (cart !== null) {
-                        $.each(cart, async function (key, value) {
-                            if (value !== undefined) {
-                                amount += value.amount;
-                                total += value.total
-                            }
-                            countNumberCart.html(`<span>${amount}</span>`)
-                            totalCart.html(total)
-                        })
-                    }
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thêm giỏ hàng thành công'
-                    })
-                })
-        })
-    }
+    // for (let i = 0; i < btnAddToCart.length; i++) {
+    //     btnAddToCart[i].addEventListener('click', async (e) => {
+    //         e.preventDefault()
+    //         const attrNames = btnAddToCart[i].getAttributeNames().map(name => btnAddToCart[i].getAttribute(name));
+    //         const productId = attrNames[1];
+    //         const a = await addToCart(productId)
+    //         const b = await getCart()
+    //         Promise.all([a, b])
+    //             .then(async data => {
+    //                 if (data[0].status === 401 && data[1].status === 401) {
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Vui lòng đăng nhập giúp em'
+    //                     })
+    //                 } else {
+    //                     return await instance.setLocalCart(data[1])
+    //                 }
+    //             })
+    //             .then(async data => {
+    //                 const cart = await instance.getLocalCart()
+    //                 let amount = 0;
+    //                 let total = 0;
+    //                 if (cart !== null) {
+    //                     $.each(cart, async function (key, value) {
+    //                         if (value !== undefined) {
+    //                             amount += value.amount;
+    //                             total += value.total
+    //                         }
+    //                         countNumberCart.html(`<span>${amount}</span>`)
+    //                         totalCart.html(total)
+    //                     })
+    //                 }
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Thêm giỏ hàng thành công'
+    //                 })
+    //             })
+    //     })
+    // }
 
     async function addToCart(productId) {
         return await instance.post(`/api/cart/addToCart/${productId}`).then((result) => {
@@ -425,104 +425,104 @@
         })
     }
 
-    $(document).ready(function () {
-        $('.addWishList').on('click', async function (e) {
-            e.preventDefault();
-            const id = $(this).data('id');
-            if (id) {
-                await addToWishList(id)
-                    .then(async (data) => {
-                        const { status, message } = data
-                        if (status === 401 && message === "Unauthorized") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Vui lòng đăng nhập giúp em'
-                            })
-                        } else {
-                            const count = await getWishList()
-                            countNumberWishList.html(count.length)
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                            if ($.isEmptyObject(data.status === 0)) {
-                                Toast.fire({
-                                    icon: 'error',
-                                    title: data.msg
-                                })
-                            } else {
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: data.msg
-                                })
-                            }
-                        }
+    // $(document).ready(function () {
+    //     $('.addWishList').on('click', async function (e) {
+    //         e.preventDefault();
+    //         const id = $(this).data('id');
+    //         if (id) {
+    //             await addToWishList(id)
+    //                 .then(async (data) => {
+    //                     const { status, message } = data
+    //                     if (status === 401 && message === "Unauthorized") {
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Vui lòng đăng nhập giúp em'
+    //                         })
+    //                     } else {
+    //                         const count = await getWishList()
+    //                         countNumberWishList.html(count.length)
+    //                         const Toast = Swal.mixin({
+    //                             toast: true,
+    //                             position: 'top-end',
+    //                             showConfirmButton: false,
+    //                             timer: 3000,
+    //                             timerProgressBar: true,
+    //                             didOpen: (toast) => {
+    //                                 toast.addEventListener('mouseenter', Swal.stopTimer)
+    //                                 toast.addEventListener('mouseleave', Swal.resumeTimer)
+    //                             }
+    //                         })
+    //                         if ($.isEmptyObject(data.status === 0)) {
+    //                             Toast.fire({
+    //                                 icon: 'error',
+    //                                 title: data.msg
+    //                             })
+    //                         } else {
+    //                             Toast.fire({
+    //                                 icon: 'success',
+    //                                 title: data.msg
+    //                             })
+    //                         }
+    //                     }
 
 
-                    })
-            }
-        });
+    //                 })
+    //         }
+    //     });
 
-    });
+    // });
 
 </script>
 <script>
     // details page
-    async function updateCart(productId) {
-        const amount = $('input[name="qty"]').val()
-        return await instance.post(`/api/cart/updateCart/${productId}`, {
-            amount: amount
-        }).then(result => {
-            return result.data
-        })
-    }
-    $(document).ready(function () {
-        $('.cart_button').on('click', async function (e) {
-            e.preventDefault()
-            const id = $(this).data('id');
-            const a = await updateCart(id)
-            const b = await getCart()
-            Promise.all([a, b])
-                .then(async data => {
-                    if (data[0].status === 401 && data[1].status === 401) {
-                        return Swal.fire({
-                            icon: 'error',
-                            title: 'Vui lòng đăng nhập giúp em'
-                        })
+    // async function updateCart(productId) {
+    //     const amount = $('input[name="qty"]').val()
+    //     return await instance.post(`/api/cart/updateCart/${productId}`, {
+    //         amount: amount
+    //     }).then(result => {
+    //         return result.data
+    //     })
+    // }
+    // $(document).ready(function () {
+    //     $('.cart_button').on('click', async function (e) {
+    //         e.preventDefault()
+    //         const id = $(this).data('id');
+    //         const a = await updateCart(id)
+    //         const b = await getCart()
+    //         Promise.all([a, b])
+    //             .then(async data => {
+    //                 if (data[0].status === 401 && data[1].status === 401) {
+    //                     return Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Vui lòng đăng nhập giúp em'
+    //                     })
 
-                    } else {
-                        await instance.setLocalCart(data[1])
-                            .then(async () => {
-                                const cart = await instance.getLocalCart()
-                                let amount = 0;
-                                let total = 0;
-                                if (cart !== null) {
-                                    $.each(cart, async function (key, value) {
-                                        if (value !== undefined) {
-                                            amount += value.amount;
-                                            total += value.total
-                                        }
-                                        countNumberCart.html(`<span>${amount}</span>`)
-                                        totalCart.html(total)
-                                    })
-                                }
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Thêm giỏ hàng thành công'
-                                })
-                            })
-                    }
-                })
+    //                 } else {
+    //                     await instance.setLocalCart(data[1])
+    //                         .then(async () => {
+    //                             const cart = await instance.getLocalCart()
+    //                             let amount = 0;
+    //                             let total = 0;
+    //                             if (cart !== null) {
+    //                                 $.each(cart, async function (key, value) {
+    //                                     if (value !== undefined) {
+    //                                         amount += value.amount;
+    //                                         total += value.total
+    //                                     }
+    //                                     countNumberCart.html(`<span>${amount}</span>`)
+    //                                     totalCart.html(total)
+    //                                 })
+    //                             }
+    //                             Swal.fire({
+    //                                 icon: 'success',
+    //                                 title: 'Thêm giỏ hàng thành công'
+    //                             })
+    //                         })
+    //                 }
+    //             })
 
-        })
-    })
+    //     })
+    // })
 </script>
 <script src="/js/wishlist.js"></script>
 </body>

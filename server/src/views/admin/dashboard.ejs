@@ -125,8 +125,6 @@
                        console.log(data);
                        $('.countOrder').append(`
                             <div>Số Hóa Đơn : ${data.totalOrder}</div>
-                            <div>Giá Trung Bình Sản Phẩm : ${numberFormat.format(data.avgProduct)}</div>
-                            <div>Giá Sản Phẩm Thấp Nhất :${numberFormat.format(data.minProduct)}</div>
                             <div>Tổng Tiền Hóa Đơn : ${numberFormat.format(data.totalBillPrice)}</div> 
                             <div>Doanh Thu Năm 2022 : ${numberFormat.format(data.dtName.DoanhThuNam)}</div>                      
                         `)
