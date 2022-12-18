@@ -29,7 +29,7 @@
                                     <% }) %>
                             </ul>
                         </div>
-                        <div class="sidebar_section filter_by_section">
+                        <!-- <div class="sidebar_section filter_by_section">
                             <div class="sidebar_title">Sắp Xếp :</div>
                             <div class="sidebar_subtitle">Price</div>
                             <div class="filter_price">
@@ -38,10 +38,10 @@
                                 <p><input type="text" id="amount" class="amount" readonly
                                         style="border:0; font-weight:bold;"></p>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="sidebar_section">
-                            <div class="sidebar_subtitle brands_subtitle">Brands</div>
+                            <div class="sidebar_subtitle brands_subtitle">Nhà Cung Cấp</div>
                             <ul class="brands_list">
                                 <% brand.map(function(b){ %>
                                     <li class="brand"><a href="#">
@@ -64,8 +64,8 @@
                                     <%= count %>
                                 </span> Sản Phẩm Tìm Thấy</div>
                             <div class="shop_sorting">
-                                <span>Tìm Kiếm:</span>
-                                <ul>
+                                <!-- <span>Tìm Kiếm:</span> -->
+                                <!-- <ul>
                                     <li>
                                         <span class="sorting_text">highest rated<i
                                                 class="fas fa-chevron-down"></span></i>
@@ -81,7 +81,7 @@
                                                 Giá</li>
                                         </ul>
                                     </li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
 
@@ -110,7 +110,7 @@
                                                 </a></div>
                                         </div>
                                     </div>
-                                    <button class="addWishList" data-id="<%= p.id %>">
+                                    <button class="addWishList displayBTNaddWishList" data-id="<%= p.id %>">
                                         <div class="product_fav "><i class="fas fa-heart"></i></div>
                                     </button>
                                 </div>

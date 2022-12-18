@@ -191,17 +191,17 @@
     </script>
 <script>
     // hiển thị tên ng dùng sau khi đăng nhập
-      
+    //    <ul>
+    //         <li><a href="#">Danh sách yêu thích</a></li>
+    //         <li><a href="#">Thanh toán</a></li>
+    //         <li><a href="#">Khác</a></li>
+    //     </ul>
          let user = instance.getLocalInfoUser()
             if (user !== null) {
                 $('.top_bar_user').append(`<ul class="standard_dropdown top_bar_dropdown">
                                         <li>
                                             <a href="/profile" id="profile">Hồ sơ<i class="fas fa-chevron-down"></i></a>
-                                            <ul>
-                                                <li><a href="#">Danh sách yêu thích</a></li>
-                                                <li><a href="#">Thanh toán</a></li>
-                                                <li><a href="#">Khác</a></li>
-                                            </ul>
+                                           
                                         </li>
                                     </ul>`)
                 $('.cart_text').append(`<a href="/cart">Cart</a>`)

@@ -126,7 +126,7 @@
                            if (status == 'success') {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Login successfully'
+                                title: 'Đăng Nhập Thành Công'
                             }).then(async () => {
                                 await instance.setLocalAccessToken(accessToken)
                                 await instance.setLocalRefreshToken(refreshToken)
@@ -134,22 +134,30 @@
                                 window.location.replace("/")
                             })
 
+                        }else{
+                            Swal.fire({
+                                   icon: 'error',
+                                   title: 'Email/mật khẩu sai'
+                               })
                         }
                     })
                     .catch(err => {
-                        console.log(err);
-                        if(err.code === "ERR_BAD_RESPONSE"){
-                              Swal.fire({
+                         return Swal.fire({
                                 icon: 'error',
-                                title: err.response.data
+                                title: 'Email/mật khẩu sai'
                             })
-                        }
-                          if (err.response.status === 404) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: err.response.data.message
-                            })
-                        }
+                        // if(err.code === "ERR_BAD_RESPONSE"){
+                        //      return Swal.fire({
+                        //         icon: 'error',
+                        //         title: err.response.data
+                        //     })
+                        // }
+                        // if (err.response.status === 404) {
+                        //     return Swal.fire({
+                        //         icon: 'error',
+                        //         title: err.response.data.message
+                        //     })
+                        // }
                     })
                    
                 
