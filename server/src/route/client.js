@@ -3,6 +3,14 @@ import ClientController from "../controller/ClientController";
 import { verifyAccessToken } from "../services/jwt_service";
 import uploadCloud from "../config/cloudinary";
 const route = express.Router();
+
+
+route.get("/password/reset", ClientController.getForgot);
+route.post("/password/email", ClientController.sendResetLinkEmail);
+
+route.get("/password/reset/:email", ClientController.showResetForm);
+route.post("/password/reset", ClientController.reset);
+
 route.get("/searchPrice", ClientController.searchprice);
 route.get("/searchName", ClientController.searchname);
 route.get("/search", ClientController.search);

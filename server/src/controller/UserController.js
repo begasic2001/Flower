@@ -12,6 +12,7 @@ import { userValidate, uid } from "../config/validatation";
 import user_service from "../services/user_service";
 import { v4 as genarateId } from "uuid";
 import joi from "joi";
+
 const getAllUser = async (req, res, next) => {
   try {
     const allUser = await user_service.user();
@@ -182,6 +183,15 @@ const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
+
+const forgotPass = async (req, res, next) => {
+  try {
+    const response = await user_service.deleteUser(req.query.uid);
+    if (response) res.redirect("/api/auth/user");
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   getAllUser,
   user,
@@ -193,4 +203,5 @@ module.exports = {
   getUserEdit,
   updateUser,
   deleteUser,
+  forgotPass,
 };

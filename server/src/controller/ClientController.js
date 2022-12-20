@@ -14,6 +14,8 @@ paypal.configure({
   client_id: process.env.CLIENT_ID_PAYPAL,
   client_secret: process.env.CLIENT_SECRECT_PAYPAL,
 });
+import mailer from "../config/mail";
+import bcrypt from "bcrypt";
 let items;
 var total = 0;
 const clientView = async (req, res, next) => {
@@ -186,9 +188,9 @@ const getShipping = async (req, res, next) => {
 const getProductById = async (req, res, next) => {
   try {
     const numberFormat = new Intl.NumberFormat("vi-VN", {
-       style: "currency",
-       currency: "VND",
-     });
+      style: "currency",
+      currency: "VND",
+    });
     const productId = req.params.productId;
     const getProductBySubCategory = await services.getAny({
       status: 1,
@@ -228,10 +230,10 @@ const getProductById = async (req, res, next) => {
 
 const getAllCategoryById = async (req, res, next) => {
   try {
-     const numberFormat = new Intl.NumberFormat("vi-VN", {
-       style: "currency",
-       currency: "VND",
-     });
+    const numberFormat = new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
     const categoryId = req.params.categoryId;
     const getProductByCategory = await services.getAny({
       status: 1,
@@ -504,6 +506,87 @@ const searchprice = async (req, res, next) => {
     next(error);
   }
 };
+
+const getForgot = async (req, res, next) => {
+  try {
+    res.render("client/forgotPass");
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendResetLinkEmail = async (req, res, next) => {
+  try {
+    if (!req.body.email) {
+      res.redirect("/password/reset");
+    } else {
+      const user = await db.User.findOne({ where: { email: req.body.email } });
+      if (!user) {
+        res.redirect("/password/reset");
+      } else {
+        bcrypt
+          .hash(user.email, parseInt(process.env.BCRYPT_SALT_ROUND))
+          .then((hashedEmail) => {
+            mailer.sendMail(
+              user.email,
+              "Reset password",
+              `<a href="http://localhost:9000/password/reset/${user.email}?token=${hashedEmail}"> Reset Password </a>`
+            );
+            console.log(
+              `http://localhost:9000/password/reset/${user.email}?token=${hashedEmail}`
+            );
+          });
+        res.redirect("/password/reset?status=success");
+      }
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const showResetForm = async (req, res) => {
+  if (!req.params.email || !req.query.token) {
+    res.redirect("/password/reset");
+  } else {
+    res.render("client/reset", {
+      email: req.params.email,
+      token: req.query.token,
+    });
+  }
+};
+
+const reset = async (req, res) => {
+  const { email, token, password } = req.body;
+  console.log(email, token, password);
+  if (!email || !token || !password) {
+    res.redirect("/password/reset");
+  } else {
+    bcrypt.compare(email, token, (err, result) => {
+      console.log("compare", result);
+      if (result == true) {
+        bcrypt
+          .hash(password, parseInt(process.env.BCRYPT_SALT_ROUND))
+          .then(async (hashedPassword) => {
+            console.log(`hashedPassword`, hashedPassword);
+            const response = await db.sequelize.query(
+              `EXEC sp_forgotPass :email , :password`,
+              {
+                replacements: {
+                  email: email,
+                  password: hashedPassword,
+                },
+              }
+            );
+            if (response) {
+              res.redirect("/login");
+            }
+          });
+      } else {
+        res.redirect("/password/reset");
+      }
+    });
+  }
+};
 module.exports = {
   clientView,
   getUserLogin,
@@ -526,4 +609,8 @@ module.exports = {
   search,
   searchname,
   searchprice,
+  getForgot,
+  sendResetLinkEmail,
+  showResetForm,
+  reset,
 };
